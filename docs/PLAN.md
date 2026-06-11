@@ -11,7 +11,7 @@ shown with a real-world scene — terms support multiple playgrounds, so ArcGIS
 companions sit alongside low-level demos (see each plan's header).
 
 - ✅ [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) — **complete**: all 11 demos live (normal/bump/displacement mapping, Fresnel + ArcGIS water-Fresnel over Lake Brienz, BRDF explorer, IBL, light types + sun companion, baking, shader lab, UV unwrap); 23 playgrounds total, 33 of 66 terms covered
-- [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) (2D ray lab + ArcGIS scene-picking, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator)
+- ✅ [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) — **complete**: all 11 demos live (2D ray lab + ArcGIS scene-picking over Zurich, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator); 34 playgrounds total, 47 of 66 terms covered
 - [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) (mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race, ArcGIS basemap-mips + glTF-PBR, synced-frustum stretch)
 
 After phase 4, all 66 terms have a live playground or interactive diagram, with
