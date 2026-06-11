@@ -63,6 +63,14 @@ test("ArcGIS scene playground renders (shadow mapping)", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test("multi-playground term shows both demos (fresnel + ArcGIS water)", async ({ page }) => {
+  const errors = collectPageErrors(page);
+  await page.goto("#/term/fresnel-effect");
+  await expect(page.locator("figure")).toHaveCount(2, { timeout: 60_000 });
+  await expect(page.locator("figure canvas").first()).toBeVisible({ timeout: 30_000 });
+  expect(errors).toEqual([]);
+});
+
 test("guided tour navigates between steps", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("#/tour/1");
