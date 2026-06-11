@@ -1,12 +1,13 @@
+@import "tailwindcss";
+
+/* Tailwind's `dark:` variant follows Calcite's mode class (set on <html>),
+   so a single toggle drives both design systems. */
+@custom-variant dark (&:where(.calcite-mode-dark, .calcite-mode-dark *));
+
 #root,
 html,
 body {
-  background-color: var(--calcite-ui-foreground-2);
+  background-color: var(--calcite-color-background);
   height: 100%;
   margin: 0;
-}
-
-arcgis-chart {
-  width: 350px;
-  height: 250px;
 }
