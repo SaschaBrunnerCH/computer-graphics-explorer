@@ -24,8 +24,10 @@ test("home page renders the glossary shell", async ({ page }) => {
 test("search palette opens with Ctrl+K and finds terms", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("");
+  // Wait for hydration (the shell's key listener) before pressing the shortcut.
+  await expect(page.getByRole("heading", { level: 1, name: /playful demo/i })).toBeVisible();
   await page.keyboard.press("ControlOrMeta+k");
-  const input = page.getByLabel("Search terms", { exact: true });
+  const input = page.getByRole("textbox", { name: "Search terms" });
   await expect(input).toBeVisible();
   await input.fill("fresnel");
   await page.keyboard.press("Enter");
