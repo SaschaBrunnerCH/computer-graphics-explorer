@@ -9,11 +9,6 @@ import { lazy, type ComponentType, type LazyExoticComponent } from "react";
  * diagrams/, add one line here, and set `demo: "<key>"` on the term(s).
  */
 export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
-  // Registered as demos are implemented; keys referenced by term data:
-  // shadows, atmosphere-fog, lod, ssao (ArcGIS)
-  // shading-models, global-illumination, texture-filtering, anti-aliasing,
-  // pbr-materials, frustum-culling (react-three-fiber)
-  // depth-buffer (raw WebGL2), rasterization (canvas)
+  "shading-models": lazy(() => import("./r3f/ShadingModels")),
+  "depth-buffer": lazy(() => import("./webgl/DepthBuffer")),
 };
-
-void lazy; // re-exported pattern: playground entries use lazy(() => import("./..."))
