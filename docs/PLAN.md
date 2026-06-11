@@ -1,8 +1,19 @@
 # Build Plan — Computer Graphics Explorer
 
-Implementation plan for the spec in `docs/specs.md`. Executed autonomously; judgment calls are logged in `DECISIONS.md`.
+Implementation plan for the spec in `docs/specs.md`. Executed autonomously; judgment calls are logged in `DECISIONS.md` (repo root).
 
-## Milestones
+## Roadmap — next phases
+
+Phase 1 (everything below) is complete: 12 playgrounds live, 20 of 66 terms covered.
+The remaining 46 terms are planned as three batches of ~10 playgrounds each:
+
+- [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) (normal/bump/displacement mapping, Fresnel, BRDF explorer, IBL, light types, baking, shader lab, UV unwrap)
+- [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) (2D ray lab, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator)
+- [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) (mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race)
+
+After phase 4, all 66 terms have a live playground or interactive diagram.
+
+## Milestones (phase 1)
 
 All milestones completed (including the nice-to-have guided tour).
 

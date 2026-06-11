@@ -65,6 +65,9 @@ src/
 e2e/                Playwright smoke tests
 ```
 
+The build plan and the playground roadmap (three more phases of ~10 demos each)
+live in [`docs/PLAN.md`](docs/PLAN.md) and [`docs/plans/`](docs/plans/).
+
 Key decisions (the full log is in [`DECISIONS.md`](DECISIONS.md)):
 
 - **Hash routing** so every term has a shareable deep link that survives
