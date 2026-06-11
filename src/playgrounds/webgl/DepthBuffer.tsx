@@ -206,7 +206,11 @@ export default function DepthBuffer(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<DemoState>({ ...INITIAL });
   const [state, setState] = useState<DemoState>({ ...INITIAL });
-  stateRef.current = state;
+
+  // Mirror state into a ref so the RAF loop reads fresh values without re-creating the GL setup.
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
