@@ -70,6 +70,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "Radiosity treats the scene as a system of linear equations: each patch's outgoing light equals its emission plus its reflectance times the light gathered from all other patches, weighted by 'form factors' (geometric visibility terms). Solving it — by matrix inversion or iterative 'shooting' of energy from the brightest patches — yields per-patch radiosity that holds for any camera position, making it ideal for precomputation. Its limits are structural: form factors only model perfectly diffuse exchange, the patch grid caps lighting detail, and the O(n²) patch relationships scale poorly, which is why path tracing eventually displaced it.",
+    demos: ["radiosity"],
     relatedTermIds: [
       "global-illumination",
       "light-baking",
@@ -96,6 +97,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "Path tracing is Monte Carlo integration of the rendering equation: at each bounce, a direction is sampled from the surface's BRDF, and the path's contribution is weighted accordingly. Variance — visible as noise — is the central enemy, fought with importance sampling (favor directions where light likely comes from), next-event estimation (explicitly sample light sources at each bounce), Russian roulette path termination, and low-discrepancy sample sequences. Real-time path tracing leans on hardware BVH traversal plus aggressive AI denoisers and temporal accumulation to make 1–2 samples per pixel presentable.",
+    demos: ["path-tracer"],
     relatedTermIds: ["ray-tracing", "global-illumination", "brdf", "radiosity"],
   },
   {

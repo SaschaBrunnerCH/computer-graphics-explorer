@@ -63,6 +63,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Classic (Whitted) ray tracing spawns secondary rays only for perfect reflection, refraction, and shadow tests. Path tracing generalizes it: rays scatter probabilistically according to the surface's BRDF, and averaging many random paths per pixel converges to the physically correct answer — at the cost of noise that needs many samples or an AI denoiser. Hardware acceleration structures (BVHs) make ray–triangle intersection fast enough for hybrid real-time use.",
+    demos: ["ray-lab"],
     relatedTermIds: ["ray-casting", "path-tracing", "rasterization", "global-illumination"],
   },
   {
@@ -84,6 +85,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Rendering-wise, ray casting is ray tracing truncated at the first hit: primary rays only. That's why early 'raycasters' could run on 1992 CPUs — one intersection per column against a 2D grid. In modern engines the same operation, accelerated by spatial structures like BVHs or octrees, powers picking, collision probes, and visibility queries rather than image synthesis.",
+    demos: ["ray-lab", "scene-picking"],
     relatedTermIds: ["ray-tracing", "frustum-culling"],
   },
   {
@@ -180,6 +182,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "The swap is typically synchronized to the display's refresh (vsync) to avoid tearing; missing the deadline means waiting a whole refresh, which is why frame rates under vsync often snap to divisors (60 → 30). Triple buffering adds a second back buffer to decouple drawing from the swap deadline at the cost of one frame of latency. Variable-refresh displays (G-Sync/FreeSync) relax the fixed deadline entirely.",
+    demos: ["frame-time"],
     relatedTermIds: ["frame-buffer", "frame-rate"],
   },
   {
@@ -201,6 +204,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Average fps hides what matters: percentile frame times (the worst 1% of frames) determine perceived smoothness. A run at 90 fps average with occasional 80 ms frames feels worse than a locked 60. Real-time budgets divide further: at 16.7 ms total you might give 4 ms to shadows, 6 ms to the main pass, 3 ms to post-processing — which is why features like SSAO or soft shadows are always toggleable.",
+    demos: ["frame-time"],
     relatedTermIds: ["double-buffering", "draw-calls-batching", "level-of-detail"],
   },
   {

@@ -20,6 +20,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Tone mapping operators map HDR radiance to display range. The simplest, Reinhard (`c / (1 + c)`), compresses gently but desaturates highlights. Filmic curves like Hable/Uncharted 2 and ACES add a toe and shoulder that mimic film response: shadows roll off gently, highlights saturate toward white gracefully. The operator runs per pixel at the end of the HDR pipeline, before (or combined with) gamma encoding. Local operators that adapt per region exist but are rare in real time; games mostly use a global curve plus auto-exposure, which scales scene brightness based on a running average luminance — the source of the 'eye adaptation' effect when moving between dark and bright areas.",
+    demos: ["tone-mapping"],
     relatedTermIds: ["hdr", "gamma-correction", "color-spaces", "bloom"],
   },
   {
@@ -41,6 +42,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "HDR rendering means lighting is accumulated into floating-point render targets (commonly `RGBA16F`) instead of 8-bit-per-channel buffers, so values above 1.0 survive. This enables physically plausible light intensities, meaningful auto-exposure, and effects that depend on knowing how over-bright a pixel is — bloom thresholds, lens flares, sun glints. Image-based lighting uses HDR environment maps for the same reason: an 8-bit sky photo can't tell the renderer the sun is 50,000 times brighter than the clouds. HDR displays add a second meaning of the term: instead of tone mapping all the way down to standard range, the engine outputs to a wide-range format (e.g. HDR10) and lets the display show real highlight intensity.",
+    demos: ["tone-mapping"],
     relatedTermIds: ["tone-mapping", "bloom", "image-based-lighting", "frame-buffer"],
   },
   {
@@ -62,6 +64,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The standard implementation extracts pixels above a brightness threshold from the HDR frame, then blurs them — typically by repeatedly downsampling the bright-pass image into a mip chain, blurring at each level, and upsampling additively. Blurring at multiple resolutions is the trick: small Gaussian kernels on low-res buffers are cheap but composite into a glow that spreads hundreds of pixels wide. The result is added back to the scene before tone mapping. This is also why bloom genuinely needs HDR input: with 8-bit color, a white piece of paper and a light bulb both clip to 1.0, so both would glow equally — the threshold has nothing to grab onto.",
+    demos: ["bloom"],
     relatedTermIds: ["hdr", "tone-mapping", "frame-buffer"],
   },
   {
@@ -83,6 +86,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Real lenses focus each point of the scene to a point only at the focal distance; elsewhere it spreads into a 'circle of confusion' (CoC) whose radius grows with distance from the focal plane and with aperture size. Post-process DoF reads the depth buffer, computes a CoC per pixel, and applies a variable-radius blur — often a 'scatter-as-gather' pass that samples in a disc pattern shaped like the lens aperture, which is what makes bokeh hexagonal or circular. The hard problems are at the edges: a sharp foreground object should blur and bleed over the in-focus background behind it, but a screen-space blur only has one depth per pixel, so engines render near-field blur in a separate layer to fake that partial occlusion.",
+    demos: ["depth-of-field"],
     relatedTermIds: ["depth-buffer", "camera-frustum", "motion-blur"],
   },
   {
@@ -104,6 +108,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Offline renderers solve it honestly: distribute ray samples in time across the shutter interval, so moving geometry genuinely smears. Real-time engines instead render a velocity buffer — each pixel stores how far its surface moved on screen since the previous frame, computed by transforming each vertex by both this frame's and last frame's matrices. A post-process pass then blurs each pixel along its velocity vector. Camera-only motion blur is even cheaper, reconstructing velocity purely from the depth buffer and camera delta. Artifacts come from the screen-space shortcut: backgrounds bleed into fast-moving foreground objects and vice versa, which tile-based dilation of dominant velocities tries to hide.",
+    demos: ["motion-blur"],
     relatedTermIds: ["depth-of-field", "frame-rate", "depth-buffer"],
   },
   {
@@ -125,6 +130,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "For each pixel, SSR reconstructs the view-space position and normal, computes the reflection vector, then ray-marches it in screen space, comparing the ray's depth against the depth buffer at each step until it dips behind a surface — a hit means 'sample the color buffer there.' Practical implementations march in fewer, coarser steps with a binary-search refinement at the crossing, or use hierarchical depth (depth mip pyramids) to skip empty space. Rough surfaces jitter the reflection ray per the material's roughness and blur the result, usually leaning on temporal accumulation to hide the noise. Failure cases are structural: anything off-screen, behind the camera, or occluded in the depth buffer simply can't be reflected, so engines fall back to environment maps or ray tracing where SSR misses.",
+    demos: ["ssr"],
     relatedTermIds: ["depth-buffer", "frame-buffer", "ray-tracing", "image-based-lighting", "pbr"],
   },
   {
@@ -146,6 +152,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The pitfall is doing lighting math in the encoded space. Gamma encoding stores roughly `c^(1/2.2)`; the display applies `c^2.2` to undo it. But light is additive only in linear space: 50% gray in sRGB encoding represents about 21.4% physical light intensity (`0.5^2.2`), not 50%. Average two gamma-encoded values, or multiply a gamma-encoded texture by a light intensity, and the result is simply wrong — typically too-dark midtones, harsh shadow falloff, and ugly hue shifts in gradients. The correct workflow: decode inputs to linear (sample sRGB textures through hardware sRGB formats), do all lighting and blending in linear, and re-encode to gamma once, at the very end after tone mapping. Even image resizing suffers: downscaling in gamma space visibly darkens fine bright detail.",
+    demos: ["gamma"],
     relatedTermIds: ["color-spaces", "tone-mapping", "texture-mapping"],
   },
   {
@@ -167,6 +174,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The core math trap: sRGB's transfer function (approximately `c^2.2`, exactly a piecewise curve with a linear toe) means stored values are not proportional to light. `0.5 + 0.5` in sRGB is not 'twice the light' — decoded, it's roughly `0.214 + 0.214 = 0.428` of linear light, while sRGB-space addition would claim full white. Any operation that assumes additivity — lighting, alpha blending, mipmap averaging, antialiasing resolve — must therefore happen in linear space. GPUs help: textures created with sRGB formats decode to linear automatically on sampling, and sRGB render targets re-encode on write, both with correct filtering. Color textures (albedo) are sRGB; data textures (normal maps, roughness, height) are already linear and must not be decoded. Wide-gamut spaces (Display P3, Rec.2020) extend the same idea with different primaries, raising the same convert-first rule.",
+    demos: ["gamma"],
     relatedTermIds: ["gamma-correction", "tone-mapping", "albedo", "mipmapping", "anti-aliasing"],
   },
 ];

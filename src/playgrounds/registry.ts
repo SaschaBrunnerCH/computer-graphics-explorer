@@ -33,6 +33,18 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "brdf-explorer": lazy(() => import("./diagrams/BrdfExplorer")),
   "uv-unwrap": lazy(() => import("./diagrams/UvUnwrap")),
   "water-fresnel": lazy(() => import("./arcgis/WaterFresnel")),
+  // Phase 3 — Rays & Post-Processing (docs/plans/phase-3-rays-and-post-processing.md)
+  "ray-lab": lazy(() => import("./diagrams/RayLab")),
+  "path-tracer": lazy(() => import("./diagrams/PathTracer")),
+  radiosity: lazy(() => import("./diagrams/Radiosity")),
+  "motion-blur": lazy(() => import("./diagrams/MotionBlur")),
+  gamma: lazy(() => import("./diagrams/Gamma")),
+  "frame-time": lazy(() => import("./diagrams/FrameTime")),
+  "tone-mapping": lazy(() => import("./r3f/ToneMapping")),
+  bloom: lazy(() => import("./r3f/Bloom")),
+  "depth-of-field": lazy(() => import("./r3f/DepthOfField")),
+  ssr: lazy(() => import("./r3f/Ssr")),
+  "scene-picking": lazy(() => import("./arcgis/ScenePicking")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -42,4 +54,5 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "lod",
   "ssao",
   "water-fresnel",
+  "scene-picking",
 ]);
