@@ -28,7 +28,10 @@ const INITIAL_DATE = new Date("2026-06-21T15:30:00Z");
 
 type CameraPreset = "overview" | "street";
 
-const CAMERAS: Record<CameraPreset, { position: [number, number, number]; heading: number; tilt: number }> = {
+const CAMERAS: Record<
+  CameraPreset,
+  { position: [number, number, number]; heading: number; tilt: number }
+> = {
   // Above the old town, tilted so building shadows stretch across the streets.
   overview: { position: [8.5417, 47.369, 760], heading: 10, tilt: 65 },
   // Just above the rooftops along the Limmat — shadow edges up close.
@@ -136,8 +139,8 @@ export default function Shadows(): React.JSX.Element {
             }}
           />
           <p className="m-0 text-xs text-[var(--calcite-color-text-3)]">
-            Use the daylight panel on the map to scrub time of day and date — shadows track the
-            real sun position. Ambient occlusion is automatic in this engine (adaptive rendering).
+            Use the daylight panel on the map to scrub time of day and date — shadows track the real
+            sun position. Ambient occlusion is automatic in this engine (adaptive rendering).
           </p>
         </>
       }

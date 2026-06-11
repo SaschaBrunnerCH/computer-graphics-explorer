@@ -16,3 +16,5 @@ Judgment calls made during the autonomous build, per the spec's Autonomous Execu
 - **Search palette is hand-rolled** (div overlay + input + listbox) instead of `calcite-dialog`: full control over command-palette keyboard behavior (arrows/enter/escape) without fighting web-component focus internals.
 - **MSAA/AA captions, GI demo "fakes" labeled**: real-time GI in the Cornell box is approximated with placed fill lights and the caption says so — honesty over fake physics.
 - **StrictMode WebGL gotcha**: demos avoid `loseContext()` in React cleanup because StrictMode remounts reuse the same canvas, which would permanently kill the second mount's context.
+- **LOD demo controls kept honest**: `SceneView.qualityProfile` is runtime-settable in v5 and shipped as a real control; `LayerView.suspended` turned out to be read-only, so the planned "suspend streaming" toggle was dropped rather than faked.
+- **Guided tour built** (nice-to-have): everything else was done and verified, so "Rendering Pipeline 101" shipped — 11 ordered stops reusing the term articles via a shared `TermArticle` component, with per-step connective blurbs and a clickable progress bar.

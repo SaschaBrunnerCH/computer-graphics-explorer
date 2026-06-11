@@ -5,6 +5,7 @@ import { usePageMeta } from "../lib/meta";
 
 import "@esri/calcite-components/components/calcite-icon";
 import "@esri/calcite-components/components/calcite-chip";
+import "@esri/calcite-components/components/calcite-button";
 
 const playgroundCount = new Set(terms.filter((t) => t.demo).map((t) => t.demo)).size;
 
@@ -28,6 +29,13 @@ export function HomePage(): React.JSX.Element {
           {terms.length} rendering terms explained in plain English — {playgroundCount} of them with
           live 3D playgrounds you can poke, slide, and break. Built with the ArcGIS Maps SDK,
           Three.js, and raw WebGL2.
+        </p>
+        <p className="mt-6">
+          <Link to="/tour/1" className="no-underline">
+            <calcite-button kind="brand" scale="l" icon-start="walking" icon-end="chevron-right">
+              Take the Rendering Pipeline 101 tour
+            </calcite-button>
+          </Link>
         </p>
         <p className="mt-6 text-sm text-[var(--calcite-color-text-3)]">
           Tip: press{" "}

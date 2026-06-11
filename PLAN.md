@@ -4,6 +4,8 @@ Implementation plan for the spec in `docs/specs.md`. Executed autonomously; judg
 
 ## Milestones
 
+All milestones completed (including the nice-to-have guided tour).
+
 1. **Scaffold** ✅ — `@arcgis/create` React template merged into the repo root; full dependency set installed (ArcGIS Maps SDK v5, Calcite v5, React 19, Vite 7, three/react-three-fiber/drei, react-router-dom, fuse.js, zod, Tailwind 4, ESLint/Prettier, Playwright).
 2. **Tooling** — Tailwind 4 via `@tailwindcss/vite` with dark mode synchronized to Calcite mode classes; ESLint flat config + Prettier; npm scripts (`typecheck`, `lint`, `format`, `test:e2e`); Vite `base: '/computer-graphics-explorer/'`; `.env.example`.
 3. **Term data** — zod schema + typed term data split per category under `src/data/terms/`; full catalog (~60 terms, 7 categories) with explanation, why-it-matters, analogy, spot-it-in-the-wild, deeper dive, related terms.

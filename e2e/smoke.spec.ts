@@ -63,6 +63,16 @@ test("ArcGIS scene playground renders (shadow mapping)", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test("guided tour navigates between steps", async ({ page }) => {
+  const errors = collectPageErrors(page);
+  await page.goto("#/tour/1");
+  await expect(page.getByText(/step 1 of/i)).toBeVisible();
+  await page.getByRole("link", { name: /next stop/i }).click();
+  await expect(page).toHaveURL(/#\/tour\/2/);
+  await expect(page.getByText(/step 2 of/i)).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test("progress toggle persists in localStorage", async ({ page }) => {
   await page.goto("#/term/rendering");
   const toggle = page.locator("calcite-switch");
