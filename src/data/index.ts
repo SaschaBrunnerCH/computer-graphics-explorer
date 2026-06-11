@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { termSchema, type Term, type CategoryId, type Difficulty } from "./types";
+import { termSchema, type Term, type TermInput, type CategoryId, type Difficulty } from "./types";
 import { categories, categoryById } from "./categories";
 import { renderingFundamentals } from "./terms/rendering-fundamentals";
 import { geometryScene } from "./terms/geometry-scene";
@@ -9,7 +9,7 @@ import { texturesSampling } from "./terms/textures-sampling";
 import { postProcessing } from "./terms/post-processing";
 import { realtimeGis } from "./terms/realtime-gis";
 
-const rawTerms: Term[] = [
+const rawTerms: TermInput[] = [
   ...renderingFundamentals,
   ...geometryScene,
   ...shadingMaterials,

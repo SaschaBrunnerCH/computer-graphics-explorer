@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const realtimeGis: Term[] = [
+export const realtimeGis: TermInput[] = [
   {
     id: "webgl-vs-webgpu",
     title: "WebGL vs WebGPU",
@@ -132,7 +132,7 @@ export const realtimeGis: Term[] = [
     deeperDive:
       "Physically, two scattering models dominate: Rayleigh scattering from air molecules, which is strongly wavelength-dependent (blue scatters most — hence blue skies, and red sunsets once the blue has been scattered away along a long horizon path) and Mie scattering from aerosols, which is wavelength-neutral and forms the bright haze around the sun. Real-time implementations integrate these along the view ray through a model of air density falling off with altitude; modern engines precompute the integrals into lookup tables (Bruneton-style precomputed atmospheric scattering) so a full planetary atmosphere costs a couple of texture fetches per pixel. Simpler engines approximate the depth-cue part with distance fog blended toward a sky color, which captures aerial perspective if not the physics.",
     relatedTermIds: ["specular-vs-diffuse", "hdr", "tone-mapping", "depth-buffer"],
-    demo: "atmosphere-fog",
+    demos: ["atmosphere-fog"],
   },
   {
     id: "mesh-simplification",

@@ -7,7 +7,7 @@ import "@esri/calcite-components/components/calcite-icon";
 import "@esri/calcite-components/components/calcite-chip";
 import "@esri/calcite-components/components/calcite-button";
 
-const playgroundCount = new Set(terms.filter((t) => t.demo).map((t) => t.demo)).size;
+const playgroundCount = new Set(terms.flatMap((t) => t.demos)).size;
 
 export function HomePage(): React.JSX.Element {
   usePageMeta(
@@ -53,7 +53,7 @@ export function HomePage(): React.JSX.Element {
         {categories.map((category) => {
           const categoryTerms = termsByCategory.get(category.id) ?? [];
           const done = categoryTerms.filter((t) => understood.has(t.id)).length;
-          const demos = categoryTerms.filter((t) => t.demo).length;
+          const demos = categoryTerms.filter((t) => t.demos.length > 0).length;
           const firstTerm = categoryTerms[0];
           return (
             <Link

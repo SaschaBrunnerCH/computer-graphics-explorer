@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const lighting: Term[] = [
+export const lighting: TermInput[] = [
   {
     id: "direct-vs-indirect-lighting",
     title: "Direct vs Indirect Lighting",
@@ -21,7 +21,7 @@ export const lighting: Term[] = [
     deeperDive:
       "Mathematically, the rendering equation splits incoming light at a point into emission, direct illumination (one segment from a light), and indirect illumination (light that has scattered at least once). Rasterizers evaluate direct light analytically per light per pixel, then approximate the indirect term with ambient constants, baked lightmaps, light probes, or screen-space tricks. Path tracers handle both terms uniformly by following bounces, which is why their soft, color-bleeding look is so hard to fake — the indirect term is recursive and touches the whole scene.",
     relatedTermIds: ["global-illumination", "path-tracing", "ambient-occlusion", "light-types"],
-    demo: "global-illumination",
+    demos: ["global-illumination"],
   },
   {
     id: "global-illumination",
@@ -49,7 +49,7 @@ export const lighting: Term[] = [
       "light-baking",
       "ambient-occlusion",
     ],
-    demo: "global-illumination",
+    demos: ["global-illumination"],
   },
   {
     id: "radiosity",
@@ -123,7 +123,7 @@ export const lighting: Term[] = [
       "depth-buffer",
       "normal-vectors",
     ],
-    demo: "ssao",
+    demos: ["ssao"],
   },
   {
     id: "light-types",
@@ -219,7 +219,7 @@ export const lighting: Term[] = [
     deeperDive:
       "The technique inherits all the limits of a depth texture. Limited resolution and depth precision cause shadow acne — surfaces incorrectly self-shadowing in stripe patterns — which is countered with a depth bias (plus slope-scaled bias for grazing angles); too much bias detaches shadows from their casters, the 'peter-panning' artifact. A single map can't cover a large scene at useful resolution, so cascaded shadow maps (CSM) split the view frustum into distance bands, each with its own map — near cascades get fine detail, far ones get coverage — with visible quality steps at cascade boundaries. Filtering (PCF, VSM) softens the hard binary test into smoother penumbra-like edges. Experiment with bias and resolution in the playground to produce acne and peter-panning on demand.",
     relatedTermIds: ["depth-buffer", "soft-vs-hard-shadows", "light-types", "frame-buffer"],
-    demo: "shadows",
+    demos: ["shadows"],
   },
   {
     id: "soft-vs-hard-shadows",
@@ -241,6 +241,6 @@ export const lighting: Term[] = [
     deeperDive:
       "Physically, the penumbra is the region where the light source is only partially blocked, and its width grows with light size and caster-to-receiver distance. Plain shadow mapping yields hard edges because the depth test is binary, so engines fake softness: percentage-closer filtering (PCF) averages several shadow-map tests for a uniform blur, while percentage-closer soft shadows (PCSS) first estimates average blocker distance per pixel to scale the filter radius — approximating true contact-hardening behavior at real cost. Ray-traced shadows get it right by shooting multiple rays toward points across the light's actual area, with denoising to tame the resulting noise.",
     relatedTermIds: ["shadow-mapping", "light-types", "ambient-occlusion", "ray-tracing"],
-    demo: "shadows",
+    demos: ["shadows"],
   },
 ];

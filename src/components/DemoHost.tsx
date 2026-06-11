@@ -27,10 +27,15 @@ class DemoErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 }
 
-export function DemoHost({ demoKey }: { demoKey: string | undefined }): React.JSX.Element {
-  const Playground = demoKey ? playgrounds[demoKey] : undefined;
+/**
+ * Renders every playground a term declares, in order — many terms pair a
+ * low-level demo with a real-world ArcGIS scene. Each playground loads
+ * lazily and fails independently.
+ */
+export function DemoHost({ demoKeys }: { demoKeys: readonly string[] }): React.JSX.Element {
+  const available = demoKeys.filter((key) => playgrounds[key]);
 
-  if (!Playground) {
+  if (available.length === 0) {
     return (
       <calcite-notice open kind="info" icon="magic-wand" className="my-4">
         <div slot="title">Playground coming soon</div>
@@ -43,19 +48,26 @@ export function DemoHost({ demoKey }: { demoKey: string | undefined }): React.JS
   }
 
   return (
-    <DemoErrorBoundary>
-      <Suspense
-        fallback={
-          <div
-            className="flex min-h-64 items-center justify-center"
-            aria-label="Loading playground"
-          >
-            <calcite-loader label="Loading playground" />
-          </div>
-        }
-      >
-        <Playground />
-      </Suspense>
-    </DemoErrorBoundary>
+    <div className="flex flex-col gap-6">
+      {available.map((key) => {
+        const Playground = playgrounds[key];
+        return (
+          <DemoErrorBoundary key={key}>
+            <Suspense
+              fallback={
+                <div
+                  className="flex min-h-64 items-center justify-center"
+                  aria-label="Loading playground"
+                >
+                  <calcite-loader label="Loading playground" />
+                </div>
+              }
+            >
+              <Playground />
+            </Suspense>
+          </DemoErrorBoundary>
+        );
+      })}
+    </div>
   );
 }

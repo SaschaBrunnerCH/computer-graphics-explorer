@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const texturesSampling: Term[] = [
+export const texturesSampling: TermInput[] = [
   {
     id: "texture-mapping",
     title: "Texture Mapping",
@@ -25,7 +25,7 @@ export const texturesSampling: Term[] = [
       "albedo",
       "normal-mapping",
     ],
-    demo: "texture-filtering",
+    demos: ["texture-filtering"],
   },
   {
     id: "uv-coordinates",
@@ -68,7 +68,7 @@ export const texturesSampling: Term[] = [
     deeperDive:
       "The mip chain is a precomputed answer to a sampling problem: when one screen pixel covers many texture pixels (texels), correct filtering would require averaging all of them every frame. Mips bake that averaging in advance — level n is a filtered half-resolution copy of level n−1, costing only 33% extra memory in total. The GPU picks the level from the on-screen size of the texture's footprint, using screen-space derivatives of the UVs, and trilinear filtering blends the two nearest levels to hide the switch. The name comes from the Latin 'multum in parvo' — much in little.",
     relatedTermIds: ["texture-filtering", "texture-mapping", "moire-patterns", "level-of-detail"],
-    demo: "texture-filtering",
+    demos: ["texture-filtering"],
   },
   {
     id: "texture-filtering",
@@ -101,7 +101,7 @@ export const texturesSampling: Term[] = [
       "anti-aliasing",
       "moire-patterns",
     ],
-    demo: "texture-filtering",
+    demos: ["texture-filtering"],
   },
   {
     id: "texture-atlas",
@@ -156,7 +156,7 @@ export const texturesSampling: Term[] = [
       "frame-buffer",
       "mipmapping",
     ],
-    demo: "anti-aliasing",
+    demos: ["anti-aliasing"],
   },
   {
     id: "moire-patterns",
@@ -178,6 +178,6 @@ export const texturesSampling: Term[] = [
     deeperDive:
       "Moiré is aliasing with a recognizable face. The Nyquist limit says a sampled signal can only represent frequencies up to half the sampling rate; a distant checkerboard pushes texture detail far past what one sample per pixel can capture, and the excess frequency folds back ('aliases') into a low-frequency impostor — the visible ripples. The cure is to remove the unrepresentable frequencies before sampling: mipmapping does exactly that by pre-blurring the texture to match its on-screen footprint, trilinear filtering hides the level transitions, and anisotropic filtering handles the grazing-angle case where the footprint is highly elongated. Geometric edges alias by the same math, which is why anti-aliasing and mipmapping are two answers to one underlying problem.",
     relatedTermIds: ["mipmapping", "texture-filtering", "anti-aliasing", "texture-mapping"],
-    demo: "texture-filtering",
+    demos: ["texture-filtering"],
   },
 ];

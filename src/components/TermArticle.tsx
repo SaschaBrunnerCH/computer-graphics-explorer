@@ -62,7 +62,7 @@ export function TermArticle({ term }: { term: Term }): React.JSX.Element {
       </p>
 
       <section aria-label="Interactive playground" className="my-8">
-        <DemoHost demoKey={term.demo} />
+        <DemoHost demoKeys={term.demos} />
       </section>
 
       {term.spotItInTheWild.length > 0 && (

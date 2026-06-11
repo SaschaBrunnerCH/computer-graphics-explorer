@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const shadingMaterials: Term[] = [
+export const shadingMaterials: TermInput[] = [
   {
     id: "shading-models",
     title: "Shading (Flat / Gouraud / Phong)",
@@ -21,7 +21,7 @@ export const shadingMaterials: Term[] = [
     deeperDive:
       "Technically the trio differs in interpolation. Flat: one normal per face, lighting evaluated once. Gouraud: lighting evaluated at each vertex, resulting colors interpolated across the triangle — cheap, but specular highlights smaller than a triangle get smeared or vanish. Phong shading: the normal vector is interpolated across the triangle and lighting is evaluated per fragment, capturing tight highlights correctly. (Don't confuse Phong shading with the Phong reflection model — the ambient/diffuse/specular lighting formula — though both are named after Bui Tuong Phong.) Modern fragment shaders make per-pixel shading the default; try toggling all three in the playground.",
     relatedTermIds: ["shader", "normal-vectors", "specular-vs-diffuse", "rasterization"],
-    demo: "shading-models",
+    demos: ["shading-models"],
   },
   {
     id: "shader",
@@ -96,7 +96,7 @@ export const shadingMaterials: Term[] = [
       "image-based-lighting",
       "albedo",
     ],
-    demo: "pbr-materials",
+    demos: ["pbr-materials"],
   },
   {
     id: "metalness-roughness",
@@ -118,7 +118,7 @@ export const shadingMaterials: Term[] = [
     deeperDive:
       "Metalness switches between two physical regimes. Dielectrics (metalness 0): base color feeds the diffuse term, and specular reflectance is a fixed ~0.04 (4%) white. Metals (metalness 1): there is no diffuse term at all — base color instead becomes the specular reflectance, which is why gold's reflections are golden. Roughness controls the width of the microfacet distribution (typically as GGX 'alpha' = roughness squared, a perceptually even remapping): low roughness gives tight, bright highlights and sharp reflections; high roughness spreads the same energy into a broad, dim sheen. The alternative specular/glossiness workflow stores explicit specular color instead but allows physically impossible combinations, which is why metal-rough won.",
     relatedTermIds: ["pbr", "albedo", "brdf", "fresnel-effect"],
-    demo: "pbr-materials",
+    demos: ["pbr-materials"],
   },
   {
     id: "albedo",
@@ -161,7 +161,7 @@ export const shadingMaterials: Term[] = [
     deeperDive:
       "Diffuse reflection comes from light penetrating slightly, scattering among pigment particles, and re-exiting in random directions — well approximated by the Lambertian model, where brightness depends only on the angle between surface normal and light (the cosine term `N·L`), not the viewer. Specular reflection happens right at the surface boundary and is view-dependent: classic models put a highlight around the mirror direction (Phong, Blinn-Phong), while modern microfacet models derive its shape from roughness statistics. In PBR the two are coupled by energy conservation — light that reflects specularly isn't available to scatter diffusely — and metals drop the diffuse part entirely.",
     relatedTermIds: ["shading-models", "brdf", "fresnel-effect", "normal-vectors"],
-    demo: "shading-models",
+    demos: ["shading-models"],
   },
   {
     id: "fresnel-effect",

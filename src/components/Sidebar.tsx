@@ -9,27 +9,31 @@ import "@esri/calcite-components/components/calcite-accordion";
 import "@esri/calcite-components/components/calcite-accordion-item";
 import "@esri/calcite-components/components/calcite-icon";
 
-function PlaygroundMarker({ demo }: { demo: string | undefined }): React.JSX.Element | null {
-  if (!demo) return null;
-  if (arcgisPlaygrounds.has(demo)) {
-    return (
-      <img
-        src={arcgisSdkLogo}
-        alt=""
-        title="ArcGIS Maps SDK playground"
-        aria-label="Has an ArcGIS Maps SDK playground"
-        className="h-3.5 w-3.5 shrink-0"
-      />
-    );
-  }
+function PlaygroundMarker({ demos }: { demos: readonly string[] }): React.JSX.Element | null {
+  if (demos.length === 0) return null;
+  const hasArcgis = demos.some((d) => arcgisPlaygrounds.has(d));
+  const hasOther = demos.some((d) => !arcgisPlaygrounds.has(d));
   return (
-    <calcite-icon
-      icon="play"
-      scale="s"
-      title="Interactive playground"
-      aria-label="Has an interactive playground"
-      style={{ color: "var(--calcite-color-brand)" }}
-    />
+    <>
+      {hasOther && (
+        <calcite-icon
+          icon="play"
+          scale="s"
+          title="Interactive playground"
+          aria-label="Has an interactive playground"
+          style={{ color: "var(--calcite-color-brand)" }}
+        />
+      )}
+      {hasArcgis && (
+        <img
+          src={arcgisSdkLogo}
+          alt=""
+          title="ArcGIS Maps SDK playground"
+          aria-label="Has an ArcGIS Maps SDK playground"
+          className="h-3.5 w-3.5 shrink-0"
+        />
+      )}
+    </>
   );
 }
 
@@ -67,7 +71,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }): React.JSX.
                       >
                         <DifficultyBadge difficulty={term.difficulty} />
                         <span className="min-w-0 flex-1 truncate">{term.title}</span>
-                        <PlaygroundMarker demo={term.demo} />
+                        <PlaygroundMarker demos={term.demos} />
                         {understood.has(term.id) && (
                           <calcite-icon
                             icon="check-circle"

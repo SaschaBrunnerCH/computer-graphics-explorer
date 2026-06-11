@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const geometryScene: Term[] = [
+export const geometryScene: TermInput[] = [
   {
     id: "vertex",
     title: "Vertex",
@@ -138,7 +138,7 @@ export const geometryScene: Term[] = [
     deeperDive:
       "The frustum is fully described by the projection matrix: field of view and aspect ratio set the pyramid's spread, near and far planes cap it. Its six bounding planes (left, right, top, bottom, near, far) are what culling tests objects against. Depth-buffer precision is distributed between near and far non-linearly — most of it bunches up near the near plane — which is why globe-scale viewers like a SceneView adjust the near plane dynamically as you zoom from orbit down to street level.",
     relatedTermIds: ["frustum-culling", "transformation-matrices", "depth-buffer"],
-    demo: "frustum-culling",
+    demos: ["frustum-culling"],
   },
   {
     id: "frustum-culling",
@@ -166,7 +166,7 @@ export const geometryScene: Term[] = [
       "scene-graph",
       "draw-calls-batching",
     ],
-    demo: "frustum-culling",
+    demos: ["frustum-culling"],
   },
   {
     id: "backface-culling",
@@ -215,7 +215,7 @@ export const geometryScene: Term[] = [
       "terrain-rendering",
       "frustum-culling",
     ],
-    demo: "lod",
+    demos: ["lod"],
   },
   {
     id: "tessellation",

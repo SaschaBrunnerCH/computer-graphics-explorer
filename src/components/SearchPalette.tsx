@@ -142,10 +142,12 @@ export function SearchPalette({
                     }
                   >
                     {categoryById.get(term.category)?.title}
-                    {term.demo ? " · interactive playground" : ""}
+                    {term.demos.length > 0 ? " · interactive playground" : ""}
                   </span>
                 </span>
-                {term.demo && <calcite-icon icon="play" scale="s" aria-label="Has playground" />}
+                {term.demos.length > 0 && (
+                  <calcite-icon icon="play" scale="s" aria-label="Has playground" />
+                )}
               </button>
             </li>
           ))}

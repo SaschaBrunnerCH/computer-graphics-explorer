@@ -37,11 +37,17 @@ export const termSchema = z.object({
   /** Optional "go deeper" technical version (plain text, may contain `code` backticks) */
   deeperDive: z.string().optional(),
   relatedTermIds: z.array(z.string()).default([]),
-  /** Key into the playground registry; terms without one show a friendly coming-soon state */
-  demo: z.string().optional(),
+  /**
+   * Keys into the playground registry, rendered in order on the term page.
+   * Many terms pair a low-level demo with a real-world ArcGIS scene.
+   * Terms with none show a friendly coming-soon state.
+   */
+  demos: z.array(z.string()).default([]),
 });
 
 export type Term = z.infer<typeof termSchema>;
+/** Author-facing shape (fields with defaults are optional); validated into Term. */
+export type TermInput = z.input<typeof termSchema>;
 
 export interface Category {
   id: CategoryId;

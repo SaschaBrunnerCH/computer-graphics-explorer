@@ -1,11 +1,11 @@
-# Phase 4 — Geometry, Pipeline & GIS Playgrounds (10 demos)
+# Phase 4 — Geometry, Pipeline & GIS Playgrounds (12 demos + 1 stretch)
 
 Covers the remaining **Geometry & Scene** and **Real-Time & GIS** terms plus the
-pipeline overview. Same conventions as phase 2/3. ArcGIS demos follow the
-established keyless pattern (basemap `osm`, `world-elevation`, public scene
-layers — verify any new service token-free with curl before using). Do **not**
-guess ArcGIS v5 APIs: confirm against the installed typings or the Map
-Components reference (see DECISIONS.md for known v5 gotchas).
+pipeline overview. Same conventions and **ArcGIS-everywhere policy** as phase 2/3.
+ArcGIS demos follow the established keyless pattern (basemap `osm`,
+`world-elevation`, public scene layers — verify any new service token-free with
+curl before using). Do **not** guess ArcGIS v5 APIs: confirm against the installed
+typings or the Map Components reference (see DECISIONS.md for known v5 gotchas).
 
 | # | Demo key | Terms served | Renderer | Idea |
 |---|----------|--------------|----------|------|
@@ -19,20 +19,27 @@ Components reference (see DECISIONS.md for known v5 gotchas).
 | 8 | `scene-streaming` | i3s-3d-tiles, mesh-simplification, occlusion-culling | arcgis | A large public SceneLayer (verified keyless) streaming in while flying between two presets; caption streams live `view.updating` + memory/feature stats if exposed. Explains screen-space-error-driven refinement; occlusion/HLOD explained in captions where no honest toggle exists. |
 | 9 | `edge-rendering` | edge-rendering | arcgis | Buildings SceneLayer with a renderer applying `edges`: segmented none / solid / sketch, size + color controls. Verify `MeshSymbol3D`/`FillSymbol3DLayer` edges API in v5 typings; OSM buildings layer accepts a custom renderer (verify; fall back to another public layer if not). |
 | 10 | `gpu-race` | gpu-vs-cpu-rendering, webgl-vs-webgpu | diagrams + webgl | Same particle/triangle workload twice: CPU canvas loop vs WebGL2, side by side with live ms/frame bars and a particle-count slider — watch the CPU lane fall over first. Caption + a small static table carry the WebGL→WebGPU story (capability comparison; no WebGPU dependency yet). |
+| 11 | `basemap-mips` | texture-mapping, mipmapping (companions) | **arcgis** | Tile pyramids are mip levels in the wild: OSM raster basemap with altitude presets; caption shows the current basemap tile level live while zooming, and explains that the engine swaps sharper tiles exactly the way mipmapping swaps texture levels. Tilted horizon view shows coarser tiles being used in the distance — anisotropy's real-world cousin. |
+| 12 | `gltf-pbr` | pbr, metalness-roughness (companions) | **arcgis** | The spec's original ask: a real glTF mesh inside an `<arcgis-scene>` (Mesh.createFromGLB / glTF on a graphics layer — verify the v5 API). Bundle one small CC0 model (≤ ~1 MB, e.g. a stylized vehicle/helmet) as a static asset — bundled assets don't violate the no-network rule. Camera orbit presets; sun-position slider so PBR responds to real daylight. |
+| S | `scene-frustum` (stretch) | camera-frustum, frustum-culling (companions) | **arcgis** | Two synced scenes: an overview scene renders the other view's live camera frustum as a 3D polygon (rebuild from `view.camera` + fov on `arcgisViewChange`). High effort — attempt only after 1–12 land. |
 
 ## Term data updates
 
-vertex + triangle-mesh + normal-vectors → `mesh-inspector`; transformation-matrices →
-`mvp-matrices`; scene-graph → `scene-graph`; backface-culling → `backface-culling`;
-instancing + draw-calls-batching → `instancing`; render-pipeline + rendering +
-frame-buffer → `pipeline-diagram`; terrain-rendering + elevation-exaggeration →
-`terrain-exaggeration`; i3s-3d-tiles + mesh-simplification + occlusion-culling →
-`scene-streaming`; edge-rendering → `edge-rendering`; gpu-vs-cpu-rendering +
-webgl-vs-webgpu → `gpu-race`.
+Append to `demos: []`: vertex + triangle-mesh + normal-vectors → `mesh-inspector`;
+transformation-matrices → `mvp-matrices`; scene-graph → `scene-graph`;
+backface-culling → `backface-culling`; instancing + draw-calls-batching →
+`instancing`; render-pipeline + rendering + frame-buffer → `pipeline-diagram`;
+terrain-rendering + elevation-exaggeration → `terrain-exaggeration`;
+i3s-3d-tiles + mesh-simplification + occlusion-culling → `scene-streaming`;
+edge-rendering → `edge-rendering`; gpu-vs-cpu-rendering + webgl-vs-webgpu →
+`gpu-race`; texture-mapping + mipmapping → append `basemap-mips`; pbr +
+metalness-roughness → append `gltf-pbr`; displacement-mapping → append
+`terrain-exaggeration` (cross-phase companion from phase 2); camera-frustum +
+frustum-culling → append `scene-frustum` if the stretch lands.
 
 After phase 4 every one of the 66 terms has a live playground or interactive
-diagram. Remaining stretch ideas (not scheduled): a real WebGPU compute demo once
-support is broad enough, and a picture-in-picture camera view for frustum culling.
+diagram, and ~14 ArcGIS scenes appear across ~24 terms. Remaining stretch ideas
+(not scheduled): a real WebGPU compute demo once support is broad enough.
 
 ## Risks / notes
 

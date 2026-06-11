@@ -1,6 +1,6 @@
-import type { Term } from "../types";
+import type { TermInput } from "../types";
 
-export const postProcessing: Term[] = [
+export const postProcessing: TermInput[] = [
   {
     id: "tone-mapping",
     title: "Tone Mapping",

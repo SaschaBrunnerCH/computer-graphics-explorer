@@ -5,13 +5,17 @@ Implementation plan for the spec in `docs/specs.md`. Executed autonomously; judg
 ## Roadmap — next phases
 
 Phase 1 (everything below) is complete: 12 playgrounds live, 20 of 66 terms covered.
-The remaining 46 terms are planned as three batches of ~10 playgrounds each:
+The remaining 46 terms are planned as three batches of 11–12 playgrounds each.
+**Standing policy:** integrate `<arcgis-scene>` wherever a concept can honestly be
+shown with a real-world scene — terms support multiple playgrounds, so ArcGIS
+companions sit alongside low-level demos (see each plan's header).
 
-- [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) (normal/bump/displacement mapping, Fresnel, BRDF explorer, IBL, light types, baking, shader lab, UV unwrap)
-- [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) (2D ray lab, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator)
-- [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) (mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race)
+- [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) (normal/bump/displacement mapping, Fresnel + ArcGIS water-Fresnel, BRDF explorer, IBL, light types + sun companion, baking, shader lab, UV unwrap)
+- [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) (2D ray lab + ArcGIS scene-picking, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator)
+- [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) (mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race, ArcGIS basemap-mips + glTF-PBR, synced-frustum stretch)
 
-After phase 4, all 66 terms have a live playground or interactive diagram.
+After phase 4, all 66 terms have a live playground or interactive diagram, with
+~14 ArcGIS scenes across ~24 terms.
 
 ## Milestones (phase 1)
 

@@ -39,8 +39,9 @@ No API key needed for development — ArcGIS demos fall back to keyless services
 2. Register it in `src/playgrounds/registry.ts` with `lazy(() => import(...))`
    (one line). Lazy loading is mandatory — ArcGIS and Three.js must not land in
    the entry bundle.
-3. Point a term at it: set `demo: "<your-key>"` in the term data. Several terms
-   may share one demo.
+3. Point a term at it: add your key to the term's `demos: ["<your-key>"]` array.
+   Several terms may share one demo, and one term may show several playgrounds —
+   many pair a low-level demo with a real-world `<arcgis-scene>` companion.
 4. Ground rules: live and parameterized (sliders/toggles that change rendering
    in real time), a one-line caption that updates with state, a working Reset,
    cleanup on unmount, no network fetches beyond the ArcGIS services, and it

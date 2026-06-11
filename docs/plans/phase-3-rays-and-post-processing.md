@@ -1,10 +1,15 @@
-# Phase 3 — Rays & Post-Processing Playgrounds (10 demos)
+# Phase 3 — Rays & Post-Processing Playgrounds (11 demos)
 
 Covers the remaining **Rendering Fundamentals** ray/timing terms and the whole
-**Post-Processing & Effects** category. Same conventions as phase 2 (see
-`phase-2-shading-and-light.md` header). Post-processing demos may use the
-EffectComposer passes that **ship inside three** (`three/examples/jsm/postprocessing/*`)
-— no new dependencies.
+**Post-Processing & Effects** category. Same conventions and **ArcGIS-everywhere
+policy** as phase 2 (see `phase-2-shading-and-light.md` header). Post-processing
+demos may use the EffectComposer passes that **ship inside three**
+(`three/examples/jsm/postprocessing/*`) — no new dependencies.
+
+Note on ArcGIS coverage in this phase: the post-processing operators (bloom, DoF,
+tone mapping, motion blur, gamma) expose no runtime controls in the SDK, so per the
+honest-controls rule they stay r3f/canvas-only. The ray family gets a real-world
+ArcGIS companion (#11).
 
 | # | Demo key | Terms served | Renderer | Idea |
 |---|----------|--------------|----------|------|
@@ -18,13 +23,15 @@ EffectComposer passes that **ship inside three** (`three/examples/jsm/postproces
 | 8 | `gamma` | gamma-correction, color-spaces | diagrams (canvas 2D) | Three-part panel: (a) linear vs sRGB-encoded gradient ramps, (b) the classic 50%-gray checkerboard comparison, (c) blend-two-colors in linear vs in sRGB (the red+green = muddy brown bug). Gamma slider + "blend in linear" toggle. |
 | 9 | `ssr` | screen-space-reflections | r3f | Glossy floor with drei `MeshReflectorMaterial` + objects that can slide off-screen (position slider). The lesson is the **failure mode**: as an object leaves the frame its reflection dies — caption explains that screen-space techniques only know what the screen knows. |
 | 10 | `frame-time` | frame-rate, double-buffering | diagrams (canvas 2D) | Frame-budget simulator: artificial work-per-frame slider, live frame-time graph (last 120 frames), fps readout, percentile marker. "Simulate vsync" toggle snaps presentation to 60 Hz multiples; a drawn tear-line illustration for vsync-off; triple-buffering note in caption. |
+| 11 | `scene-picking` | ray-casting (companion to #1) | **arcgis** | Real-world ray casting: click anywhere in a Zurich buildings scene → `view.hitTest`, highlight the hit feature, and draw the camera→hit ray as a 3D line graphic with distance readout in the caption. Toggle "show ray". Picking *is* ray casting — same machinery the term page describes. Keyless OSM buildings layer (already verified). |
 
 ## Term data updates
 
-ray-casting + ray-tracing → `ray-lab`; path-tracing → `path-tracer`; radiosity →
-`radiosity`; tone-mapping + hdr → `tone-mapping`; bloom → `bloom`; depth-of-field →
-`depth-of-field`; motion-blur → `motion-blur`; gamma-correction + color-spaces →
-`gamma`; screen-space-reflections → `ssr`; frame-rate + double-buffering → `frame-time`.
+Append to `demos: []`: ray-casting → `ray-lab` **and** `scene-picking`; ray-tracing →
+`ray-lab`; path-tracing → `path-tracer`; radiosity → `radiosity`; tone-mapping +
+hdr → `tone-mapping`; bloom → `bloom`; depth-of-field → `depth-of-field`;
+motion-blur → `motion-blur`; gamma-correction + color-spaces → `gamma`;
+screen-space-reflections → `ssr`; frame-rate + double-buffering → `frame-time`.
 
 `rendering` and `frame-buffer` stay demo-less for now (the tour + cross-links carry
 them); candidates for a phase-4 stretch goal.
