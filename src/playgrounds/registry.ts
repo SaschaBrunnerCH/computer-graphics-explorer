@@ -21,6 +21,18 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "atmosphere-fog": lazy(() => import("./arcgis/AtmosphereFog")),
   lod: lazy(() => import("./arcgis/Lod")),
   ssao: lazy(() => import("./arcgis/Ssao")),
+  // Phase 2 — Shading & Light (docs/plans/phase-2-shading-and-light.md)
+  "normal-mapping": lazy(() => import("./r3f/NormalMapping")),
+  displacement: lazy(() => import("./r3f/Displacement")),
+  fresnel: lazy(() => import("./r3f/Fresnel")),
+  albedo: lazy(() => import("./r3f/Albedo")),
+  ibl: lazy(() => import("./r3f/Ibl")),
+  "light-types": lazy(() => import("./r3f/LightTypes")),
+  "light-baking": lazy(() => import("./r3f/LightBaking")),
+  "shader-lab": lazy(() => import("./webgl/ShaderLab")),
+  "brdf-explorer": lazy(() => import("./diagrams/BrdfExplorer")),
+  "uv-unwrap": lazy(() => import("./diagrams/UvUnwrap")),
+  "water-fresnel": lazy(() => import("./arcgis/WaterFresnel")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -29,4 +41,5 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "atmosphere-fog",
   "lod",
   "ssao",
+  "water-fresnel",
 ]);

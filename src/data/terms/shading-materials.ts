@@ -42,6 +42,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Shaders are written in GLSL (OpenGL/WebGL), HLSL (DirectX), or WGSL (WebGPU) and compiled by the driver to GPU machine code. The vertex shader's job is the model→world→view→clip transform plus passing attributes downstream; the rasterizer interpolates those attributes; the fragment shader consumes them to evaluate lighting, sample textures, and output color. The execution model is SIMD-like: threads run in lockstep groups (warps/wavefronts), which is why divergent branching is expensive. Compute shaders expose the same hardware for arbitrary work — culling, skinning, particle simulation — with explicit control over thread groups and shared memory.",
+    demos: ["shader-lab"],
     relatedTermIds: [
       "render-pipeline",
       "shading-models",
@@ -68,6 +69,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Formally, the BRDF f(l, v) gives the ratio of reflected radiance toward view direction v to incoming irradiance from light direction l, in units of 1/steradian. Physically plausible BRDFs obey energy conservation (never reflect more than arrives) and Helmholtz reciprocity (swapping l and v gives the same value). A perfectly diffuse (Lambertian) surface has a constant BRDF; real-time engines typically pair that with a microfacet specular term like Cook-Torrance, where a statistical distribution of tiny mirror facets (GGX is the modern standard) produces roughness-controlled highlights. The rendering equation integrates the BRDF against incoming light over the whole hemisphere — which is exactly what path tracers sample.",
+    demos: ["brdf-explorer"],
     relatedTermIds: ["pbr", "specular-vs-diffuse", "metalness-roughness", "path-tracing"],
   },
   {
@@ -139,6 +141,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "In the metalness-roughness workflow the base color map is overloaded: for dielectrics it is the diffuse albedo; for metals it becomes the specular reflectance color. Physically plausible albedo values are bounded — nothing real is 0% or 100% reflective, so PBR guides recommend roughly 30–240 in 8-bit sRGB (charcoal sits near 0.04 linear, fresh snow near 0.9). Albedo textures are authored in sRGB and must be converted to linear space before lighting math, while data maps like roughness and normals stay linear — a classic source of 'washed out' material bugs.",
+    demos: ["albedo"],
     relatedTermIds: ["pbr", "metalness-roughness", "texture-mapping", "gamma-correction"],
   },
   {
@@ -182,6 +185,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "The full Fresnel equations follow from light crossing a boundary between materials of different refractive indices; real-time graphics uses Schlick's approximation: `F = F0 + (1 - F0) * (1 - cos θ)^5`, where F0 is the reflectance at normal incidence and θ the angle between view and surface normal. For dielectrics F0 is around 0.02–0.05 (water 0.02, plastic 0.04, gemstones higher); for metals F0 is high and colored — this is exactly the value the metalness workflow derives from base color. Because F approaches 1 at grazing angles for everything, even rough concrete shows a faint horizon sheen. Fresnel-style view-angle terms also drive rim lighting, water shaders, and the reflectivity falloff in screen-space reflections.",
+    demos: ["fresnel", "water-fresnel"],
     relatedTermIds: ["pbr", "specular-vs-diffuse", "brdf", "screen-space-reflections"],
   },
   {
@@ -203,6 +207,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "A tangent-space normal map stores unit normals relative to the surface's local frame (tangent, bitangent, normal), remapped from [-1, 1] to RGB [0, 1] — hence the dominant blue, since 'unperturbed' (0, 0, 1) encodes as (128, 128, 255). The fragment shader rebuilds the TBN matrix from interpolated vertex data, transforms the sampled normal into world space, and feeds it to lighting. Maps are typically baked by ray-casting from a low-poly mesh to a multi-million-poly sculpt, capturing its detail. Limits: silhouettes stay polygonal, there's no self-occlusion or parallax, and at grazing angles the illusion thins — that's where parallax occlusion or displacement mapping take over. Normal maps are data, not color: store them linearly, never as sRGB.",
+    demos: ["normal-mapping"],
     relatedTermIds: [
       "normal-vectors",
       "bump-mapping",
@@ -230,6 +235,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Jim Blinn's original formulation perturbs the normal using the height field's partial derivatives: the gradient of the height texture tilts the geometric normal toward downhill, with a strength factor scaling the effect. In practice shaders sample the height map at neighboring texels (or use hardware derivatives) to estimate the gradient per fragment. Normal mapping is effectively the precomputed version — bake those derivatives once into an RGB map instead of computing them at runtime — which gives better quality and lets detail come from a sculpt rather than just a height field. The shared limitation stands: silhouettes, shadows, and parallax don't respond, because the geometry never changed.",
+    demos: ["normal-mapping"],
     relatedTermIds: ["normal-mapping", "displacement-mapping", "normal-vectors", "texture-mapping"],
   },
   {
@@ -251,6 +257,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Real-time displacement typically runs in the tessellation stages: the hull/control shader decides subdivision density (often screen-space adaptive, so nearby patches get more triangles), the tessellator generates vertices, and the domain shader samples the height map and offsets each new vertex along the normal. Vertex-shader displacement on a pre-subdivided mesh is the simpler WebGL-friendly route — three.js exposes it directly as `displacementMap`. Offline renderers micro-displace down to sub-pixel polygons (REYES-style micropolygons). Common pitfalls: cracks along UV seams and patch edges where displaced neighbors disagree, normals needing recomputation after displacement, and shadow/physics meshes going out of sync with the displaced visual mesh. A standard hybrid keeps coarse shape in displacement and fine grain in a normal map.",
+    demos: ["displacement"],
     relatedTermIds: [
       "tessellation",
       "normal-mapping",

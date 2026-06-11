@@ -144,6 +144,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "The types differ in how direction and attenuation are computed per shaded point. Directional lights have constant direction and no falloff; point lights attenuate with distance (physically by inverse square, often artistically clamped) and need six-faced cube shadow maps; spot lights add an angular falloff between inner and outer cone angles and shadow-map cheaply from a single frustum. Area lights are the physically honest ones — real sources have size — but require integrating over the emitter, so real-time engines use approximations like linearly transformed cosines. Light count matters too: forward renderers pay per light per pixel, which pushed engines toward clustered and deferred lighting.",
+    demos: ["light-types", "shadows"],
     relatedTermIds: [
       "shadow-mapping",
       "soft-vs-hard-shadows",
@@ -170,6 +171,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "IBL evaluates the rendering equation with the environment map as the incoming radiance. Doing that integral per pixel is too slow, so engines precompute it: the diffuse term becomes an irradiance map (the environment convolved with a cosine lobe), and the specular term is pre-filtered into mipmap levels of increasing roughness, combined at runtime with a BRDF lookup table — the 'split-sum' approximation popularized by Unreal. Source images are HDR (the sun must be thousands of times brighter than the sky for correct results), and local light probes blend multiple captured environments so reflections roughly match an object's position indoors.",
+    demos: ["ibl"],
     relatedTermIds: ["pbr", "hdr", "specular-vs-diffuse", "fresnel-effect", "global-illumination"],
   },
   {
@@ -191,6 +193,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "A baker path-traces or radiosity-solves the static scene and writes incoming light into a dedicated, non-overlapping UV layout (a second UV channel) per object. Variants store different things: full lightmaps (all light, fully static), indirect-only lightmaps (combined with real-time direct light and shadows), directional lightmaps that preserve a dominant light direction so normal maps still respond, and light probes — points sampling the baked light field so dynamic objects moving through the scene pick up plausible lighting. Classic failure modes are seams at UV chart boundaries, light leaks from too-low lightmap resolution, and the visible mismatch between crisp dynamic objects and soft baked surroundings.",
+    demos: ["light-baking"],
     relatedTermIds: [
       "global-illumination",
       "radiosity",

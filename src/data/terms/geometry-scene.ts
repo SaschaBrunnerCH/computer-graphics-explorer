@@ -236,6 +236,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "In the hardware pipeline, two extra shader stages surround a fixed-function tessellator: the hull (control) shader decides per-patch tessellation factors — typically from screen-space edge length — and the domain (evaluation) shader positions each generated vertex, often sampling a displacement map. Crack-free results demand matching factors along shared edges. Mesh shaders are increasingly replacing this fixed scheme with a more flexible compute-like model, and the term also covers CPU-side meanings: subdivision surfaces (Catmull-Clark) in modeling, and triangulating polygons — like building footprints — into renderable meshes.",
+    demos: ["displacement"],
     relatedTermIds: [
       "triangle-mesh",
       "displacement-mapping",
