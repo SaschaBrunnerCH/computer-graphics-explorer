@@ -11,4 +11,14 @@ import { lazy, type ComponentType, type LazyExoticComponent } from "react";
 export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "shading-models": lazy(() => import("./r3f/ShadingModels")),
   "depth-buffer": lazy(() => import("./webgl/DepthBuffer")),
+  shadows: lazy(() => import("./arcgis/Shadows")),
+  "global-illumination": lazy(() => import("./r3f/GlobalIllumination")),
+  "pbr-materials": lazy(() => import("./r3f/PbrMaterials")),
+  "frustum-culling": lazy(() => import("./r3f/FrustumCulling")),
+  "texture-filtering": lazy(() => import("./r3f/TextureFiltering")),
+  "anti-aliasing": lazy(() => import("./r3f/AntiAliasing")),
+  rasterization: lazy(() => import("./diagrams/Rasterization")),
+  "atmosphere-fog": lazy(() => import("./arcgis/AtmosphereFog")),
+  lod: lazy(() => import("./arcgis/Lod")),
+  ssao: lazy(() => import("./arcgis/Ssao")),
 };
