@@ -22,3 +22,11 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   lod: lazy(() => import("./arcgis/Lod")),
   ssao: lazy(() => import("./arcgis/Ssao")),
 };
+
+/** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
+export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
+  "shadows",
+  "atmosphere-fog",
+  "lod",
+  "ssao",
+]);
