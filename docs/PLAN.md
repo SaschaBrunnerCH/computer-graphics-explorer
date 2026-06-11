@@ -10,7 +10,7 @@ The remaining 46 terms are planned as three batches of 11–12 playgrounds each.
 shown with a real-world scene — terms support multiple playgrounds, so ArcGIS
 companions sit alongside low-level demos (see each plan's header).
 
-- [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) (normal/bump/displacement mapping, Fresnel + ArcGIS water-Fresnel, BRDF explorer, IBL, light types + sun companion, baking, shader lab, UV unwrap)
+- ✅ [Phase 2 — Shading & Light](plans/phase-2-shading-and-light.md) — **complete**: all 11 demos live (normal/bump/displacement mapping, Fresnel + ArcGIS water-Fresnel over Lake Brienz, BRDF explorer, IBL, light types + sun companion, baking, shader lab, UV unwrap); 23 playgrounds total, 33 of 66 terms covered
 - [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) (2D ray lab + ArcGIS scene-picking, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator)
 - [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) (mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race, ArcGIS basemap-mips + glTF-PBR, synced-frustum stretch)
 
