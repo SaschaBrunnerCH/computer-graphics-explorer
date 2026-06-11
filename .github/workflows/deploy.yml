@@ -35,9 +35,12 @@ jobs:
 
       # The API key is optional: the app degrades gracefully without it,
       # so a missing secret must not fail the build.
+      # Bundling the ArcGIS SDK needs more than the runner's default ~2 GB
+      # Node heap, hence the explicit max-old-space-size.
       - run: npm run build
         env:
           VITE_ARCGIS_API_KEY: ${{ secrets.VITE_ARCGIS_API_KEY }}
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
