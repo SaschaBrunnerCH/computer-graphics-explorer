@@ -84,7 +84,7 @@ export default function Shadows(): React.JSX.Element {
   };
 
   const caption = castShadows
-    ? "The sun renders the city into a depth texture (the shadow map); every pixel compares its distance to it. A small depth bias hides stripey shadow acne — too much and shadows detach from their buildings (peter-panning). Scrub the daylight slider to move the sun."
+    ? "The sun — a directional light source — renders the city into a depth texture (the shadow map); every pixel compares its distance to it. A small depth bias hides stripey shadow acne — too much and shadows detach from their buildings (peter-panning). Scrub the daylight slider to move the sun."
     : "Direct shadows are off: buildings look pasted-on and 'floaty', with nothing anchoring them to the ground. That missing contact cue is exactly what shadow mapping restores.";
 
   return (
