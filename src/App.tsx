@@ -1,18 +1,22 @@
-import "@esri/calcite-components/components/calcite-shell";
-import "@esri/calcite-components/components/calcite-navigation";
-import "@esri/calcite-components/components/calcite-navigation-logo";
+import { createHashRouter, RouterProvider } from "react-router-dom";
+import { AppLayout } from "./components/AppLayout";
+import { HomePage } from "./pages/HomePage";
+import { TermPage } from "./pages/TermPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+
+// Hash routing keeps deep links working on GitHub Pages without a 404 fallback.
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "term/:termId", element: <TermPage /> },
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
+]);
 
 export function App(): React.JSX.Element {
-  return (
-    <calcite-shell>
-      <calcite-navigation slot="header">
-        <calcite-navigation-logo
-          heading="Computer Graphics Explorer"
-          description="Interactive glossary & playground for 3D rendering concepts"
-          heading-level="1"
-          slot="logo"
-        ></calcite-navigation-logo>
-      </calcite-navigation>
-    </calcite-shell>
-  );
+  return <RouterProvider router={router} />;
 }

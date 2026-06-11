@@ -9,5 +9,14 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     outDir: "dist",
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes("@esri/calcite") || id.includes("type-fest")) return "calcite";
+          if (/node_modules\/(react|react-dom|react-router|scheduler)\//.test(id)) return "react";
+          return undefined;
+        },
+      },
+    },
   },
 });

@@ -1,4 +1,8 @@
 import { z } from "zod";
+import type { Icon } from "@esri/calcite-components/components/calcite-icon";
+
+/** Calcite's strict icon-name union, derived from the component's `icon` property. */
+export type IconName = NonNullable<Icon["icon"]>;
 
 export const categoryIds = [
   "rendering-fundamentals",
@@ -42,6 +46,6 @@ export type Term = z.infer<typeof termSchema>;
 export interface Category {
   id: CategoryId;
   title: string;
-  icon: string;
+  icon: IconName;
   tagline: string;
 }
