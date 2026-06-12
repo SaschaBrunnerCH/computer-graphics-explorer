@@ -20,6 +20,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "WebGL is a state machine: you bind buffers and textures to global slots and the driver validates everything on every draw call, which makes per-draw CPU cost high. WebGPU replaces this with pre-validated pipeline objects and bind groups — expensive checks happen once at creation, so issuing thousands of draws per frame is far cheaper. It also adds first-class compute shaders (WebGL has none), storage buffers, and render bundles for replaying command sequences. For map engines that stream and process large datasets, the compute capability is as significant as the draw-call savings: terrain processing, culling, and decoding can move onto the GPU.",
+    demos: ["gpu-race"],
     relatedTermIds: ["gpu-vs-cpu-rendering", "draw-calls-batching", "render-pipeline", "shader"],
   },
   {
@@ -41,6 +42,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Overhead comes from state changes: every switch of shader, texture, or buffer between draws costs driver and pipeline work. Batching strategies attack this differently. Static batching pre-merges geometry that shares a material into one vertex buffer. Instancing draws N copies of the same mesh in one call with per-instance transforms — ideal for trees or repeated street furniture. Texture atlases and array textures remove texture switches so more objects can share a batch. Tiled map engines batch naturally: all features in a tile that share a renderer are uploaded as one buffer and drawn together, which is why a city of 100,000 buildings can render with a few hundred draw calls instead of 100,000.",
+    demos: ["instancing"],
     relatedTermIds: ["instancing", "texture-atlas", "gpu-vs-cpu-rendering", "webgl-vs-webgpu"],
   },
   {
@@ -62,6 +64,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Classic approaches: precomputed visibility (PVS) divides a level into cells and stores which cells can see which — great for static indoor games, useless for streamed open worlds. Hardware occlusion queries ask the GPU 'would this bounding box's pixels survive the depth test?' but the answer arrives a frame late, causing pop-in if used naively. The modern favorite is the hierarchical Z-buffer (Hi-Z): render big occluders (or reproject last frame's depth), build a mip pyramid of farthest depths, and test each object's bounds against the appropriate mip level — cheap, GPU-friendly, and a natural fit for GPU-driven pipelines where the GPU culls its own work.",
+    demos: ["scene-streaming"],
     relatedTermIds: ["frustum-culling", "depth-buffer", "backface-culling", "level-of-detail"],
   },
   {
@@ -83,6 +86,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Web-scale engines stream elevation as heightmap tiles in a quadtree: each tile covers a square of the world, and each level down splits it into four tiles with twice the resolution. Tiles are chosen per frame by screen-space error — a tile subdivides when its coarseness would be visible at the current camera distance. Adjacent tiles at different LODs don't share vertices along their border, which causes cracks: thin gaps where the meshes disagree. The standard fixes are skirts (each tile extends a short curtain of triangles downward around its edge, hiding gaps) or stitching (adjusting edge vertices to match the coarser neighbor). Imagery tiles stream through the same quadtree, so texture and geometry detail stay in step.",
+    demos: ["terrain-exaggeration"],
     relatedTermIds: [
       "level-of-detail",
       "displacement-mapping",
@@ -110,6 +114,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Implementation is a vertical scale applied when terrain geometry is generated — heights are multiplied before the mesh is built, so lighting, normals, and draped imagery all follow the exaggerated surface consistently. Pitfalls: exaggeration distorts slope-dependent analysis (a 2× exaggerated 10° slope renders like 20°), and 3D objects placed on the surface must be re-anchored or they float or sink. Choosing a factor is cartographic judgment: regional overviews often use 2–5×, planetary or bathymetric views more, and engineering or line-of-sight work should stay at 1× so measurements remain honest.",
+    demos: ["terrain-exaggeration"],
     relatedTermIds: ["terrain-rendering", "displacement-mapping", "normal-vectors"],
   },
   {
@@ -153,6 +158,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "The workhorse algorithm is iterative edge collapse with quadric error metrics (Garland-Heckbert): every edge gets a cost measuring how far the merged vertex would drift from the original surface's planes, and the cheapest edges collapse first until the triangle budget is met. Production pipelines must simultaneously preserve appearance attributes — UV seams, vertex normals, material boundaries — since a geometrically tiny collapse can still smear a texture. For streamed multi-LOD content, simplification runs per node of the spatial tree, and texture detail is reduced in step with geometry so neither wastes the other's savings. Newer approaches like Nanite sidestep discrete LODs by precomputing a hierarchy of simplified clusters and picking per-cluster detail at render time.",
+    demos: ["scene-streaming"],
     relatedTermIds: ["level-of-detail", "triangle-mesh", "i3s-3d-tiles", "vertex"],
   },
   {
@@ -174,6 +180,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Both are OGC community standards solving the same problem with similar machinery: I3S (Indexed 3D Scene Layers, originated by Esri, serving 'scene layers') and 3D Tiles (originated by Cesium). Each organizes content as a spatial tree — nodes (I3S) or tiles (3D Tiles) with bounding volumes, where children cover the parent's region at higher detail. Traversal is driven by screen-space error: each node stores a geometric error describing how coarse it is, the client projects that error to pixels for the current camera, and refines down the tree until the error is below threshold — distant areas stop at coarse nodes while nearby ones refine deep. Payloads carry compressed meshes and textures (3D Tiles uses glTF with Draco/KTX2 compression; I3S uses similar binary geometry buffers) plus per-feature attributes so individual buildings stay identifiable and queryable. The layer types map onto the tree too: 3D objects, integrated meshes, point clouds, and points are all the same streaming pattern with different payloads.",
+    demos: ["scene-streaming"],
     relatedTermIds: [
       "level-of-detail",
       "mesh-simplification",
@@ -201,6 +208,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Two main implementation families. Geometry-based methods analyze the mesh: an edge is a crease if the angle between its two adjacent face normals exceeds a threshold, and a silhouette if one face points toward the camera and the other away — found edges are extruded into camera-facing ribbons of triangles so they have controllable width. Screen-space methods instead run a post-process edge detector over the depth and normal buffers, drawing a line wherever neighbors differ sharply. The ArcGIS SceneView takes the geometry-based route for SceneLayer and mesh symbology: edge geometry is extracted from the 3D object or building content and rendered as styled lines ('solid' or hand-drawn-looking 'sketch'), with size, color, and transparency controls, and extension-line treatment that keeps edges readable as the camera moves. Geometry-based edges stay crisp under motion; screen-space edges are cheaper and catch everything but inherit the frame buffer's resolution and aliasing.",
+    demos: ["edge-rendering"],
     relatedTermIds: ["normal-vectors", "depth-buffer", "shading-models", "anti-aliasing"],
   },
 ];

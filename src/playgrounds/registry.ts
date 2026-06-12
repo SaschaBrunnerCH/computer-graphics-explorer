@@ -45,6 +45,19 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "depth-of-field": lazy(() => import("./r3f/DepthOfField")),
   ssr: lazy(() => import("./r3f/Ssr")),
   "scene-picking": lazy(() => import("./arcgis/ScenePicking")),
+  // Phase 4 — Geometry, Pipeline & GIS (docs/plans/phase-4-geometry-pipeline-gis.md)
+  "mesh-inspector": lazy(() => import("./r3f/MeshInspector")),
+  "scene-graph": lazy(() => import("./r3f/SceneGraph")),
+  "backface-culling": lazy(() => import("./r3f/BackfaceCulling")),
+  instancing: lazy(() => import("./r3f/Instancing")),
+  "mvp-matrices": lazy(() => import("./r3f/MvpMatrices")),
+  "pipeline-diagram": lazy(() => import("./diagrams/PipelineDiagram")),
+  "gpu-race": lazy(() => import("./diagrams/GpuRace")),
+  "terrain-exaggeration": lazy(() => import("./arcgis/TerrainExaggeration")),
+  "scene-streaming": lazy(() => import("./arcgis/SceneStreaming")),
+  "edge-rendering": lazy(() => import("./arcgis/EdgeRendering")),
+  "basemap-mips": lazy(() => import("./arcgis/BasemapMips")),
+  "gltf-pbr": lazy(() => import("./arcgis/GltfPbr")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -55,4 +68,9 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "ssao",
   "water-fresnel",
   "scene-picking",
+  "terrain-exaggeration",
+  "scene-streaming",
+  "edge-rendering",
+  "basemap-mips",
+  "gltf-pbr",
 ]);

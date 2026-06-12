@@ -98,7 +98,7 @@ export const shadingMaterials: TermInput[] = [
       "image-based-lighting",
       "albedo",
     ],
-    demos: ["pbr-materials"],
+    demos: ["pbr-materials", "gltf-pbr"],
   },
   {
     id: "metalness-roughness",
@@ -120,7 +120,7 @@ export const shadingMaterials: TermInput[] = [
     deeperDive:
       "Metalness switches between two physical regimes. Dielectrics (metalness 0): base color feeds the diffuse term, and specular reflectance is a fixed ~0.04 (4%) white. Metals (metalness 1): there is no diffuse term at all — base color instead becomes the specular reflectance, which is why gold's reflections are golden. Roughness controls the width of the microfacet distribution (typically as GGX 'alpha' = roughness squared, a perceptually even remapping): low roughness gives tight, bright highlights and sharp reflections; high roughness spreads the same energy into a broad, dim sheen. The alternative specular/glossiness workflow stores explicit specular color instead but allows physically impossible combinations, which is why metal-rough won.",
     relatedTermIds: ["pbr", "albedo", "brdf", "fresnel-effect"],
-    demos: ["pbr-materials"],
+    demos: ["pbr-materials", "gltf-pbr"],
   },
   {
     id: "albedo",
@@ -257,7 +257,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Real-time displacement typically runs in the tessellation stages: the hull/control shader decides subdivision density (often screen-space adaptive, so nearby patches get more triangles), the tessellator generates vertices, and the domain shader samples the height map and offsets each new vertex along the normal. Vertex-shader displacement on a pre-subdivided mesh is the simpler WebGL-friendly route — three.js exposes it directly as `displacementMap`. Offline renderers micro-displace down to sub-pixel polygons (REYES-style micropolygons). Common pitfalls: cracks along UV seams and patch edges where displaced neighbors disagree, normals needing recomputation after displacement, and shadow/physics meshes going out of sync with the displaced visual mesh. A standard hybrid keeps coarse shape in displacement and fine grain in a normal map.",
-    demos: ["displacement"],
+    demos: ["displacement", "terrain-exaggeration"],
     relatedTermIds: [
       "tessellation",
       "normal-mapping",

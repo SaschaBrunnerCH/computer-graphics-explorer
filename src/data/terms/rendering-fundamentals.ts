@@ -20,6 +20,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Renderers fall into two big families. Real-time renderers (games, map engines) use rasterization on the GPU and have a budget of a few milliseconds per frame. Offline renderers (film) typically use path tracing and can spend hours per frame chasing physical accuracy. Modern engines blur the line: real-time ray tracing hardware now brings offline techniques into interactive frame budgets.",
+    demos: ["pipeline-diagram"],
     relatedTermIds: ["rasterization", "ray-tracing", "render-pipeline", "frame-rate"],
   },
   {
@@ -107,6 +108,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "The canonical stages: vertex shader (model→world→view→clip transform), primitive assembly and clipping, rasterization, fragment shader, then per-fragment tests (scissor, stencil, depth) and blending into the frame buffer. Modern pipelines add optional stages — tessellation, geometry/mesh shaders — and compute shaders sit outside the pipeline entirely for general GPU work.",
+    demos: ["pipeline-diagram"],
     relatedTermIds: [
       "shader",
       "rasterization",
@@ -134,6 +136,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "APIs expose this as a frame buffer object (FBO) with attachments: one or more color attachments, plus optional depth and stencil. Rendering to an off-screen FBO and sampling it as a texture is the backbone of shadow maps, post-processing chains, and deferred rendering (where geometry data itself is written to multiple render targets before lighting).",
+    demos: ["pipeline-diagram"],
     relatedTermIds: [
       "depth-buffer",
       "double-buffering",
@@ -226,6 +229,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "GPUs are throughput machines: wide SIMD units, thousands of threads in flight to hide memory latency, but poor at branching and serial logic. CPUs are latency machines: deep caches and branch prediction for irregular work like scene traversal and culling. The pipeline split follows: the CPU culls, sorts, and issues draw calls; the GPU transforms, rasterizes, and shades. 'CPU-bound' vs 'GPU-bound' tells you which side exhausted its frame budget first.",
+    demos: ["gpu-race"],
     relatedTermIds: ["draw-calls-batching", "shader", "render-pipeline", "webgl-vs-webgpu"],
   },
 ];

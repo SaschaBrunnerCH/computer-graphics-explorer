@@ -25,7 +25,7 @@ export const texturesSampling: TermInput[] = [
       "albedo",
       "normal-mapping",
     ],
-    demos: ["texture-filtering"],
+    demos: ["texture-filtering", "basemap-mips"],
   },
   {
     id: "uv-coordinates",
@@ -69,7 +69,7 @@ export const texturesSampling: TermInput[] = [
     deeperDive:
       "The mip chain is a precomputed answer to a sampling problem: when one screen pixel covers many texture pixels (texels), correct filtering would require averaging all of them every frame. Mips bake that averaging in advance — level n is a filtered half-resolution copy of level n−1, costing only 33% extra memory in total. The GPU picks the level from the on-screen size of the texture's footprint, using screen-space derivatives of the UVs, and trilinear filtering blends the two nearest levels to hide the switch. The name comes from the Latin 'multum in parvo' — much in little.",
     relatedTermIds: ["texture-filtering", "texture-mapping", "moire-patterns", "level-of-detail"],
-    demos: ["texture-filtering"],
+    demos: ["texture-filtering", "basemap-mips"],
   },
   {
     id: "texture-filtering",
