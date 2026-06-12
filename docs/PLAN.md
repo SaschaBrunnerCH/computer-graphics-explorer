@@ -14,8 +14,10 @@ companions sit alongside low-level demos (see each plan's header).
 - ✅ [Phase 3 — Rays & Post-Processing](plans/phase-3-rays-and-post-processing.md) — **complete**: all 11 demos live (2D ray lab + ArcGIS scene-picking over Zurich, progressive path tracer, radiosity, tone mapping/HDR, bloom, DoF, motion blur, gamma, SSR, frame-time simulator); 34 playgrounds total, 47 of 66 terms covered
 - ✅ [Phase 4 — Geometry, Pipeline & GIS](plans/phase-4-geometry-pipeline-gis.md) — **complete, including the synced-frustum stretch goal**: mesh inspector, MVP matrices, scene graph, backface culling, instancing, pipeline diagram, terrain exaggeration, scene streaming, edge rendering, CPU-vs-GPU race, basemap-mips, glTF-PBR, scene-frustum
 
-**The roadmap is done**: 47 playgrounds live, **all 66 terms covered**, 12 ArcGIS
-scenes appearing across 21 terms.
+- ✅ [Phase 5 — `<arcgis-map>` companions](plans/phase-5-arcgis-map.md) — **complete**: seven 2D MapView demos with honest API levers (vector-vs-raster rasterization, layer-effect bloom, imagery interpolation filtering, stretch-renderer tone mapping, real Kansas moiré, tile generalization, live frame budget)
+
+**The roadmap is done**: 54 playgrounds live, **all 66 terms covered**, 19 ArcGIS
+demos (12 scenes + 7 maps) appearing across 29 terms.
 
 ## Milestones (phase 1)
 
