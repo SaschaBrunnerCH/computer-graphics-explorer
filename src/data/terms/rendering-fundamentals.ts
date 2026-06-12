@@ -43,7 +43,7 @@ export const renderingFundamentals: TermInput[] = [
     deeperDive:
       "For each triangle, the GPU transforms its vertices to screen space, then walks the bounding region testing pixel centers against the triangle's edge equations. Covered pixels become fragments, which carry interpolated vertex attributes (depth, UVs, normals) to the fragment shader. Because each triangle is processed independently, the algorithm parallelizes almost perfectly — which is exactly what GPU hardware is built for. The trade-off: rasterization only knows about one triangle at a time, so global effects like reflections and indirect light need extra tricks.",
     relatedTermIds: ["ray-tracing", "render-pipeline", "anti-aliasing", "depth-buffer"],
-    demos: ["rasterization"],
+    demos: ["rasterization", "vector-raster"],
   },
   {
     id: "ray-tracing",
@@ -207,7 +207,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Average fps hides what matters: percentile frame times (the worst 1% of frames) determine perceived smoothness. A run at 90 fps average with occasional 80 ms frames feels worse than a locked 60. Real-time budgets divide further: at 16.7 ms total you might give 4 ms to shadows, 6 ms to the main pass, 3 ms to post-processing — which is why features like SSAO or soft shadows are always toggleable.",
-    demos: ["frame-time"],
+    demos: ["frame-time", "map-frame-budget"],
     relatedTermIds: ["double-buffering", "draw-calls-batching", "level-of-detail"],
   },
   {

@@ -158,7 +158,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "The workhorse algorithm is iterative edge collapse with quadric error metrics (Garland-Heckbert): every edge gets a cost measuring how far the merged vertex would drift from the original surface's planes, and the cheapest edges collapse first until the triangle budget is met. Production pipelines must simultaneously preserve appearance attributes — UV seams, vertex normals, material boundaries — since a geometrically tiny collapse can still smear a texture. For streamed multi-LOD content, simplification runs per node of the spatial tree, and texture detail is reduced in step with geometry so neither wastes the other's savings. Newer approaches like Nanite sidestep discrete LODs by precomputing a hierarchy of simplified clusters and picking per-cluster detail at render time.",
-    demos: ["scene-streaming"],
+    demos: ["scene-streaming", "tile-generalization"],
     relatedTermIds: ["level-of-detail", "triangle-mesh", "i3s-3d-tiles", "vertex"],
   },
   {

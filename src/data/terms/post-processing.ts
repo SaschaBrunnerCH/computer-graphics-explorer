@@ -20,7 +20,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Tone mapping operators map HDR radiance to display range. The simplest, Reinhard (`c / (1 + c)`), compresses gently but desaturates highlights. Filmic curves like Hable/Uncharted 2 and ACES add a toe and shoulder that mimic film response: shadows roll off gently, highlights saturate toward white gracefully. The operator runs per pixel at the end of the HDR pipeline, before (or combined with) gamma encoding. Local operators that adapt per region exist but are rare in real time; games mostly use a global curve plus auto-exposure, which scales scene brightness based on a running average luminance — the source of the 'eye adaptation' effect when moving between dark and bright areas.",
-    demos: ["tone-mapping"],
+    demos: ["tone-mapping", "imagery-tone"],
     relatedTermIds: ["hdr", "gamma-correction", "color-spaces", "bloom"],
   },
   {
@@ -42,7 +42,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "HDR rendering means lighting is accumulated into floating-point render targets (commonly `RGBA16F`) instead of 8-bit-per-channel buffers, so values above 1.0 survive. This enables physically plausible light intensities, meaningful auto-exposure, and effects that depend on knowing how over-bright a pixel is — bloom thresholds, lens flares, sun glints. Image-based lighting uses HDR environment maps for the same reason: an 8-bit sky photo can't tell the renderer the sun is 50,000 times brighter than the clouds. HDR displays add a second meaning of the term: instead of tone mapping all the way down to standard range, the engine outputs to a wide-range format (e.g. HDR10) and lets the display show real highlight intensity.",
-    demos: ["tone-mapping"],
+    demos: ["tone-mapping", "imagery-tone"],
     relatedTermIds: ["tone-mapping", "bloom", "image-based-lighting", "frame-buffer"],
   },
   {
@@ -64,7 +64,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The standard implementation extracts pixels above a brightness threshold from the HDR frame, then blurs them — typically by repeatedly downsampling the bright-pass image into a mip chain, blurring at each level, and upsampling additively. Blurring at multiple resolutions is the trick: small Gaussian kernels on low-res buffers are cheap but composite into a glow that spreads hundreds of pixels wide. The result is added back to the scene before tone mapping. This is also why bloom genuinely needs HDR input: with 8-bit color, a white piece of paper and a light bulb both clip to 1.0, so both would glow equally — the threshold has nothing to grab onto.",
-    demos: ["bloom"],
+    demos: ["bloom", "map-bloom"],
     relatedTermIds: ["hdr", "tone-mapping", "frame-buffer"],
   },
   {
@@ -152,7 +152,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The pitfall is doing lighting math in the encoded space. Gamma encoding stores roughly `c^(1/2.2)`; the display applies `c^2.2` to undo it. But light is additive only in linear space: 50% gray in sRGB encoding represents about 21.4% physical light intensity (`0.5^2.2`), not 50%. Average two gamma-encoded values, or multiply a gamma-encoded texture by a light intensity, and the result is simply wrong — typically too-dark midtones, harsh shadow falloff, and ugly hue shifts in gradients. The correct workflow: decode inputs to linear (sample sRGB textures through hardware sRGB formats), do all lighting and blending in linear, and re-encode to gamma once, at the very end after tone mapping. Even image resizing suffers: downscaling in gamma space visibly darkens fine bright detail.",
-    demos: ["gamma"],
+    demos: ["gamma", "imagery-tone"],
     relatedTermIds: ["color-spaces", "tone-mapping", "texture-mapping"],
   },
   {

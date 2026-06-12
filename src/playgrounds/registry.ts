@@ -59,6 +59,14 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "basemap-mips": lazy(() => import("./arcgis/BasemapMips")),
   "gltf-pbr": lazy(() => import("./arcgis/GltfPbr")),
   "scene-frustum": lazy(() => import("./arcgis/SceneFrustum")),
+  // Phase 5 — <arcgis-map> companions (docs/plans/phase-5-arcgis-map.md)
+  "vector-raster": lazy(() => import("./arcgis-map/VectorRaster")),
+  "map-bloom": lazy(() => import("./arcgis-map/MapBloom")),
+  "imagery-filtering": lazy(() => import("./arcgis-map/ImageryFiltering")),
+  "imagery-tone": lazy(() => import("./arcgis-map/ImageryTone")),
+  "map-moire": lazy(() => import("./arcgis-map/MapMoire")),
+  "tile-generalization": lazy(() => import("./arcgis-map/TileGeneralization")),
+  "map-frame-budget": lazy(() => import("./arcgis-map/MapFrameBudget")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -75,4 +83,11 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "basemap-mips",
   "gltf-pbr",
   "scene-frustum",
+  "vector-raster",
+  "map-bloom",
+  "imagery-filtering",
+  "imagery-tone",
+  "map-moire",
+  "tile-generalization",
+  "map-frame-budget",
 ]);
