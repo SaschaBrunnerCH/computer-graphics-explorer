@@ -58,6 +58,7 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "edge-rendering": lazy(() => import("./arcgis/EdgeRendering")),
   "basemap-mips": lazy(() => import("./arcgis/BasemapMips")),
   "gltf-pbr": lazy(() => import("./arcgis/GltfPbr")),
+  "scene-frustum": lazy(() => import("./arcgis/SceneFrustum")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -73,4 +74,5 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "edge-rendering",
   "basemap-mips",
   "gltf-pbr",
+  "scene-frustum",
 ]);

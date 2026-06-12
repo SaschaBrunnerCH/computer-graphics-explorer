@@ -143,7 +143,7 @@ export const geometryScene: TermInput[] = [
     deeperDive:
       "The frustum is fully described by the projection matrix: field of view and aspect ratio set the pyramid's spread, near and far planes cap it. Its six bounding planes (left, right, top, bottom, near, far) are what culling tests objects against. Depth-buffer precision is distributed between near and far non-linearly — most of it bunches up near the near plane — which is why globe-scale viewers like a SceneView adjust the near plane dynamically as you zoom from orbit down to street level.",
     relatedTermIds: ["frustum-culling", "transformation-matrices", "depth-buffer"],
-    demos: ["frustum-culling"],
+    demos: ["frustum-culling", "scene-frustum"],
   },
   {
     id: "frustum-culling",
@@ -171,7 +171,7 @@ export const geometryScene: TermInput[] = [
       "scene-graph",
       "draw-calls-batching",
     ],
-    demos: ["frustum-culling"],
+    demos: ["frustum-culling", "scene-frustum"],
   },
   {
     id: "backface-culling",
