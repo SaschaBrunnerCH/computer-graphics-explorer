@@ -42,10 +42,14 @@ uncoverable — argued in the table below so they aren't re-litigated.
 | [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (shipped) |
 | [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (shipped) |
 
-Parked, verify-first:
+Unparked — **verified feasible 2026-07-02**:
 [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing)
-— honest only if `takeScreenshot({width,height})` truly re-renders at the
-requested resolution (supersampling), not resamples.
+— `takeScreenshot({width,height})` **does re-render** at the requested
+resolution (empirically: a 3× screenshot's edge gradients are ~3× steeper
+than a bilinear 3× upscale of the native shot, and basemap labels become
+legible — real new pixels, not interpolation). An honest supersampling demo
+(`screenshot-ssaa`: same view captured at ⅓× / 1× / 3× and compared per-pixel)
+is buildable whenever wanted.
 
 ## Not possible — and what it would take
 
