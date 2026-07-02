@@ -3,8 +3,7 @@ import Camera from "@arcgis/core/Camera.js";
 import Graphic from "@arcgis/core/Graphic.js";
 import Point from "@arcgis/core/geometry/Point.js";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer.js";
-import type PointSymbol3D from "@arcgis/core/symbols/PointSymbol3D.js";
-import WebStyleSymbol from "@arcgis/core/symbols/WebStyleSymbol.js";
+import PointSymbol3D from "@arcgis/core/symbols/PointSymbol3D.js";
 import "@arcgis/map-components/components/arcgis-scene";
 import { PlaygroundFrame } from "../../components/PlaygroundFrame";
 import { SegmentedControl, SliderControl, SwitchControl } from "../../components/controls";
@@ -15,9 +14,9 @@ configureArcgis();
 /**
  * Instancing, made visible: N copies of ONE realistic maple model scattered
  * over the flat Allmend field south of Zurich. A single Esri "web style" tree
- * symbol (EsriRealisticTreesStyle → "Acer", a ~3.5 MB glTF served keyless from
- * static.arcgis.com) is fetched ONCE with `WebStyleSymbol.fetchSymbol()`
- * (→ Promise<Symbol2D3DUnion>; narrowed to the PointSymbol3D it resolves to)
+ * symbol ("Acer", a ~3.5 MB glTF served keyless from static.arcgis.com) is
+ * fetched ONCE as raw symbol JSON from the static CDN (not via
+ * WebStyleSymbol.fetchSymbol — see loadSymbol for why) into a PointSymbol3D
  * and that same symbol instance is reused for every graphic. Reusing the one
  * symbol is what lets the engine upload the mesh once and stamp it per point
  * (instancing / draw-call batching), so tripling the tree count barely moves
@@ -32,6 +31,14 @@ const LAYER_ID = "tree-instances";
 const SEED = 0x5ca1_ab1e;
 const CHUNK = 200; // trees added per animation frame while filling
 const MAX_TREES = 3000;
+/**
+ * Acer (Norway Maple) symbol JSON on the token-less static CDN — the `gltf`
+ * flavor, whose resource.href is a plain .glb the engine loads directly (the
+ * `web` flavor wraps a JSON model format only the WebStyleSymbol path resolves).
+ */
+const TREE_SYMBOL_URL =
+  "https://static.arcgis.com/arcgis/styleItems/RealisticTrees/gltf/AcerPlatanoides.json";
+
 const TREE_HEIGHT = 12; // metres — a realistic Norway maple
 
 /** Allmend field, south of Zurich — flat open ground at ~415 m. */
@@ -180,13 +187,29 @@ export default function TreeInstancing(): React.JSX.Element {
     requestAnimationFrame(step);
   };
 
-  /** Fetch the tree model once, scale it to a realistic height, then fill. */
+  /**
+   * Fetch the tree model once, scale it to a realistic height, then fill.
+   *
+   * Deliberately NOT WebStyleSymbol.fetchSymbol(): resolving a styleName goes
+   * through the arcgis.com portal, and when the site is built with a
+   * basemaps-only API key (`esriConfig.apiKey`), that portal request carries
+   * the key and gets REJECTED — the demo then failed on the deployed site
+   * while working keyless in dev. The style's symbol JSON lives on
+   * static.arcgis.com (a token-less CDN, curl- and CORS-verified), so a plain
+   * browser fetch + PointSymbol3D.fromJSON sidesteps the portal entirely.
+   */
   const loadSymbol = async (el: HTMLArcgisSceneElement, layer: GraphicsLayer): Promise<void> => {
-    const web = new WebStyleSymbol({ styleName: "EsriRealisticTreesStyle", name: "Acer" });
-    const fetched = await web.fetchSymbol();
+    const resp = await fetch(TREE_SYMBOL_URL);
+    if (!resp.ok) {
+      setStatus("failed");
+      return;
+    }
+    const json: unknown = await resp.json();
+    // fromJSON is loosely typed in the SDK; the guard below makes the cast safe.
+    const fetched = PointSymbol3D.fromJSON(json) as PointSymbol3D | null;
     // The view may have been torn down (StrictMode) while the model loaded.
     if (!el.view || layer.destroyed) return;
-    if (fetched.type !== "point-3d") {
+    if (!fetched || fetched.type !== "point-3d") {
       setStatus("failed");
       return;
     }

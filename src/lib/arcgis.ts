@@ -17,7 +17,13 @@ let configured = false;
 
 export function configureArcgis(): void {
   if (!configured && arcgisApiKey) {
-    esriConfig.apiKey = arcgisApiKey;
+    // Deliberately NOT `esriConfig.apiKey`: a global key rides along on every
+    // *.arcgis.com request, and our basemaps-only key gets REJECTED by public
+    // services that happily serve anonymous requests (portal item lookups,
+    // tiles.arcgis.com scene services, 3D buildings) — which broke several
+    // demos on the deployed site while keyless dev builds worked. Scope the
+    // key to the one service it is licensed for: premium basemap styles.
+    esriConfig.apiKeys.basemapStyles = arcgisApiKey;
   }
   configured = true;
 }
