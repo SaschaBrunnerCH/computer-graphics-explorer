@@ -47,9 +47,11 @@ anti-aliasing → `aa-lab`; depth-of-field → `scene-dof`; motion-blur →
 
 ## Coverage after phase 8
 
-54 of 66 terms with an ArcGIS companion. The remaining **12** stay in the
-[coverage report](../arcgis-companion-coverage.md)'s not-possible table —
-re-audited this phase, arguments unchanged.
+54 of 66 terms with an ArcGIS companion. A second re-audit pass moved five
+of the remaining twelve into **phase 9 candidates** (custom-geometry
+RenderNodes lit by `sunLight`: ray/path tracing, GI, BRDF, shading models —
+see the [coverage report](../arcgis-companion-coverage.md)); only **6** stay
+in the not-possible table.
 
 ## Risks / notes
 
