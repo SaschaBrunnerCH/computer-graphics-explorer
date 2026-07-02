@@ -86,7 +86,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Web-scale engines stream elevation as heightmap tiles in a quadtree: each tile covers a square of the world, and each level down splits it into four tiles with twice the resolution. Tiles are chosen per frame by screen-space error — a tile subdivides when its coarseness would be visible at the current camera distance. Adjacent tiles at different LODs don't share vertices along their border, which causes cracks: thin gaps where the meshes disagree. The standard fixes are skirts (each tile extends a short curtain of triangles downward around its edge, hiding gaps) or stitching (adjusting edge vertices to match the coarser neighbor). Imagery tiles stream through the same quadtree, so texture and geometry detail stay in step.",
-    demos: ["terrain-exaggeration"],
+    demos: ["terrain-exaggeration", "map-hillshade"],
     relatedTermIds: [
       "level-of-detail",
       "displacement-mapping",
@@ -114,7 +114,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Implementation is a vertical scale applied when terrain geometry is generated — heights are multiplied before the mesh is built, so lighting, normals, and draped imagery all follow the exaggerated surface consistently. Pitfalls: exaggeration distorts slope-dependent analysis (a 2× exaggerated 10° slope renders like 20°), and 3D objects placed on the surface must be re-anchored or they float or sink. Choosing a factor is cartographic judgment: regional overviews often use 2–5×, planetary or bathymetric views more, and engineering or line-of-sight work should stay at 1× so measurements remain honest.",
-    demos: ["terrain-exaggeration"],
+    demos: ["terrain-exaggeration", "map-hillshade"],
     relatedTermIds: ["terrain-rendering", "displacement-mapping", "normal-vectors"],
   },
   {

@@ -21,13 +21,12 @@ companions sit alongside low-level demos (see each plan's header).
 
 - ✅ [Phase 8 — Hidden Levers](plans/phase-8-hidden-levers.md) — **complete**: `aa-lab` (three-resolution takeScreenshot comparison + FXAA RenderNode toggle), `scene-dof` (depth-buffer-driven circle-of-confusion blur with focus/aperture sliders), `scene-motion-blur` (frame-accumulation RenderNode over an orbiting Frankfurt), `false-color` (Toronto 4-band CIR band remapping — vegetation glows red)
 - ✅ [Phase 9 — The RenderNode Frontier](plans/phase-9-rendernode-frontier.md) — **complete** (IBL stretch not shipped, stays parked): `scene-material-lab` (our sphere, our flat/Gouraud/Phong/GGX shaders, lit by the engine's real sun), `hybrid-ray` (a fragment-shader ray tracer depth-composited against rasterized Zurich — reflections, shadow rays, bounce slider), `scene-path-trace` (progressive Monte-Carlo path tracing with a live SPP counter that converges while the camera holds still and resets to noise on every move; serves path-tracing + global-illumination). Key engine finding: `opaque-color` injections get erased by the downstream resolve — custom passes must target `composite-color`
-- 🔲 [Phase 10 — More 2D companions](plans/phase-10-2d-companions.md) — **planned, balance pass**: four `<arcgis-map>` demos giving scene-only terms an honest 2D perspective — `map-hillshade` (hillshade IS bump-mapping's math on real Earth; azimuth/altitude/z-factor), `painters-order` (2D has no depth buffer — layer order is visibility, the painter's-algorithm contrast to scene-zfight), `map-view-transform` (the V of MVP via runtime rotation/scale/center), `extent-culling` (the view extent as the 2D frustum, live on an overview map) — plus two zero-code appends (level-of-detail ← tile-generalization, elevation-exaggeration ← map-hillshade)
+- ✅ [Phase 10 — More 2D companions](plans/phase-10-2d-companions.md) — **complete, balance pass**: four `<arcgis-map>` demos giving scene-only terms an honest 2D perspective — `map-hillshade` (hillshade IS bump-mapping's math on real Earth; azimuth/altitude/z-factor), `painters-order` (2D has no depth buffer — layer order is visibility, the painter's-algorithm contrast to scene-zfight), `map-view-transform` (the V of MVP via runtime rotation/scale/center), `extent-culling` (the view extent as the 2D frustum, live on an overview map) — plus two zero-code appends (level-of-detail ← tile-generalization, elevation-exaggeration ← map-hillshade)
 - 💡 [Ideas backlog](plans/ideas-backlog.md) — enrichments (emissive bloom, LineOfSight, Viewshed, ShadowCast, weather) and seven new-term candidates (voxels, point clouds, blend modes, particles, clipping planes, video textures, flow animation)
 
-**Phases 1–9 are done — coverage is exhausted at 59 of 66**: 74 playgrounds
-live, **all 66 terms covered**, 39 ArcGIS demos (30 scenes + 9 maps).
-Phase 10 (planned) rebalances toward 2D: 13 map demos, eleven terms with both
-a 3D and a 2D ArcGIS perspective — coverage count unchanged. The final 6
+**Phases 1–10 are done — coverage is exhausted at 59 of 66**: 78 playgrounds
+live, **all 66 terms covered**, 43 ArcGIS demos (30 scenes + 13 maps), with
+ten terms carrying both a 3D and a 2D ArcGIS perspective. The final 6
 (+1 parked IBL) have no honest ArcGIS lever — see
 [arcgis-companion-coverage.md](arcgis-companion-coverage.md) for the per-term
 status with live links, including the argued not-possible table (watch item:

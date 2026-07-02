@@ -120,7 +120,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "The magic ingredient is homogeneous coordinates: a 4th component `w` lets a single 4×4 matrix encode translation (impossible with 3×3) and perspective division. Matrices compose by multiplication, so `MVP = P × V × M` is precomputed once per object and applied to every vertex in the vertex shader; after it, dividing by `w` performs the perspective foreshortening. Order matters — matrix multiplication doesn't commute, so rotate-then-translate and translate-then-rotate land an object in different places. In a scene graph, each node's model matrix is the product of its ancestors' local matrices.",
-    demos: ["mvp-matrices", "mesh-transform"],
+    demos: ["mvp-matrices", "mesh-transform", "map-view-transform"],
     relatedTermIds: ["camera-frustum", "scene-graph", "vertex", "render-pipeline"],
   },
   {
@@ -143,7 +143,7 @@ export const geometryScene: TermInput[] = [
     deeperDive:
       "The frustum is fully described by the projection matrix: field of view and aspect ratio set the pyramid's spread, near and far planes cap it. Its six bounding planes (left, right, top, bottom, near, far) are what culling tests objects against. Depth-buffer precision is distributed between near and far non-linearly — most of it bunches up near the near plane — which is why globe-scale viewers like a SceneView adjust the near plane dynamically as you zoom from orbit down to street level.",
     relatedTermIds: ["frustum-culling", "transformation-matrices", "depth-buffer"],
-    demos: ["frustum-culling", "scene-frustum"],
+    demos: ["frustum-culling", "scene-frustum", "extent-culling"],
   },
   {
     id: "frustum-culling",
@@ -171,7 +171,7 @@ export const geometryScene: TermInput[] = [
       "scene-graph",
       "draw-calls-batching",
     ],
-    demos: ["frustum-culling", "scene-frustum"],
+    demos: ["frustum-culling", "scene-frustum", "extent-culling"],
   },
   {
     id: "backface-culling",
@@ -221,7 +221,7 @@ export const geometryScene: TermInput[] = [
       "terrain-rendering",
       "frustum-culling",
     ],
-    demos: ["lod"],
+    demos: ["lod", "tile-generalization"],
   },
   {
     id: "tessellation",

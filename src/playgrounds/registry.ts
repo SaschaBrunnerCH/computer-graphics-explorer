@@ -91,6 +91,11 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "scene-material-lab": lazy(() => import("./arcgis/SceneMaterialLab")),
   "hybrid-ray": lazy(() => import("./arcgis/HybridRay")),
   "scene-path-trace": lazy(() => import("./arcgis/ScenePathTrace")),
+  // Phase 10 — More 2D companions (docs/plans/phase-10-2d-companions.md)
+  "map-hillshade": lazy(() => import("./arcgis-map/MapHillshade")),
+  "painters-order": lazy(() => import("./arcgis-map/PaintersOrder")),
+  "map-view-transform": lazy(() => import("./arcgis-map/MapViewTransform")),
+  "extent-culling": lazy(() => import("./arcgis-map/ExtentCulling")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -134,4 +139,8 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "scene-material-lab",
   "hybrid-ray",
   "scene-path-trace",
+  "map-hillshade",
+  "painters-order",
+  "map-view-transform",
+  "extent-culling",
 ]);

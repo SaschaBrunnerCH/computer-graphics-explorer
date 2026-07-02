@@ -235,7 +235,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Jim Blinn's original formulation perturbs the normal using the height field's partial derivatives: the gradient of the height texture tilts the geometric normal toward downhill, with a strength factor scaling the effect. In practice shaders sample the height map at neighboring texels (or use hardware derivatives) to estimate the gradient per fragment. Normal mapping is effectively the precomputed version — bake those derivatives once into an RGB map instead of computing them at runtime — which gives better quality and lets detail come from a sculpt rather than just a height field. The shared limitation stands: silhouettes, shadows, and parallax don't respond, because the geometry never changed.",
-    demos: ["normal-mapping", "scene-normal-map"],
+    demos: ["normal-mapping", "scene-normal-map", "map-hillshade"],
     relatedTermIds: ["normal-mapping", "displacement-mapping", "normal-vectors", "texture-mapping"],
   },
   {

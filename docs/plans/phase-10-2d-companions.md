@@ -1,5 +1,15 @@
 # Phase 10 — More 2D: `<arcgis-map>` Companions for Scene-Only Terms (4 demos + 2 appends)
 
+> **Status: COMPLETE** (shipped 2026-07-02). All four demos live-verified with
+> driven levers (azimuth flip, order swap, rotation, extent pan). Two fixes
+> from verification: painters-order's shape offsets were authored in degrees
+> instead of kilometres (shapes landed 200 km off-screen); the hillshade
+> renderer is updated by CLONING the layer's current renderer and mutating the
+> clone — constructing a fresh RasterShadedReliefRenderer can cross Vite dev
+> module realms and fail the SDK's type check ("not a subclass of itself").
+> ExtentCulling gained a null-extent guard (view.extent is null pre-layout).
+> Log in DECISIONS.md.
+
 A balance pass, not a coverage pass: after phase 9 the split is 30 scenes vs
 9 maps, and several scene-covered terms have an **honest 2D lever the 3D demo
 doesn't show**. Phase-5's bar still applies — 2D only where it teaches
