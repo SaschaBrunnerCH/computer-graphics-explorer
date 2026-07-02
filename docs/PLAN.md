@@ -20,13 +20,15 @@ companions sit alongside low-level demos (see each plan's header).
 - ✅ [Phase 7 — Light & Screen in the Wild](plans/phase-7-light-and-screen.md) — **complete, including the `RenderNode` stretch**: baked-vs-dynamic lighting on the Girona photogrammetry mesh, ambient-as-indirect over Zurich, the water-SSR vanish-at-frame-edge artifact, real z-fighting between co-planar slabs, geodesic densify (a flight path that cuts through the Earth), the vector basemap's real 871-icon sprite atlas, and `scene-shader` — a custom posterize RenderNode splicing user GLSL between named pipeline stages (serves shader / frame-buffer / render-pipeline); the plan doc also documents the ~15 terms with no honest ArcGIS lever
 
 - 🔲 [Phase 8 — Hidden Levers](plans/phase-8-hidden-levers.md) — **planned**: four rejections falsified by a same-day re-audit — anti-aliasing (`takeScreenshot` verified to re-render at requested resolution + FXAA RenderNode toggle), depth-of-field and motion-blur (RenderNode post-processing, following Esri's official DoF/crossfade samples), and color-spaces (sampleserver6 Toronto is keyless 4-band U16 with runtime `bandIds`)
+- 🔲 [Phase 9 — The RenderNode Frontier](plans/phase-9-rendernode-frontier.md) — **planned, hardest in the catalog**: custom geometry + custom shaders inside the engine (windmills pattern, `sunLight`, `toRenderCoordinates`) — `scene-material-lab` (flat/Gouraud/Phong/GGX + BRDF sliders under the real sun), `hybrid-ray` (fragment-shader ray tracer depth-composited with the city), `scene-path-trace` (progressive Monte-Carlo accumulation that resets on camera moves; serves path-tracing + global-illumination), plus an IBL stretch mode
+- 💡 [Ideas backlog](plans/ideas-backlog.md) — enrichments (emissive bloom, LineOfSight, Viewshed, ShadowCast, weather) and seven new-term candidates (voxels, point clouds, blend modes, particles, clipping planes, video textures, flow animation)
 
 **Phases 1–7 are done**: 67 playgrounds live, **all 66 terms covered**,
 32 ArcGIS demos (24 scenes + 8 maps) appearing across **50 of 66 terms**.
-Phase 8 takes companions to **54 of 66**; the remaining 12 have no honest
-ArcGIS lever — see
+Phase 8 takes companions to **54 of 66**, phase 9 to **59–60 of 66**; the
+final 6 have no honest ArcGIS lever — see
 [arcgis-companion-coverage.md](arcgis-companion-coverage.md) for the per-term
-status with live links, including the argued not-possible table (watch items:
+status with live links, including the argued not-possible table (watch item:
 Esri's WebGPU port).
 
 ## Milestones (phase 1)

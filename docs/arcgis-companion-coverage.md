@@ -60,14 +60,15 @@ verified 2026-07-02):
 | [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | `scene-motion-blur` | RenderNode frame accumulation (`retain()` across frames, per the crossfade sample) |
 | [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | `false-color` | sampleserver6 `Toronto` is 4-band U16 **keyless**; `ImageryLayer.bandIds` is a runtime accessor |
 
-## Phase 9 candidates — the RenderNode frontier (feasible, not yet planned)
+## Planned — phase 9, the RenderNode frontier
 
 Re-audit of 2026-07-02 (second pass): the RenderNode API is not just
 post-processing — the official windmills sample injects **custom geometry
 with custom shaders** into the scene (depth-tested against the real city),
 `RenderNode.sunLight` hands our shaders the **engine's actual incident light
 direction**, `toRenderCoordinates()` places our geometry at any lon/lat, and
-retained FBOs accumulate across frames. That falsifies five more rejections:
+retained FBOs accumulate across frames. That falsifies five more rejections
+([plan](plans/phase-9-rendernode-frontier.md)):
 
 | Term | Candidate demo | Verified lever & honest angle |
 |---|---|---|
