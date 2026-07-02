@@ -1,5 +1,21 @@
 # Phase 7 — Light & Screen in the Wild (6 demos + 1 stretch)
 
+> **Status: COMPLETE, including the stretch** (shipped 2026-07-02, commits
+> `7855890` core + `d288d19` stretch). All verify-first items resolved in our
+> favor: v5 water reflections DO mirror scene geometry (even under headless
+> SwiftShader), co-planar client meshes DO genuinely z-fight (no internal
+> bias), and the `RenderNode` posterize pass compiles and runs on software
+> WebGL. Deviations from plan, discovered in live verification:
+> `Mesh.offset()` on local-vertex-space meshes moves the origin in
+> spatial-reference units (degrees, not metres — also latent in phase 6's
+> mesh-transform, fixed both); the densify path is pinned at 200 km altitude
+> so coarse chords are visible instead of buried; `water-ssr` uses a
+> self-placed crimson tower mesh + water polygon rather than reusing the
+> WaterFresnel site; the stretch's "normals buffer" toggle was dropped
+> (posterize + slot picker carries all three terms); `@subclass` decorators
+> don't parse under Vite's react plugin — `RenderNode.createSubclass` instead.
+> Full log in DECISIONS.md.
+
 The remaining lighting, geometry and screen-space terms get real-world
 companions built on levers verified in the installed v5 typings: environment
 lighting (`lighting.directShadowsEnabled`, sun time via the daylight pattern),
@@ -35,9 +51,9 @@ All keys also go into `arcgisPlaygrounds`.
 
 ## Coverage after phases 6 + 7
 
-47 of 66 terms with an ArcGIS companion (50 with the stretch), 31 scene +
-7 map demos. The remaining ~16 terms are **honestly uncoverable** — documented
-below so future sessions don't re-litigate them.
+**Achieved: 50 of 66 terms** with an ArcGIS companion (stretch included),
+24 scene + 8 map demos. The remaining 15 terms are **honestly uncoverable** —
+documented below so future sessions don't re-litigate them.
 
 ## Rejected — no honest ArcGIS lever (do not re-attempt without new API)
 
