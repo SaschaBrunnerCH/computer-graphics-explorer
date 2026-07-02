@@ -19,7 +19,7 @@ accepts canvas/ImageData) — no new binary assets, no network fetches.
 
 | # | Demo key | Companion to | Idea & honest lever |
 |---|----------|--------------|---------------------|
-| 1 | `scene-mesh` | vertex, triangle-mesh, normal-vectors | Build a mesh **from raw arrays** floating over a city: a low-poly dome/terrain patch whose `vertexAttributes.position` and `.normal` are ours. Levers: "show vertices" toggle (small point graphics at vertex positions), flat ↔ smooth segmented control (recompute the normal array per-face vs averaged, then `vertexAttributesChanged()`), "lift center vertex" slider (edit positions live). The money shot: the same arrays the WebGL demos teach, rendered by a production GIS engine. |
+| 1 | `scene-mesh` | vertex, triangle-mesh, normal-vectors, backface-culling | Build a mesh **from raw arrays** floating over a city: a low-poly dome/terrain patch whose `vertexAttributes.position` and `.normal` are ours. Levers: "show vertices" toggle (small point graphics at vertex positions), flat ↔ smooth segmented control (recompute the normal array per-face vs averaged, then `vertexAttributesChanged()`), "lift center vertex" slider (edit positions live), and a **"flip winding" toggle** (reverse triangle index order): SDK meshes render single-sided, so flipped faces vanish — backface culling with a real switch. The money shot: the same arrays the WebGL demos teach, rendered by a production GIS engine. |
 | 2 | `mesh-transform` | transformation-matrices | One glTF or box mesh on a graphics layer with translate (`offset`), rotate (`rotate` about z), and scale (`scale`) sliders — each call is a real geometry transform in the SDK. Caption shows the accumulated TRS values and ties them to the M of the MVP demo above. Reset rebuilds the mesh from its stored original. |
 | 3 | `scene-uv` | uv-coordinates | A quad/box mesh with a procedural checker+letters `colorTexture` and editable **uv** array: scale/offset sliders rewrite `vertexAttributes.uv` (or drive `colorTextureTransform` — verify which is runtime-cheaper), so the texture visibly stretches, tiles, and slides on real terrain backdrop. Same mental model as the UV-unwrap diagram, now on the wild side. |
 | 4 | `scene-normal-map` | normal-mapping, bump-mapping | Flat mesh plane with a procedural normal map (bricks/ripples drawn to canvas, height→normal derived per pixel) on `material.normalTexture`: on/off toggle + a **sun time-of-day slider** (`<arcgis-daylight>` pattern from Shadows) so the fake relief responds to real daylight; orbit low to see the silhouette stay flat — the tell the r3f demo teaches, under a real sun. |
@@ -28,7 +28,7 @@ accepts canvas/ImageData) — no new binary assets, no network fetches.
 
 ## Term data updates (all appends)
 
-vertex + triangle-mesh + normal-vectors → `scene-mesh`;
+vertex + triangle-mesh + normal-vectors + backface-culling → `scene-mesh`;
 transformation-matrices → `mesh-transform`; uv-coordinates → `scene-uv`;
 normal-mapping + bump-mapping → `scene-normal-map`; albedo +
 specular-vs-diffuse → `scene-albedo`; instancing + draw-calls-batching →
@@ -40,9 +40,9 @@ specular-vs-diffuse → `scene-albedo`; instancing + draw-calls-batching →
   `vertexAttributes` meshes render on a GraphicsLayer with
   `elevationInfo: relative-to-ground`, and measure `vertexAttributesChanged()`
   cost at slider rate (throttle if needed).
-- **Winding/normal pitfalls** (#1): SDK meshes are single-sided — wrong winding
-  makes faces vanish. That's a lesson (link backface-culling in captions), but
-  the demo's defaults must be correct.
+- **Winding/normal pitfalls** (#1): single-sided rendering is the demo's own
+  lesson (the flip-winding toggle), but the defaults must be correct or the
+  mesh ships invisible.
 - WebStyleSymbol keylessness (#6) is the one service unknown of the phase.
 - Headless verification: scene demos follow the established SwiftShader-safe
   pattern (keyless `osm`/`satellite` basemap, canvas-exists assertions only).
