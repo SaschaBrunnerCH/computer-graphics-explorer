@@ -108,7 +108,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "The canonical stages: vertex shader (model→world→view→clip transform), primitive assembly and clipping, rasterization, fragment shader, then per-fragment tests (scissor, stencil, depth) and blending into the frame buffer. Modern pipelines add optional stages — tessellation, geometry/mesh shaders — and compute shaders sit outside the pipeline entirely for general GPU work.",
-    demos: ["pipeline-diagram"],
+    demos: ["pipeline-diagram", "scene-shader"],
     relatedTermIds: [
       "shader",
       "rasterization",
@@ -136,7 +136,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "APIs expose this as a frame buffer object (FBO) with attachments: one or more color attachments, plus optional depth and stencil. Rendering to an off-screen FBO and sampling it as a texture is the backbone of shadow maps, post-processing chains, and deferred rendering (where geometry data itself is written to multiple render targets before lighting).",
-    demos: ["pipeline-diagram"],
+    demos: ["pipeline-diagram", "scene-shader"],
     relatedTermIds: [
       "depth-buffer",
       "double-buffering",

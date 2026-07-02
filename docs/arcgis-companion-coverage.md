@@ -5,12 +5,11 @@ companion where it honestly fits" goal. Term links go to the deployed site.
 Last updated 2026-07-02 (after the phase 6–7 feasibility pass; API claims
 verified against the installed SDK v5 typings).
 
-**47 of 66 terms** have a live ArcGIS companion today
-([phase 6](plans/phase-6-mesh-material-lab.md) and the
-[phase 7](plans/phase-7-light-and-screen.md) core both shipped 2026-07-02).
-The pending `scene-shader` stretch (RenderNode) would take that to **50**.
-The remaining **15** are honestly uncoverable — argued in the table below so
-they aren't re-litigated.
+**50 of 66 terms** have a live ArcGIS companion —
+[phase 6](plans/phase-6-mesh-material-lab.md) and
+[phase 7](plans/phase-7-light-and-screen.md) **including the `scene-shader`
+RenderNode stretch** all shipped 2026-07-02. The remaining **15** are honestly
+uncoverable — argued in the table below so they aren't re-litigated.
 
 ## Shipped — phase 6, Mesh & Material Lab (2026-07-02)
 
@@ -39,9 +38,9 @@ they aren't re-litigated.
 | [Depth Buffer (Z-Buffer)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-buffer) | `scene-zfight` |
 | [Tessellation](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/tessellation) | `geodesic-densify` |
 | [Texture Atlas](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/texture-atlas) | `sprite-atlas` |
-| [Shader (Vertex / Fragment / Compute)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shader) | `scene-shader` (stretch) |
-| [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (stretch) |
-| [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (stretch) |
+| [Shader (Vertex / Fragment / Compute)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shader) | `scene-shader` (shipped) |
+| [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (shipped) |
+| [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (shipped) |
 
 Parked, verify-first:
 [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing)

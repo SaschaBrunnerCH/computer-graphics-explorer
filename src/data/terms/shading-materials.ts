@@ -42,7 +42,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Shaders are written in GLSL (OpenGL/WebGL), HLSL (DirectX), or WGSL (WebGPU) and compiled by the driver to GPU machine code. The vertex shader's job is the model→world→view→clip transform plus passing attributes downstream; the rasterizer interpolates those attributes; the fragment shader consumes them to evaluate lighting, sample textures, and output color. The execution model is SIMD-like: threads run in lockstep groups (warps/wavefronts), which is why divergent branching is expensive. Compute shaders expose the same hardware for arbitrary work — culling, skinning, particle simulation — with explicit control over thread groups and shared memory.",
-    demos: ["shader-lab"],
+    demos: ["shader-lab", "scene-shader"],
     relatedTermIds: [
       "render-pipeline",
       "shading-models",
