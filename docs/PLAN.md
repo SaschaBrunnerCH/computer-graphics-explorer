@@ -16,8 +16,12 @@ companions sit alongside low-level demos (see each plan's header).
 
 - ✅ [Phase 5 — `<arcgis-map>` companions](plans/phase-5-arcgis-map.md) — **complete**: seven 2D MapView demos with honest API levers (vector-vs-raster rasterization, layer-effect bloom, imagery interpolation filtering, stretch-renderer tone mapping, real Kansas moiré, tile generalization, live frame budget)
 
-**The roadmap is done**: 54 playgrounds live, **all 66 terms covered**, 19 ArcGIS
-demos (12 scenes + 7 maps) appearing across 29 terms.
+- 🔲 [Phase 6 — Mesh & Material Lab](plans/phase-6-mesh-material-lab.md) — **planned**: six `<arcgis-scene>` companions built on the client-side Mesh API (raw vertex arrays, transforms, UV editing, normal maps, albedo/specular, tree instancing)
+- 🔲 [Phase 7 — Light & Screen in the Wild](plans/phase-7-light-and-screen.md) — **planned**: baked-vs-dynamic lighting on the Girona mesh, ambient-as-indirect, water-SSR artifact, real z-fighting, plus a `RenderNode` custom-shader stretch; also documents the ~20 terms with no honest ArcGIS lever
+
+**Core roadmap (phases 1–5) is done**: 54 playgrounds live, **all 66 terms
+covered**, 19 ArcGIS demos (12 scenes + 7 maps) appearing across 29 terms.
+Phases 6–7 extend ArcGIS-companion coverage from 29 to ~44 of 66 terms.
 
 ## Milestones (phase 1)
 
