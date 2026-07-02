@@ -82,9 +82,11 @@ r3f/WebGL/diagram playground — nothing is left untaught.
 | motion-blur | Velocity-buffer smear tied to camera speed | Same root cause: no post-processing hooks; `goTo` flights render each frame crisp by design | Same post-processing stack + velocity/accumulation pass |
 
 **Not rejected, tracked elsewhere:** shader + frame-buffer + render-pipeline
-(the `scene-shader` stretch above — hard, not impossible);
-**anti-aliasing — parked, verify-first**: `takeScreenshot({width,height})`
-*might* re-render at the requested resolution (honest supersampling: compare a
-low-res nearest-upscaled shot to a high-res one). Only build it if
-verification shows a true re-render, not a resample of the current
-framebuffer.
+(the `scene-shader` stretch above — shipped);
+**anti-aliasing — verified feasible (2026-07-02)**:
+`takeScreenshot({width,height})` **re-renders** at the requested resolution
+(empirical: a 3× screenshot's max edge gradient is 124 vs 36 for a bilinear
+3× upscale of the native shot — bilinear mathematically caps near ⅓ of a full
+step, so those are real new pixels; basemap labels legible at 3× confirm it).
+A `screenshot-ssaa` demo (same view captured at ⅓× / 1× / 3×, edge crops
+compared) is buildable — not yet scheduled.
