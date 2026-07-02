@@ -67,6 +67,13 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "map-moire": lazy(() => import("./arcgis-map/MapMoire")),
   "tile-generalization": lazy(() => import("./arcgis-map/TileGeneralization")),
   "map-frame-budget": lazy(() => import("./arcgis-map/MapFrameBudget")),
+  // Phase 6 — Mesh & Material Lab (docs/plans/phase-6-mesh-material-lab.md)
+  "scene-mesh": lazy(() => import("./arcgis/SceneMesh")),
+  "mesh-transform": lazy(() => import("./arcgis/MeshTransform")),
+  "scene-uv": lazy(() => import("./arcgis/SceneUv")),
+  "scene-normal-map": lazy(() => import("./arcgis/SceneNormalMap")),
+  "scene-albedo": lazy(() => import("./arcgis/SceneAlbedo")),
+  "tree-instancing": lazy(() => import("./arcgis/TreeInstancing")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -90,4 +97,10 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "map-moire",
   "tile-generalization",
   "map-frame-budget",
+  "scene-mesh",
+  "mesh-transform",
+  "scene-uv",
+  "scene-normal-map",
+  "scene-albedo",
+  "tree-instancing",
 ]);

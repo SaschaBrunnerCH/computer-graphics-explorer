@@ -46,7 +46,7 @@ export const texturesSampling: TermInput[] = [
     ],
     deeperDive:
       "UVs are vertex attributes interpolated across triangles during rasterization — and the interpolation must be perspective-correct, dividing by depth, or textures swim on slanted surfaces (the classic PlayStation 1 wobble). Values outside the 0–1 range are handled by wrap modes: repeat tiles the image, clamp stretches the edge pixels, mirror alternates direction. Authoring good UVs means unwrapping a mesh into flat islands while balancing three enemies: distortion (stretching), seams (visible cuts), and wasted texture space between islands.",
-    demos: ["uv-unwrap"],
+    demos: ["uv-unwrap", "scene-uv"],
     relatedTermIds: ["texture-mapping", "texture-atlas", "texture-filtering", "vertex"],
   },
   {

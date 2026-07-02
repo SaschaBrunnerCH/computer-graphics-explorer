@@ -42,7 +42,7 @@ export const realtimeGis: TermInput[] = [
     ],
     deeperDive:
       "Overhead comes from state changes: every switch of shader, texture, or buffer between draws costs driver and pipeline work. Batching strategies attack this differently. Static batching pre-merges geometry that shares a material into one vertex buffer. Instancing draws N copies of the same mesh in one call with per-instance transforms — ideal for trees or repeated street furniture. Texture atlases and array textures remove texture switches so more objects can share a batch. Tiled map engines batch naturally: all features in a tile that share a renderer are uploaded as one buffer and drawn together, which is why a city of 100,000 buildings can render with a few hundred draw calls instead of 100,000.",
-    demos: ["instancing"],
+    demos: ["instancing", "tree-instancing"],
     relatedTermIds: ["instancing", "texture-atlas", "gpu-vs-cpu-rendering", "webgl-vs-webgpu"],
   },
   {

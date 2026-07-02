@@ -20,7 +20,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "On the GPU, vertices live in vertex buffers: tightly packed arrays of attributes (position, normal, UV, color) with a layout the pipeline is told how to read. The vertex shader runs once per vertex, transforming it into clip space and passing attributes onward to be interpolated across each triangle. Because identical corners are often shared by many triangles, an index buffer lets triangles reference the same vertex by number instead of duplicating it — typically cutting memory use by half or more.",
-    demos: ["mesh-inspector"],
+    demos: ["mesh-inspector", "scene-mesh"],
     relatedTermIds: ["triangle-mesh", "normal-vectors", "shader", "transformation-matrices"],
   },
   {
@@ -42,7 +42,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "A mesh is stored as a vertex buffer (the points) plus an index buffer (which triples of vertices form triangles), letting shared corners be stored once. Quads and n-gons exist in modeling tools for clean editing, but they're triangulated before rendering since GPUs only rasterize triangles. Mesh quality matters beyond count: long thin 'sliver' triangles rasterize inefficiently and cause shading artifacts, and a watertight mesh (no gaps or holes) is required for things like shadows and boolean operations to behave.",
-    demos: ["mesh-inspector"],
+    demos: ["mesh-inspector", "scene-mesh"],
     relatedTermIds: [
       "vertex",
       "normal-vectors",
@@ -70,7 +70,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "Face normals come straight from a triangle's geometry (the cross product of two edges); vertex normals are usually an average of the surrounding face normals, and the choice between sharing or splitting them at edges is exactly the difference between smooth and hard edges. During rendering, vertex normals are interpolated across the triangle and renormalized per pixel, then fed into the shading model's dot products. Normal mapping pushes the idea further: a texture overrides the interpolated normal per pixel to fake fine detail that isn't in the geometry.",
-    demos: ["mesh-inspector"],
+    demos: ["mesh-inspector", "scene-mesh"],
     relatedTermIds: [
       "vertex",
       "triangle-mesh",
@@ -120,7 +120,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "The magic ingredient is homogeneous coordinates: a 4th component `w` lets a single 4×4 matrix encode translation (impossible with 3×3) and perspective division. Matrices compose by multiplication, so `MVP = P × V × M` is precomputed once per object and applied to every vertex in the vertex shader; after it, dividing by `w` performs the perspective foreshortening. Order matters — matrix multiplication doesn't commute, so rotate-then-translate and translate-then-rotate land an object in different places. In a scene graph, each node's model matrix is the product of its ancestors' local matrices.",
-    demos: ["mvp-matrices"],
+    demos: ["mvp-matrices", "mesh-transform"],
     relatedTermIds: ["camera-frustum", "scene-graph", "vertex", "render-pipeline"],
   },
   {
@@ -192,7 +192,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "The GPU decides front vs back from the winding order of a triangle's vertices after projection to the screen: counter-clockwise is conventionally front-facing, clockwise is back-facing (both are configurable). This happens at primitive assembly, before rasterization, so culled triangles never produce fragments. It assumes meshes are closed with consistent winding — open geometry like foliage, cloth, or thin walls needs culling disabled or geometry doubled, and shaders can read a built-in front-facing flag to shade the two sides differently.",
-    demos: ["backface-culling"],
+    demos: ["backface-culling", "scene-mesh"],
     relatedTermIds: ["normal-vectors", "triangle-mesh", "frustum-culling", "rasterization"],
   },
   {
@@ -270,7 +270,7 @@ export const geometryScene: TermInput[] = [
     ],
     deeperDive:
       "APIs expose it as a draw call with an instance count: the vertex shader runs per vertex per instance, reading per-instance attributes (typically a transform matrix and color) from a separate buffer or by indexing with the built-in instance ID. The win is on the CPU side — draw-call submission and state changes are the usual bottleneck in object-heavy scenes — while the GPU still shades every instance. Instancing requires identical geometry and material per batch, so engines group objects accordingly; GPU-driven variants go further, letting a compute shader cull and build the instance list without the CPU touching it.",
-    demos: ["instancing"],
+    demos: ["instancing", "tree-instancing"],
     relatedTermIds: [
       "draw-calls-batching",
       "triangle-mesh",

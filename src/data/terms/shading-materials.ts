@@ -141,7 +141,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "In the metalness-roughness workflow the base color map is overloaded: for dielectrics it is the diffuse albedo; for metals it becomes the specular reflectance color. Physically plausible albedo values are bounded — nothing real is 0% or 100% reflective, so PBR guides recommend roughly 30–240 in 8-bit sRGB (charcoal sits near 0.04 linear, fresh snow near 0.9). Albedo textures are authored in sRGB and must be converted to linear space before lighting math, while data maps like roughness and normals stay linear — a classic source of 'washed out' material bugs.",
-    demos: ["albedo"],
+    demos: ["albedo", "scene-albedo"],
     relatedTermIds: ["pbr", "metalness-roughness", "texture-mapping", "gamma-correction"],
   },
   {
@@ -164,7 +164,7 @@ export const shadingMaterials: TermInput[] = [
     deeperDive:
       "Diffuse reflection comes from light penetrating slightly, scattering among pigment particles, and re-exiting in random directions — well approximated by the Lambertian model, where brightness depends only on the angle between surface normal and light (the cosine term `N·L`), not the viewer. Specular reflection happens right at the surface boundary and is view-dependent: classic models put a highlight around the mirror direction (Phong, Blinn-Phong), while modern microfacet models derive its shape from roughness statistics. In PBR the two are coupled by energy conservation — light that reflects specularly isn't available to scatter diffusely — and metals drop the diffuse part entirely.",
     relatedTermIds: ["shading-models", "brdf", "fresnel-effect", "normal-vectors"],
-    demos: ["shading-models"],
+    demos: ["shading-models", "scene-albedo"],
   },
   {
     id: "fresnel-effect",
@@ -207,7 +207,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "A tangent-space normal map stores unit normals relative to the surface's local frame (tangent, bitangent, normal), remapped from [-1, 1] to RGB [0, 1] — hence the dominant blue, since 'unperturbed' (0, 0, 1) encodes as (128, 128, 255). The fragment shader rebuilds the TBN matrix from interpolated vertex data, transforms the sampled normal into world space, and feeds it to lighting. Maps are typically baked by ray-casting from a low-poly mesh to a multi-million-poly sculpt, capturing its detail. Limits: silhouettes stay polygonal, there's no self-occlusion or parallax, and at grazing angles the illusion thins — that's where parallax occlusion or displacement mapping take over. Normal maps are data, not color: store them linearly, never as sRGB.",
-    demos: ["normal-mapping"],
+    demos: ["normal-mapping", "scene-normal-map"],
     relatedTermIds: [
       "normal-vectors",
       "bump-mapping",
@@ -235,7 +235,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Jim Blinn's original formulation perturbs the normal using the height field's partial derivatives: the gradient of the height texture tilts the geometric normal toward downhill, with a strength factor scaling the effect. In practice shaders sample the height map at neighboring texels (or use hardware derivatives) to estimate the gradient per fragment. Normal mapping is effectively the precomputed version — bake those derivatives once into an RGB map instead of computing them at runtime — which gives better quality and lets detail come from a sculpt rather than just a height field. The shared limitation stands: silhouettes, shadows, and parallax don't respond, because the geometry never changed.",
-    demos: ["normal-mapping"],
+    demos: ["normal-mapping", "scene-normal-map"],
     relatedTermIds: ["normal-mapping", "displacement-mapping", "normal-vectors", "texture-mapping"],
   },
   {
