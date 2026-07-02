@@ -5,16 +5,16 @@ companion where it honestly fits" goal. Term links go to the deployed site.
 Last updated 2026-07-02 (after the phase 6–7 feasibility pass; API claims
 verified against the installed SDK v5 typings).
 
-**54 of 66 terms** have a live ArcGIS companion —
+**59 of 66 terms** have a live ArcGIS companion —
 [phase 6](plans/phase-6-mesh-material-lab.md) and
 [phase 7](plans/phase-7-light-and-screen.md) **including the `scene-shader`
 RenderNode stretch** all shipped 2026-07-02. A same-day re-audit
 ([phase 8](plans/phase-8-hidden-levers.md), **shipped 2026-07-02**) found four
 rejections that no longer hold and delivered them — **54 of 66 live**; a second pass over the
 remaining twelve (custom-geometry RenderNodes + `sunLight` +
-`toRenderCoordinates`) reclassified **five more as feasible** (phase 9
-candidates, ceiling **59–60**) and one as parked. Only **6** remain honestly
-uncoverable — argued below so they aren't re-litigated.
+`toRenderCoordinates`) reclassified **five more as feasible — all five shipped the same day**
+(phase 9; IBL stays parked). Only **6** remain honestly uncoverable — argued
+below so they aren't re-litigated. **The goal is exhausted: 59 of 66.**
 
 ## Shipped — phase 6, Mesh & Material Lab (2026-07-02)
 
@@ -60,7 +60,7 @@ verified 2026-07-02):
 | [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | `scene-motion-blur` | RenderNode frame accumulation (`retain()` across frames, per the crossfade sample) |
 | [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | `false-color` | sampleserver6 `Toronto` is 4-band U16 **keyless**; `ImageryLayer.bandIds` is a runtime accessor |
 
-## Planned — phase 9, the RenderNode frontier
+## Shipped — phase 9, the RenderNode frontier (2026-07-02)
 
 Re-audit of 2026-07-02 (second pass): the RenderNode API is not just
 post-processing — the official windmills sample injects **custom geometry
@@ -70,7 +70,7 @@ direction**, `toRenderCoordinates()` places our geometry at any lon/lat, and
 retained FBOs accumulate across frames. That falsifies five more rejections
 ([plan](plans/phase-9-rendernode-frontier.md)):
 
-| Term | Candidate demo | Verified lever & honest angle |
+| Term | Demo | Verified lever & honest angle |
 |---|---|---|
 | [Ray Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/ray-tracing) | `hybrid-ray` | A fragment-shader **analytic ray tracer** (3–4 spheres: mirror reflections, shadow rays) composited against the scene's real depth buffer. The city is rasterized, the spheres are ray-traced — which is *exactly* how games ship RT (hybrid rendering); the caption teaches the boundary you can see. |
 | [Path Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/path-tracing) | `scene-path-trace` | Progressive **Monte-Carlo accumulation** via retained FBOs; accumulation resets whenever the real GIS camera moves. Drag the map → noise; hold still → converge. Precisely why interactive renderers show noisy previews. |

@@ -64,7 +64,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "Classic (Whitted) ray tracing spawns secondary rays only for perfect reflection, refraction, and shadow tests. Path tracing generalizes it: rays scatter probabilistically according to the surface's BRDF, and averaging many random paths per pixel converges to the physically correct answer — at the cost of noise that needs many samples or an AI denoiser. Hardware acceleration structures (BVHs) make ray–triangle intersection fast enough for hybrid real-time use.",
-    demos: ["ray-lab"],
+    demos: ["ray-lab", "hybrid-ray"],
     relatedTermIds: ["ray-casting", "path-tracing", "rasterization", "global-illumination"],
   },
   {

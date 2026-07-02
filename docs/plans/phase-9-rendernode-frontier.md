@@ -1,5 +1,16 @@
 # Phase 9 — The RenderNode Frontier (3 demos + 1 stretch mode)
 
+> **Status: COMPLETE — 3 demos shipped 2026-07-02; IBL stretch NOT shipped**
+> (per the degrade rule below). The build surfaced the phase's biggest
+> finding: injecting geometry at `opaque-color` (the windmills sample's slot)
+> gets silently erased by the engine's downstream resolve in SDK v5 —
+> framebuffer readback proved pixels written, then replaced. All custom
+> passes now target `composite-color`. Also verified: the render-coordinate
+> frame is stable across navigation (no drift, pixel-identical round-trip),
+> `bindRenderTarget()` needs an explicit `camera.viewport` set, and the path
+> tracer's reset-to-1-SPP-on-move behaves exactly as designed. Full log in
+> DECISIONS.md.
+
 The second re-audit of 2026-07-02 established that `RenderNode` is not just
 post-processing: the official
 [windmills sample](https://developers.arcgis.com/javascript/latest/sample-code/custom-render-node-windmills/)
@@ -38,7 +49,8 @@ path-tracing + global-illumination → `scene-path-trace`; image-based-lighting
 
 ## Coverage after phase 9
 
-**59 of 66** terms with an ArcGIS companion (60 with the IBL stretch). The
+**Achieved: 59 of 66** terms with an ArcGIS companion (IBL stretch not
+shipped; the term stays parked). The
 final 6 (rendering, radiosity, scene-graph, double-buffering,
 gpu-vs-cpu-rendering, webgl-vs-webgpu) stay in the
 [coverage report](../arcgis-companion-coverage.md)'s not-possible table —

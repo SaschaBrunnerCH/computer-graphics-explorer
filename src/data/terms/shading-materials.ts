@@ -21,7 +21,7 @@ export const shadingMaterials: TermInput[] = [
     deeperDive:
       "Technically the trio differs in interpolation. Flat: one normal per face, lighting evaluated once. Gouraud: lighting evaluated at each vertex, resulting colors interpolated across the triangle — cheap, but specular highlights smaller than a triangle get smeared or vanish. Phong shading: the normal vector is interpolated across the triangle and lighting is evaluated per fragment, capturing tight highlights correctly. (Don't confuse Phong shading with the Phong reflection model — the ambient/diffuse/specular lighting formula — though both are named after Bui Tuong Phong.) Modern fragment shaders make per-pixel shading the default; try toggling all three in the playground.",
     relatedTermIds: ["shader", "normal-vectors", "specular-vs-diffuse", "rasterization"],
-    demos: ["shading-models"],
+    demos: ["shading-models", "scene-material-lab"],
   },
   {
     id: "shader",
@@ -69,7 +69,7 @@ export const shadingMaterials: TermInput[] = [
     ],
     deeperDive:
       "Formally, the BRDF f(l, v) gives the ratio of reflected radiance toward view direction v to incoming irradiance from light direction l, in units of 1/steradian. Physically plausible BRDFs obey energy conservation (never reflect more than arrives) and Helmholtz reciprocity (swapping l and v gives the same value). A perfectly diffuse (Lambertian) surface has a constant BRDF; real-time engines typically pair that with a microfacet specular term like Cook-Torrance, where a statistical distribution of tiny mirror facets (GGX is the modern standard) produces roughness-controlled highlights. The rendering equation integrates the BRDF against incoming light over the whole hemisphere — which is exactly what path tracers sample.",
-    demos: ["brdf-explorer"],
+    demos: ["brdf-explorer", "scene-material-lab"],
     relatedTermIds: ["pbr", "specular-vs-diffuse", "metalness-roughness", "path-tracing"],
   },
   {

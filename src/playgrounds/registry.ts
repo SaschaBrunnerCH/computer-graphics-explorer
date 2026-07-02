@@ -87,6 +87,10 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "scene-dof": lazy(() => import("./arcgis/SceneDof")),
   "scene-motion-blur": lazy(() => import("./arcgis/SceneMotionBlur")),
   "false-color": lazy(() => import("./arcgis-map/FalseColor")),
+  // Phase 9 — RenderNode frontier (docs/plans/phase-9-rendernode-frontier.md)
+  "scene-material-lab": lazy(() => import("./arcgis/SceneMaterialLab")),
+  "hybrid-ray": lazy(() => import("./arcgis/HybridRay")),
+  "scene-path-trace": lazy(() => import("./arcgis/ScenePathTrace")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -127,4 +131,7 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "scene-dof",
   "scene-motion-blur",
   "false-color",
+  "scene-material-lab",
+  "hybrid-ray",
+  "scene-path-trace",
 ]);

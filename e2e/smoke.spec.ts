@@ -40,7 +40,9 @@ test("react-three-fiber playground renders (shading models)", async ({ page }) =
   const errors = collectPageErrors(page);
   await page.goto("#/term/shading-models");
   await expect(page.getByRole("heading", { level: 1, name: /shading/i })).toBeVisible();
-  await expect(page.locator("figure canvas")).toBeVisible({ timeout: 30_000 });
+  // The term now pairs the r3f demo with the scene-material-lab companion, so
+  // more than one canvas is expected — assert the first (the r3f sphere grid).
+  await expect(page.locator("figure canvas").first()).toBeVisible({ timeout: 30_000 });
   expect(errors).toEqual([]);
 });
 

@@ -49,7 +49,7 @@ export const lighting: TermInput[] = [
       "light-baking",
       "ambient-occlusion",
     ],
-    demos: ["global-illumination"],
+    demos: ["global-illumination", "scene-path-trace"],
   },
   {
     id: "radiosity",
@@ -97,7 +97,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "Path tracing is Monte Carlo integration of the rendering equation: at each bounce, a direction is sampled from the surface's BRDF, and the path's contribution is weighted accordingly. Variance — visible as noise — is the central enemy, fought with importance sampling (favor directions where light likely comes from), next-event estimation (explicitly sample light sources at each bounce), Russian roulette path termination, and low-discrepancy sample sequences. Real-time path tracing leans on hardware BVH traversal plus aggressive AI denoisers and temporal accumulation to make 1–2 samples per pixel presentable.",
-    demos: ["path-tracer"],
+    demos: ["path-tracer", "scene-path-trace"],
     relatedTermIds: ["ray-tracing", "global-illumination", "brdf", "radiosity"],
   },
   {
