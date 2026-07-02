@@ -2,104 +2,90 @@
 
 Status of the "every term should also have an `<arcgis-scene>` / `<arcgis-map>`
 companion where it honestly fits" goal. Term links go to the deployed site.
-Last updated 2026-07-02 (after the phase 6–7 feasibility pass; API claims
-verified against the installed SDK v5 typings).
+Last updated 2026-07-02, after phases 6–9 all shipped the same day.
 
-**59 of 66 terms** have a live ArcGIS companion —
-[phase 6](plans/phase-6-mesh-material-lab.md) and
-[phase 7](plans/phase-7-light-and-screen.md) **including the `scene-shader`
-RenderNode stretch** all shipped 2026-07-02. A same-day re-audit
-([phase 8](plans/phase-8-hidden-levers.md), **shipped 2026-07-02**) found four
-rejections that no longer hold and delivered them — **54 of 66 live**; a second pass over the
-remaining twelve (custom-geometry RenderNodes + `sunLight` +
-`toRenderCoordinates`) reclassified **five more as feasible — all five shipped the same day**
-(phase 9; IBL stays parked). Only **6** remain honestly uncoverable — argued
-below so they aren't re-litigated. **The goal is exhausted: 59 of 66.**
+**59 of 66 terms** have a live ArcGIS playground — the honest ceiling of
+today's platform, reached across phases 6–9 (see [PLAN.md](PLAN.md) and the
+per-phase plan docs for history and verification evidence). The remaining 7
+are argued in the second table so they aren't re-litigated. Watch item:
+Esri's WebGPU port (unlocks webgl-vs-webgpu; reopens hardware ray queries).
 
-## Shipped — phase 6, Mesh & Material Lab (2026-07-02)
+## All terms with an ArcGIS playground (59)
 
-| Term | Planned demo |
-|---|---|
-| [Vertex](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/vertex) | `scene-mesh` |
-| [Polygon / Triangle Mesh](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/triangle-mesh) | `scene-mesh` |
-| [Normal Vectors](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/normal-vectors) | `scene-mesh` |
-| [Backface Culling](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/backface-culling) | `scene-mesh` (flip-winding toggle) |
-| [Transformation Matrices (Model / View / Projection)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/transformation-matrices) | `mesh-transform` |
-| [UV Coordinates](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/uv-coordinates) | `scene-uv` |
-| [Normal Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/normal-mapping) | `scene-normal-map` |
-| [Bump Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/bump-mapping) | `scene-normal-map` |
-| [Albedo](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/albedo) | `scene-albedo` |
-| [Specular vs Diffuse Reflection](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/specular-vs-diffuse) | `scene-albedo` |
-| [Instancing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/instancing) | `tree-instancing` |
-| [Draw Calls & Batching](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/draw-calls-batching) | `tree-instancing` |
-
-## Shipped — phase 7 core, Light & Screen in the Wild (2026-07-02)
-
-| Term | Planned demo |
-|---|---|
-| [Light Baking & Lightmaps](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/light-baking) | `baked-lighting` |
-| [Direct vs Indirect Lighting](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/direct-vs-indirect-lighting) | `sun-ambient` |
-| [Screen-Space Reflections (SSR)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/screen-space-reflections) | `water-ssr` |
-| [Depth Buffer (Z-Buffer)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-buffer) | `scene-zfight` |
-| [Tessellation](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/tessellation) | `geodesic-densify` |
-| [Texture Atlas](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/texture-atlas) | `sprite-atlas` |
-| [Shader (Vertex / Fragment / Compute)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shader) | `scene-shader` (shipped) |
-| [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (shipped) |
-| [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (shipped) |
-
-## Shipped — phase 8, Hidden Levers (2026-07-02)
-
-Found by re-auditing the rejections after `scene-shader` proved custom
-post-processing works ([plan](plans/phase-8-hidden-levers.md), all levers
-verified 2026-07-02):
-
-| Term | Demo | Verified lever |
-|---|---|---|
-| [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing) | `aa-lab` | `takeScreenshot` re-renders at requested resolution (3× edge gradients ~3× steeper than any upscale) + FXAA RenderNode toggle |
-| [Depth of Field](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-of-field) | `scene-dof` | RenderNode + depth attachment — Esri ships an [official DoF sample](https://developers.arcgis.com/javascript/latest/sample-code/custom-render-node-dof/) |
-| [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | `scene-motion-blur` | RenderNode frame accumulation (`retain()` across frames, per the crossfade sample) |
-| [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | `false-color` | sampleserver6 `Toronto` is 4-band U16 **keyless**; `ImageryLayer.bandIds` is a runtime accessor |
-
-## Shipped — phase 9, the RenderNode frontier (2026-07-02)
-
-Re-audit of 2026-07-02 (second pass): the RenderNode API is not just
-post-processing — the official windmills sample injects **custom geometry
-with custom shaders** into the scene (depth-tested against the real city),
-`RenderNode.sunLight` hands our shaders the **engine's actual incident light
-direction**, `toRenderCoordinates()` places our geometry at any lon/lat, and
-retained FBOs accumulate across frames. That falsifies five more rejections
-([plan](plans/phase-9-rendernode-frontier.md)):
-
-| Term | Demo | Verified lever & honest angle |
-|---|---|---|
-| [Ray Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/ray-tracing) | `hybrid-ray` | A fragment-shader **analytic ray tracer** (3–4 spheres: mirror reflections, shadow rays) composited against the scene's real depth buffer. The city is rasterized, the spheres are ray-traced — which is *exactly* how games ship RT (hybrid rendering); the caption teaches the boundary you can see. |
-| [Path Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/path-tracing) | `scene-path-trace` | Progressive **Monte-Carlo accumulation** via retained FBOs; accumulation resets whenever the real GIS camera moves. Drag the map → noise; hold still → converge. Precisely why interactive renderers show noisy previews. |
-| [Global Illumination](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/global-illumination) | `scene-path-trace` | The same demo's indirect bounces ARE global illumination — color bleeding appears out of the noise as samples accumulate. |
-| [BRDF](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/brdf) | `scene-material-lab` | Our own sphere (windmills-pattern geometry injection) shaded by a **GGX BRDF we implement**, with roughness/metallic/anisotropy sliders — lit by `sunLight`, the engine's real sun. The formula finally has knobs. |
-| [Shading (Flat / Gouraud / Phong)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shading-models) | `scene-material-lab` | Same injected sphere, the full historical spectrum — flat / Gouraud / Phong / PBR — implemented in our shaders under the real sun. The "only 2 of 4 models exist" objection dissolves once the shaders are ours. |
-
-**Parked:** [Image-Based Lighting (IBL)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/image-based-lighting)
-— buildable on the material-lab sphere with a sun-matched procedural sky
-environment, but judged marginal over the existing r3f IBL demo (which uses a
-real prefiltered environment). Revisit if `scene-material-lab` ships and wants
-a fourth mode.
-
-Effort note: these are the hardest demos in the catalog (raw WebGL inside the
-engine's context, ECEF local-origin precision, depth-linearization math).
-Feasible ≠ cheap; schedule deliberately.
-
-## Not possible — and what it would take
-
-| Term | What an honest demo needs | Why it stays impossible | What would unlock it |
+| Term | Type | What the playground does | Note |
 |---|---|---|---|
-| [Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/rendering) | A lever over "producing the image" itself | Too generic to isolate — every demo on the site *is* rendering | Nothing — definitional term, not an API gap |
-| [Radiosity](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/radiosity) | Patch subdivision + iterative energy transfer | *Embeddable* in principle via the same RenderNode trick as the path tracer — but it would be the 2D radiosity diagram re-rendered in a heavier costume, with zero GIS tie-in. Rejected for redundancy, not impossibility | A real GI-baking pipeline in the engine |
-| [Scene Graph](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/scene-graph) | Rotate a parent, children follow | A RenderNode hierarchy would be OUR matrix stack, not the SDK's — it duplicates the r3f solar-system demo without any engine lever; graphics remain flat collections | Transform-node parenting in the graphics API |
-| [Double Buffering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/double-buffering) | Toggle buffer swap, show tearing | Swap is owned by the browser compositor, below even RenderNode | A browser swap-chain API — not Esri's to ship |
-| [GPU vs CPU Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/gpu-vs-cpu-rendering) | Same map on CPU vs GPU, side by side | Exactly one render path (WebGL2); no software renderer to race | A CPU fallback renderer — abandoned industry-wide |
-| [WebGL vs WebGPU](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/webgl-vs-webgpu) | Same scene on both APIs with a switch | Typings-verified: zero WebGPU surface in v5 | A WebGPU path with a runtime switch — **in development at Esri; likeliest unlock** |
+| [Albedo](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/albedo) | Scene | 3×3 sphere grid over Lausanne: roughness × metalness axes, albedo swatches prove base color is light-invariant |  |
+| [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing) | Scene | The same view captured at ⅓× / 1× / 3× (takeScreenshot re-renders — verified) as comparable edge crops, plus a live FXAA pass | RenderNode FXAA toggle |
+| [Ambient Occlusion (AO & SSAO)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/ambient-occlusion) | Scene | Ambient occlusion in the wild; honestly explains that v5 applies AO automatically (no public toggle) | honesty precedent for the whole site |
+| [Atmosphere Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/atmosphere-rendering) | Scene | Atmosphere and fog controls over Alpine terrain — haze thickens with distance |  |
+| [Backface Culling](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/backface-culling) | Scene | A dome hand-built from raw vertex/normal/index arrays over Bern: vertex dots, flat↔smooth normals, apex lift, winding flip | the flip-winding toggle IS backface culling |
+| [Bloom](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/bloom) | Map | layer.effect bloom(strength, radius, threshold) on glowing points — the same three knobs as the 3D UnrealBloomPass demo | 2D-only layer effect |
+| [BRDF](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/brdf) | Scene | Our own sphere and shaders — Flat / Gouraud / Phong / GGX with roughness+metallic sliders — lit by the engine's real sun | RenderNode geometry injection; composite-color slot |
+| [Bump Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/bump-mapping) | Scene | Procedural cobblestone normal map on a 2-triangle plane in Lucerne — relief pops at raking sun, silhouette stays flat |  |
+| [Camera Frustum](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/camera-frustum) | Scene | Two synced views: the overview renders the other camera's live frustum as 3D geometry | phase-4 stretch goal |
+| [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | Map | Runtime bandIds remapping on 4-band Toronto imagery: natural / color-infrared / NIR-only — vegetation floods the red channel | bands are BGR+NIR; 11-bit data |
+| [Depth Buffer (Z-Buffer)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-buffer) | Scene | Two co-planar slabs over the Theresienwiese flicker per pixel; a centimeter slider cures it up close but not from afar | engine applies no co-planar bias |
+| [Depth of Field](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-of-field) | Scene | Circle-of-confusion blur computed per pixel from the engine's depth buffer — focus distance and aperture sliders over a Zurich canyon | RenderNode — experimental API |
+| [Direct vs Indirect Lighting](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/direct-vs-indirect-lighting) | Scene | Direct sun vs the ambient fill that keeps Zurich's shadowed façades readable — indirect light's cheap stand-in | honest: approximation, not bounces |
+| [Displacement Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/displacement-mapping) | Scene | A custom BaseElevationLayer rescales Terrain3D tiles — Alpine relief from subtle to cartoonish with one slider | documented Esri pattern |
+| [Draw Calls & Batching](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/draw-calls-batching) | Scene | Up to 3,000 copies of one web-style maple on the Zurich Allmend with a live frame-time meter | keyless Esri web style |
+| [Edge / Sketch Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/edge-rendering) | Scene | Solid / sketch edge styles on building geometry with size and color controls |  |
+| [Elevation Exaggeration](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/elevation-exaggeration) | Scene | A custom BaseElevationLayer rescales Terrain3D tiles — Alpine relief from subtle to cartoonish with one slider | documented Esri pattern |
+| [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | Scene | Your own posterize GLSL spliced into the engine's pipeline, with a stage picker (opaque → final) showing what runs after you | RenderNode — experimental API |
+| [Frame Rate & Frame Time](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-rate) | Map | 1k–100k client-side points with an auto-pan toggle while our own rAF meter plots real frame times |  |
+| [Fresnel Effect](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/fresnel-effect) | Scene | Lake Brienz water: drop the camera to a grazing angle and the far shore's reflection strengthens — Fresnel live | qualityProfile high |
+| [Frustum Culling](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frustum-culling) | Scene | Two synced views: the overview renders the other camera's live frustum as 3D geometry | phase-4 stretch goal |
+| [Gamma Correction](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/gamma-correction) | Map | Stretch-renderer min/max/gamma on >8-bit imagery — tone mapping as production remote sensing does it | serves tone-mapping, HDR, gamma |
+| [Global Illumination](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/global-illumination) | Scene | Progressive Monte-Carlo path tracing over the city: hold still and color bleeding converges out of the noise; move and it resets to 1 SPP | live SPP counter; RenderNode |
+| [High Dynamic Range (HDR)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/hdr) | Map | Stretch-renderer min/max/gamma on >8-bit imagery — tone mapping as production remote sensing does it | serves tone-mapping, HDR, gamma |
+| [I3S & 3D Tiles Streaming](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/i3s-3d-tiles) | Scene | The Girona integrated mesh streams in chunk by chunk while flying presets — screen-space-error refinement visible | serves i3s, mesh-simplification, occlusion |
+| [Instancing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/instancing) | Scene | Up to 3,000 copies of one web-style maple on the Zurich Allmend with a live frame-time meter | keyless Esri web style |
+| [Level of Detail (LOD)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/level-of-detail) | Scene | Quality-profile / level-of-detail switching on a live scene — geometry refines as you approach |  |
+| [Light Baking & Lightmaps](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/light-baking) | Scene | Girona's photogrammetry textures carry the capture-time sun: sweep the live sun and the baked shadows never move; enable dynamic shadows and they double |  |
+| [Light Types (Directional / Point / Spot / Area)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/light-types) | Scene | Drag the sun across Zurich with the daylight widget and watch real building shadows move, soften and stretch | one demo serves three shadow terms |
+| [Mesh Simplification](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/mesh-simplification) | Scene + Map | `scene-streaming`: The Girona integrated mesh streams in chunk by chunk while flying presets — screen-space-error refinement visible • `tile-generalization`: The same coastline at two zoom levels side by side — cartographic generalization, mesh simplification's 2D cousin | serves i3s, mesh-simplification, occlusion |
+| [Metalness / Roughness Workflow](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/metalness-roughness) | Scene | The Khronos WaterBottle glTF as an 8 m sculpture in Zurich — metal cap, glossy body and matte label under a movable real sun | CC0 model bundled locally |
+| [Mipmapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/mipmapping) | Scene + Map | `basemap-mips`: Tile pyramids are mip levels in the wild: the caption tracks the tile level live while you zoom and tilt • `imagery-filtering`: Flip ImageryTileLayer.interpolation between nearest / bilinear / cubic on raw elevation pixels — blocky vs smooth on real Earth data | raw F32 Terrain3D tiles |
+| [Moiré Patterns](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/moire-patterns) | Map | Kansas center-pivot irrigation circles at fractional zoom + rotation — real moiré interference bands swim across the map |  |
+| [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | Scene | Frame-accumulation blur over an orbiting Frankfurt: stop the orbit and the trail collapses — it was time, not a filter | RenderNode — experimental API |
+| [Normal Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/normal-mapping) | Scene | Procedural cobblestone normal map on a 2-triangle plane in Lucerne — relief pops at raking sun, silhouette stays flat |  |
+| [Normal Vectors](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/normal-vectors) | Scene | A dome hand-built from raw vertex/normal/index arrays over Bern: vertex dots, flat↔smooth normals, apex lift, winding flip | the flip-winding toggle IS backface culling |
+| [Occlusion Culling](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/occlusion-culling) | Scene | The Girona integrated mesh streams in chunk by chunk while flying presets — screen-space-error refinement visible | serves i3s, mesh-simplification, occlusion |
+| [Path Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/path-tracing) | Scene | Progressive Monte-Carlo path tracing over the city: hold still and color bleeding converges out of the noise; move and it resets to 1 SPP | live SPP counter; RenderNode |
+| [Physically Based Rendering (PBR)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/pbr) | Scene | The Khronos WaterBottle glTF as an 8 m sculpture in Zurich — metal cap, glossy body and matte label under a movable real sun | CC0 model bundled locally |
+| [Polygon / Triangle Mesh](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/triangle-mesh) | Scene | A dome hand-built from raw vertex/normal/index arrays over Bern: vertex dots, flat↔smooth normals, apex lift, winding flip | the flip-winding toggle IS backface culling |
+| [Rasterization](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/rasterization) | Map | Vector tiles re-rasterize crisply at every fractional zoom beside a raster basemap that blurs — rasterization's trade-offs on real tiles |  |
+| [Ray Casting](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/ray-casting) | Scene | Click anywhere in the scene: a hitTest ray returns the exact 3D point and object it struck |  |
+| [Ray Tracing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/ray-tracing) | Scene | A fragment-shader ray tracer (mirror bounces, shadow rays) composited depth-correct against rasterized Zurich — hybrid rendering as games ship it | RenderNode — experimental API |
+| [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | Scene | Your own posterize GLSL spliced into the engine's pipeline, with a stage picker (opaque → final) showing what runs after you | RenderNode — experimental API |
+| [Screen-Space Reflections (SSR)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/screen-space-reflections) | Scene | A crimson tower mirrored in calm water — orbit until the tower leaves the frame and its reflection vanishes with it | the screen-space tell |
+| [Shader (Vertex / Fragment / Compute)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shader) | Scene | Your own posterize GLSL spliced into the engine's pipeline, with a stage picker (opaque → final) showing what runs after you | RenderNode — experimental API |
+| [Shading (Flat / Gouraud / Phong)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shading-models) | Scene | Our own sphere and shaders — Flat / Gouraud / Phong / GGX with roughness+metallic sliders — lit by the engine's real sun | RenderNode geometry injection; composite-color slot |
+| [Shadows & Shadow Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/shadow-mapping) | Scene | Drag the sun across Zurich with the daylight widget and watch real building shadows move, soften and stretch | one demo serves three shadow terms |
+| [Soft vs Hard Shadows](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/soft-vs-hard-shadows) | Scene | Drag the sun across Zurich with the daylight widget and watch real building shadows move, soften and stretch | one demo serves three shadow terms |
+| [Specular vs Diffuse Reflection](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/specular-vs-diffuse) | Scene | 3×3 sphere grid over Lausanne: roughness × metalness axes, albedo swatches prove base color is light-invariant |  |
+| [Terrain Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/terrain-rendering) | Scene | A custom BaseElevationLayer rescales Terrain3D tiles — Alpine relief from subtle to cartoonish with one slider | documented Esri pattern |
+| [Tessellation](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/tessellation) | Scene | A 'straight' Zurich→New York path whose coarse chords plunge through the Atlantic until densification bends the arc | geodeticDensifyOperator |
+| [Texture Atlas](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/texture-atlas) | Map | The vector basemap's actual 871-icon sprite sheet drawn beside the map, with each sprite's atlas rectangle highlighted | keyless + CORS-verified |
+| [Texture Filtering (Nearest / Bilinear / Trilinear / Anisotropic)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/texture-filtering) | Map | Flip ImageryTileLayer.interpolation between nearest / bilinear / cubic on raw elevation pixels — blocky vs smooth on real Earth data | raw F32 Terrain3D tiles |
+| [Texture Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/texture-mapping) | Scene | Tile pyramids are mip levels in the wild: the caption tracks the tile level live while you zoom and tilt |  |
+| [Tone Mapping](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/tone-mapping) | Map | Stretch-renderer min/max/gamma on >8-bit imagery — tone mapping as production remote sensing does it | serves tone-mapping, HDR, gamma |
+| [Transformation Matrices (Model / View / Projection)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/transformation-matrices) | Scene | Scale → rotate → translate sliders rebuild a box from a pristine base over Basel; a ghost box marks model space | offset() moves the origin in degrees — see DECISIONS |
+| [UV Coordinates](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/uv-coordinates) | Scene | A billboard whose eight UV numbers you edit live in Geneva: tiling, offsets, U↔V swap, grid overlay | teaches the glTF v-down convention |
+| [Vertex](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/vertex) | Scene | A dome hand-built from raw vertex/normal/index arrays over Bern: vertex dots, flat↔smooth normals, apex lift, winding flip | the flip-winding toggle IS backface culling |
 
-Every uncovered term keeps its dedicated r3f / WebGL / diagram playground —
-nothing is left untaught. Potential ceiling if phase 9 ships: **59 of 66**
-(60 with the parked IBL mode). Watch item: Esri's WebGPU port (unlocks
-webgl-vs-webgpu and hardware ray queries).
+## Terms without an ArcGIS playground (7)
+
+Every one keeps its dedicated r3f / WebGL / diagram playground — nothing is
+left untaught. Re-audited three times on 2026-07-02, each pass with more
+aggressive tools; these survived all three.
+
+| Term | Why there is no ArcGIS playground | What would unlock it |
+|---|---|---|
+| [Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/rendering) | Too generic to isolate — every demo on the site *is* rendering; a dedicated one would duplicate another term's demo | Nothing — definitional term, not an API gap |
+| [Double Buffering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/double-buffering) | Buffer swap is owned by the browser compositor, below even RenderNode — no web app can disable vsync or show tearing | A browser swap-chain API — not Esri's to ship |
+| [GPU vs CPU Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/gpu-vs-cpu-rendering) | Exactly one render path (WebGL2); no software renderer to race — `gpu-race` works because we wrote both lanes ourselves | A CPU fallback renderer — abandoned industry-wide |
+| [Scene Graph](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/scene-graph) | A RenderNode hierarchy would be OUR matrix stack, not the SDK's — graphics remain flat collections; `GroupLayer` inherits state, not transforms | Transform-node parenting in the graphics API |
+| [Radiosity](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/radiosity) | Embeddable in principle via the path-tracer's RenderNode trick, but it would be the 2D radiosity diagram in a heavier costume with zero GIS tie-in — rejected for redundancy | A real GI-baking pipeline in the engine |
+| [Image-Based Lighting (IBL)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/image-based-lighting) | PARKED, not impossible: buildable as a fourth scene-material-lab mode with a sun-matched procedural sky, but judged marginal over the r3f IBL demo's real prefiltered environment | Revisit if scene-material-lab wants an IBL mode; or an engine IBL lighting type |
+| [WebGL vs WebGPU](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/webgl-vs-webgpu) | Typings-verified: zero WebGPU surface in v5 — nothing to toggle | A WebGPU path with a runtime switch — **in development at Esri; likeliest unlock** |
