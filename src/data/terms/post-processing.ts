@@ -86,7 +86,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Real lenses focus each point of the scene to a point only at the focal distance; elsewhere it spreads into a 'circle of confusion' (CoC) whose radius grows with distance from the focal plane and with aperture size. Post-process DoF reads the depth buffer, computes a CoC per pixel, and applies a variable-radius blur — often a 'scatter-as-gather' pass that samples in a disc pattern shaped like the lens aperture, which is what makes bokeh hexagonal or circular. The hard problems are at the edges: a sharp foreground object should blur and bleed over the in-focus background behind it, but a screen-space blur only has one depth per pixel, so engines render near-field blur in a separate layer to fake that partial occlusion.",
-    demos: ["depth-of-field"],
+    demos: ["depth-of-field", "scene-dof"],
     relatedTermIds: ["depth-buffer", "camera-frustum", "motion-blur"],
   },
   {
@@ -108,7 +108,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "Offline renderers solve it honestly: distribute ray samples in time across the shutter interval, so moving geometry genuinely smears. Real-time engines instead render a velocity buffer — each pixel stores how far its surface moved on screen since the previous frame, computed by transforming each vertex by both this frame's and last frame's matrices. A post-process pass then blurs each pixel along its velocity vector. Camera-only motion blur is even cheaper, reconstructing velocity purely from the depth buffer and camera delta. Artifacts come from the screen-space shortcut: backgrounds bleed into fast-moving foreground objects and vice versa, which tile-based dilation of dominant velocities tries to hide.",
-    demos: ["motion-blur"],
+    demos: ["motion-blur", "scene-motion-blur"],
     relatedTermIds: ["depth-of-field", "frame-rate", "depth-buffer"],
   },
   {
@@ -174,7 +174,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "The core math trap: sRGB's transfer function (approximately `c^2.2`, exactly a piecewise curve with a linear toe) means stored values are not proportional to light. `0.5 + 0.5` in sRGB is not 'twice the light' — decoded, it's roughly `0.214 + 0.214 = 0.428` of linear light, while sRGB-space addition would claim full white. Any operation that assumes additivity — lighting, alpha blending, mipmap averaging, antialiasing resolve — must therefore happen in linear space. GPUs help: textures created with sRGB formats decode to linear automatically on sampling, and sRGB render targets re-encode on write, both with correct filtering. Color textures (albedo) are sRGB; data textures (normal maps, roughness, height) are already linear and must not be decoded. Wide-gamut spaces (Display P3, Rec.2020) extend the same idea with different primaries, raising the same convert-first rule.",
-    demos: ["gamma"],
+    demos: ["gamma", "false-color"],
     relatedTermIds: ["gamma-correction", "tone-mapping", "albedo", "mipmapping", "anti-aliasing"],
   },
 ];

@@ -158,7 +158,7 @@ export const texturesSampling: TermInput[] = [
       "frame-buffer",
       "mipmapping",
     ],
-    demos: ["anti-aliasing"],
+    demos: ["anti-aliasing", "aa-lab"],
   },
   {
     id: "moire-patterns",

@@ -5,12 +5,12 @@ companion where it honestly fits" goal. Term links go to the deployed site.
 Last updated 2026-07-02 (after the phase 6–7 feasibility pass; API claims
 verified against the installed SDK v5 typings).
 
-**50 of 66 terms** have a live ArcGIS companion —
+**54 of 66 terms** have a live ArcGIS companion —
 [phase 6](plans/phase-6-mesh-material-lab.md) and
 [phase 7](plans/phase-7-light-and-screen.md) **including the `scene-shader`
 RenderNode stretch** all shipped 2026-07-02. A same-day re-audit
-([phase 8](plans/phase-8-hidden-levers.md), planned) found four rejections
-that no longer hold and takes the target to **54**; a second pass over the
+([phase 8](plans/phase-8-hidden-levers.md), **shipped 2026-07-02**) found four
+rejections that no longer hold and delivered them — **54 of 66 live**; a second pass over the
 remaining twelve (custom-geometry RenderNodes + `sunLight` +
 `toRenderCoordinates`) reclassified **five more as feasible** (phase 9
 candidates, ceiling **59–60**) and one as parked. Only **6** remain honestly
@@ -47,13 +47,13 @@ uncoverable — argued below so they aren't re-litigated.
 | [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (shipped) |
 | [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (shipped) |
 
-## Planned — phase 8, Hidden Levers
+## Shipped — phase 8, Hidden Levers (2026-07-02)
 
 Found by re-auditing the rejections after `scene-shader` proved custom
 post-processing works ([plan](plans/phase-8-hidden-levers.md), all levers
 verified 2026-07-02):
 
-| Term | Planned demo | Verified lever |
+| Term | Demo | Verified lever |
 |---|---|---|
 | [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing) | `aa-lab` | `takeScreenshot` re-renders at requested resolution (3× edge gradients ~3× steeper than any upscale) + FXAA RenderNode toggle |
 | [Depth of Field](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-of-field) | `scene-dof` | RenderNode + depth attachment — Esri ships an [official DoF sample](https://developers.arcgis.com/javascript/latest/sample-code/custom-render-node-dof/) |

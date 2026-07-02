@@ -1,5 +1,12 @@
 # Phase 8 — Hidden Levers (4 demos)
 
+> **Status: COMPLETE** (shipped 2026-07-02). All four demos passed driven
+> live verification (capture button, aperture crank, band switch, orbit
+> smear) on the first run — zero code fixes needed. One plan correction:
+> Toronto's bands are BGR+NIR (natural = [2,1,0], CIR = [3,2,1]); the
+> stretch/gamma slider was dropped per the fallback rule
+> (RasterStretchRenderer is single-band). Log in DECISIONS.md.
+
 A re-audit of the "not possible" table after phase 7 shipped found four
 rejections that no longer hold, each verified empirically on 2026-07-02:
 

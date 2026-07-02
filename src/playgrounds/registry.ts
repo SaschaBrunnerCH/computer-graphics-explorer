@@ -82,6 +82,11 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "geodesic-densify": lazy(() => import("./arcgis/GeodesicDensify")),
   "sprite-atlas": lazy(() => import("./arcgis-map/SpriteAtlas")),
   "scene-shader": lazy(() => import("./arcgis/SceneShader")),
+  // Phase 8 — Hidden Levers (docs/plans/phase-8-hidden-levers.md)
+  "aa-lab": lazy(() => import("./arcgis/AaLab")),
+  "scene-dof": lazy(() => import("./arcgis/SceneDof")),
+  "scene-motion-blur": lazy(() => import("./arcgis/SceneMotionBlur")),
+  "false-color": lazy(() => import("./arcgis-map/FalseColor")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -118,4 +123,8 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "geodesic-densify",
   "sprite-atlas",
   "scene-shader",
+  "aa-lab",
+  "scene-dof",
+  "scene-motion-blur",
+  "false-color",
 ]);
