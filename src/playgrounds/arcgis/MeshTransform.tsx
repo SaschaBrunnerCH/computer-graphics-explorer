@@ -41,6 +41,9 @@ const FALLBACK_GROUND_Z = 260;
 /** Base cube edge length, in metres. */
 const BASE_SIZE = 10;
 
+/** Metres per degree of longitude at the plaza's latitude (for offset()). */
+const M_PER_DEG_LON = 111_320 * Math.cos((LAT * Math.PI) / 180);
+
 /** One view: ~120 m south of the box, low tilt so the plaza reads as a floor. */
 const CAMERA = { position: "7.5922, 47.5552, 305", heading: 0, tilt: 72 };
 
@@ -86,7 +89,9 @@ export default function MeshTransform(): React.JSX.Element {
     // Fixed order — this composition is M = T · R · S applied to the vertices.
     m.scale(t.scale, { origin: anchor }); // grow in place around the anchor
     m.rotate(0, 0, t.heading, { origin: anchor }); // spin about the vertical axis
-    m.offset(t.east, 0, t.up); // translate east / up last
+    // Gotcha: offset() on a local-vertex-space mesh moves the ORIGIN, which is
+    // in spatial-reference units — horizontal offsets are DEGREES (z is metric).
+    m.offset(t.east / M_PER_DEG_LON, 0, t.up); // translate east / up last
     const graphic = new Graphic({ geometry: m, symbol: boxSymbol() });
     const previous = transformedRef.current;
     if (previous) layer.remove(previous);

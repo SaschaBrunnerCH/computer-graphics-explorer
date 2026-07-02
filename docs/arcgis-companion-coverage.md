@@ -5,11 +5,12 @@ companion where it honestly fits" goal. Term links go to the deployed site.
 Last updated 2026-07-02 (after the phase 6–7 feasibility pass; API claims
 verified against the installed SDK v5 typings).
 
-**41 of 66 terms** have a live ArcGIS companion today
-([phase 6](plans/phase-6-mesh-material-lab.md) shipped 2026-07-02).
-[Phase 7](plans/phase-7-light-and-screen.md) takes that to **47 (50 with the
-stretch)**. The remaining **15** are honestly uncoverable — argued in the
-table below so they aren't re-litigated.
+**47 of 66 terms** have a live ArcGIS companion today
+([phase 6](plans/phase-6-mesh-material-lab.md) and the
+[phase 7](plans/phase-7-light-and-screen.md) core both shipped 2026-07-02).
+The pending `scene-shader` stretch (RenderNode) would take that to **50**.
+The remaining **15** are honestly uncoverable — argued in the table below so
+they aren't re-litigated.
 
 ## Shipped — phase 6, Mesh & Material Lab (2026-07-02)
 
@@ -28,7 +29,7 @@ table below so they aren't re-litigated.
 | [Instancing](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/instancing) | `tree-instancing` |
 | [Draw Calls & Batching](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/draw-calls-batching) | `tree-instancing` |
 
-## Planned — phase 7, Light & Screen in the Wild
+## Shipped — phase 7 core, Light & Screen in the Wild (2026-07-02)
 
 | Term | Planned demo |
 |---|---|

@@ -74,6 +74,13 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "scene-normal-map": lazy(() => import("./arcgis/SceneNormalMap")),
   "scene-albedo": lazy(() => import("./arcgis/SceneAlbedo")),
   "tree-instancing": lazy(() => import("./arcgis/TreeInstancing")),
+  // Phase 7 — Light & Screen in the Wild (docs/plans/phase-7-light-and-screen.md)
+  "baked-lighting": lazy(() => import("./arcgis/BakedLighting")),
+  "sun-ambient": lazy(() => import("./arcgis/SunAmbient")),
+  "water-ssr": lazy(() => import("./arcgis/WaterSsr")),
+  "scene-zfight": lazy(() => import("./arcgis/SceneZfight")),
+  "geodesic-densify": lazy(() => import("./arcgis/GeodesicDensify")),
+  "sprite-atlas": lazy(() => import("./arcgis-map/SpriteAtlas")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */
@@ -103,4 +110,10 @@ export const arcgisPlaygrounds: ReadonlySet<string> = new Set([
   "scene-normal-map",
   "scene-albedo",
   "tree-instancing",
+  "baked-lighting",
+  "sun-ambient",
+  "water-ssr",
+  "scene-zfight",
+  "geodesic-densify",
+  "sprite-atlas",
 ]);

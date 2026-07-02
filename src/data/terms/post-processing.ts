@@ -130,7 +130,7 @@ export const postProcessing: TermInput[] = [
     ],
     deeperDive:
       "For each pixel, SSR reconstructs the view-space position and normal, computes the reflection vector, then ray-marches it in screen space, comparing the ray's depth against the depth buffer at each step until it dips behind a surface — a hit means 'sample the color buffer there.' Practical implementations march in fewer, coarser steps with a binary-search refinement at the crossing, or use hierarchical depth (depth mip pyramids) to skip empty space. Rough surfaces jitter the reflection ray per the material's roughness and blur the result, usually leaning on temporal accumulation to hide the noise. Failure cases are structural: anything off-screen, behind the camera, or occluded in the depth buffer simply can't be reflected, so engines fall back to environment maps or ray tracing where SSR misses.",
-    demos: ["ssr"],
+    demos: ["ssr", "water-ssr"],
     relatedTermIds: ["depth-buffer", "frame-buffer", "ray-tracing", "image-based-lighting", "pbr"],
   },
   {

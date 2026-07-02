@@ -21,7 +21,7 @@ export const lighting: TermInput[] = [
     deeperDive:
       "Mathematically, the rendering equation splits incoming light at a point into emission, direct illumination (one segment from a light), and indirect illumination (light that has scattered at least once). Rasterizers evaluate direct light analytically per light per pixel, then approximate the indirect term with ambient constants, baked lightmaps, light probes, or screen-space tricks. Path tracers handle both terms uniformly by following bounces, which is why their soft, color-bleeding look is so hard to fake — the indirect term is recursive and touches the whole scene.",
     relatedTermIds: ["global-illumination", "path-tracing", "ambient-occlusion", "light-types"],
-    demos: ["global-illumination"],
+    demos: ["global-illumination", "sun-ambient"],
   },
   {
     id: "global-illumination",
@@ -195,7 +195,7 @@ export const lighting: TermInput[] = [
     ],
     deeperDive:
       "A baker path-traces or radiosity-solves the static scene and writes incoming light into a dedicated, non-overlapping UV layout (a second UV channel) per object. Variants store different things: full lightmaps (all light, fully static), indirect-only lightmaps (combined with real-time direct light and shadows), directional lightmaps that preserve a dominant light direction so normal maps still respond, and light probes — points sampling the baked light field so dynamic objects moving through the scene pick up plausible lighting. Classic failure modes are seams at UV chart boundaries, light leaks from too-low lightmap resolution, and the visible mismatch between crisp dynamic objects and soft baked surroundings.",
-    demos: ["light-baking"],
+    demos: ["light-baking", "baked-lighting"],
     relatedTermIds: [
       "global-illumination",
       "radiosity",

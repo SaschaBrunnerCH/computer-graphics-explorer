@@ -17,14 +17,14 @@ companions sit alongside low-level demos (see each plan's header).
 - ✅ [Phase 5 — `<arcgis-map>` companions](plans/phase-5-arcgis-map.md) — **complete**: seven 2D MapView demos with honest API levers (vector-vs-raster rasterization, layer-effect bloom, imagery interpolation filtering, stretch-renderer tone mapping, real Kansas moiré, tile generalization, live frame budget)
 
 - ✅ [Phase 6 — Mesh & Material Lab](plans/phase-6-mesh-material-lab.md) — **complete**: six `<arcgis-scene>` companions built on the client-side Mesh API — hand-built dome from raw vertex arrays (flat/smooth normals, winding/backface toggle) over Bern, S→R→T box transforms in Basel, editable-UV billboard in Geneva, procedural normal-mapped cobblestones in Lucerne, 3×3 albedo/metallic/roughness sphere grid in Lausanne, and a 3 000-tree instanced forest with live frame meter on the Zurich Allmend
-- 🔲 [Phase 7 — Light & Screen in the Wild](plans/phase-7-light-and-screen.md) — **planned**: baked-vs-dynamic lighting on the Girona mesh, ambient-as-indirect, water-SSR artifact, real z-fighting, geodesic densify (tessellation), vector-style sprite atlas, plus a `RenderNode` custom-shader stretch (shader / frame-buffer / render-pipeline); also documents the ~16 terms with no honest ArcGIS lever
+- ✅ [Phase 7 — Light & Screen in the Wild](plans/phase-7-light-and-screen.md) — **core complete** (stretch pending): baked-vs-dynamic lighting on the Girona photogrammetry mesh, ambient-as-indirect over Zurich, the water-SSR vanish-at-frame-edge artifact, real z-fighting between co-planar slabs, geodesic densify (a flight path that cuts through the Earth), and the vector basemap's real 871-icon sprite atlas; the `RenderNode` custom-shader stretch (shader / frame-buffer / render-pipeline) is tracked separately; the plan doc also documents the ~15 terms with no honest ArcGIS lever
 
-**Phases 1–6 are done**: 60 playgrounds live, **all 66 terms covered**,
-25 ArcGIS demos (18 scenes + 7 maps) appearing across 41 terms. Phase 7
-extends ArcGIS-companion coverage from 41 to 47 of 66 terms (50 with the
-stretch) — see [arcgis-companion-coverage.md](arcgis-companion-coverage.md)
-for the per-term status with live links, including the argued
-not-possible table.
+**Phases 1–7 (core) are done**: 66 playgrounds live, **all 66 terms covered**,
+31 ArcGIS demos (23 scenes + 8 maps) appearing across 47 terms. The remaining
+planned work is the phase-7 `RenderNode` stretch (would add shader /
+frame-buffer / render-pipeline → 50 terms) — see
+[arcgis-companion-coverage.md](arcgis-companion-coverage.md) for the per-term
+status with live links, including the argued not-possible table.
 
 ## Milestones (phase 1)
 

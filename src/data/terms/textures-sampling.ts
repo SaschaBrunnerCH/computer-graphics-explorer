@@ -123,7 +123,7 @@ export const texturesSampling: TermInput[] = [
     ],
     deeperDive:
       "The classic failure mode is bleeding: bilinear filtering near a region's border blends in texels from the neighboring image, and mipmapping makes it worse because higher mip levels average ever-larger areas — eventually merging adjacent regions entirely. Mitigations include padding each region with gutter pixels that duplicate its edges, aligning regions to power-of-two blocks, and limiting how deep the mip chain goes. Texture arrays solve the same draw-call problem without bleeding by stacking same-sized layers, and bindless textures remove the binding bottleneck altogether on modern APIs — but atlases remain the portable workhorse, especially on the web.",
-    demos: ["uv-unwrap"],
+    demos: ["uv-unwrap", "sprite-atlas"],
     relatedTermIds: [
       "uv-coordinates",
       "draw-calls-batching",
