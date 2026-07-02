@@ -8,8 +8,10 @@ verified against the installed SDK v5 typings).
 **50 of 66 terms** have a live ArcGIS companion —
 [phase 6](plans/phase-6-mesh-material-lab.md) and
 [phase 7](plans/phase-7-light-and-screen.md) **including the `scene-shader`
-RenderNode stretch** all shipped 2026-07-02. The remaining **15** are honestly
-uncoverable — argued in the table below so they aren't re-litigated.
+RenderNode stretch** all shipped 2026-07-02. A same-day re-audit
+([phase 8](plans/phase-8-hidden-levers.md), planned) found four rejections
+that no longer hold and takes the target to **54**. The remaining **12** are
+honestly uncoverable — argued in the table below so they aren't re-litigated.
 
 ## Shipped — phase 6, Mesh & Material Lab (2026-07-02)
 
@@ -42,14 +44,18 @@ uncoverable — argued in the table below so they aren't re-litigated.
 | [Frame Buffer](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/frame-buffer) | `scene-shader` (shipped) |
 | [Render Pipeline](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/render-pipeline) | `scene-shader` (shipped) |
 
-Unparked — **verified feasible 2026-07-02**:
-[Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing)
-— `takeScreenshot({width,height})` **does re-render** at the requested
-resolution (empirically: a 3× screenshot's edge gradients are ~3× steeper
-than a bilinear 3× upscale of the native shot, and basemap labels become
-legible — real new pixels, not interpolation). An honest supersampling demo
-(`screenshot-ssaa`: same view captured at ⅓× / 1× / 3× and compared per-pixel)
-is buildable whenever wanted.
+## Planned — phase 8, Hidden Levers
+
+Found by re-auditing the rejections after `scene-shader` proved custom
+post-processing works ([plan](plans/phase-8-hidden-levers.md), all levers
+verified 2026-07-02):
+
+| Term | Planned demo | Verified lever |
+|---|---|---|
+| [Aliasing & Anti-Aliasing (MSAA / FXAA / TAA)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/anti-aliasing) | `aa-lab` | `takeScreenshot` re-renders at requested resolution (3× edge gradients ~3× steeper than any upscale) + FXAA RenderNode toggle |
+| [Depth of Field](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-of-field) | `scene-dof` | RenderNode + depth attachment — Esri ships an [official DoF sample](https://developers.arcgis.com/javascript/latest/sample-code/custom-render-node-dof/) |
+| [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | `scene-motion-blur` | RenderNode frame accumulation (`retain()` across frames, per the crossfade sample) |
+| [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | `false-color` | sampleserver6 `Toronto` is 4-band U16 **keyless**; `ImageryLayer.bandIds` is a runtime accessor |
 
 ## Not possible — and what it would take
 
@@ -67,9 +73,6 @@ is buildable whenever wanted.
 | [Double Buffering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/double-buffering) | Toggle buffer swap, show tearing | Swap is owned by the browser compositor, below the SDK | Nothing Esri can do — needs a browser swap-chain API |
 | [GPU vs CPU Rendering](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/gpu-vs-cpu-rendering) | Same map on CPU vs GPU, side by side | Exactly one render path (WebGL2); no software renderer to race | A CPU fallback renderer — abandoned industry-wide |
 | [WebGL vs WebGPU](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/webgl-vs-webgpu) | Same scene on both APIs with a switch | Typings-verified: zero WebGPU surface in v5 | A WebGPU path with a runtime switch — **in development at Esri; likeliest unlock** |
-| [Color Spaces (sRGB / Linear)](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/color-spaces) | Multi-band recombination (false-color NIR) or linear/sRGB switch | Keyless imagery is pre-rendered 8-bit RGB; no color-management API | Mostly a *data* gap: a keyless multi-band sample service |
-| [Depth of Field](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/depth-of-field) | Focal blur: focus distance + aperture | No 3D post-processing; 2D layer blur has no focal plane — attention, not optics | A SceneView post-processing stack with a depth-aware DoF pass |
-| [Motion Blur](https://saschabrunnerch.github.io/computer-graphics-explorer/#/term/motion-blur) | Velocity-buffer smear tied to camera speed | Same root cause: no post-processing hooks; flights render crisp by design | Same post-processing stack + velocity/accumulation pass |
 
 Every rejected term keeps its dedicated r3f / WebGL / diagram playground —
 nothing is left untaught. Watch items: Esri's WebGPU port (reopens ray-tracing
