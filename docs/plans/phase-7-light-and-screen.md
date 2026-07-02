@@ -41,20 +41,34 @@ below so future sessions don't re-litigate them.
 
 ## Rejected — no honest ArcGIS lever (do not re-attempt without new API)
 
-- **Offline algorithms**: path-tracing, ray-tracing, radiosity, brdf — nothing
-  in a rasterizing GIS engine demonstrates them; the diagrams already do.
-- **Internal, not exposed**: rendering, double-buffering, gpu-vs-cpu-rendering,
-  webgl-vs-webgpu (typings grep confirms no WebGPU surface in v5), draw-call
-  counters (partially served by `tree-instancing` captions),
-  global-illumination (only the ambient approximation of #2 — not bounces),
-  image-based-lighting (no IBL control), scene-graph (no node hierarchy; the
-  layer-tree visibility/opacity inheritance analogy was considered and judged
-  too loose to teach transforms honestly).
-- **Rejected in phase 5, still standing**: depth-of-field / motion-blur via
-  featureEffect blur (attention-steering, not optics); color-spaces (no
-  verified keyless multi-band imagery for false-color composites).
-- **anti-aliasing — parked, verify-first**: `takeScreenshot({width,height})`
-  *might* re-render at the requested resolution (supersampling with a real
-  lever: compare a low-res nearest-upscaled shot to a high-res one). Only
-  build it if verification shows a true re-render, not a resample of the
-  current framebuffer.
+Every claim below was checked against the installed v5 typings (2026-07-02):
+`SceneView` has no post-processing/effects property; the 3D lighting
+environment is exactly `SunLighting` | `VirtualLighting`; no WebGPU surface
+exists anywhere in the package. Each term keeps its dedicated
+r3f/WebGL/diagram playground — nothing is left untaught.
+
+| Term | What an honest demo needs | Why v5 can't provide it | What Esri would need to ship |
+|---|---|---|---|
+| rendering | A lever over "producing the image" itself | Too generic to isolate — every demo on the site *is* rendering; a dedicated one duplicates another term's demo | Nothing — definitional term, not an API gap |
+| ray-tracing | Rays bouncing through the scene (reflections, refraction) | Pure rasterizer; the only ray is the pick ray, already taught by `scene-picking` on *ray-casting* | A ray-traced path (e.g. WebGPU ray queries) with a raster/RT toggle |
+| path-tracing | Monte-Carlo sampling, visible noise converging over frames | No light-path sampling anywhere in the engine | A progressive path-traced "quality preview" mode with sample-count control |
+| radiosity | Patch subdivision + iterative energy transfer | No surface-to-surface energy model, no inspectable intermediate state | A GI-baking pipeline exposing patches/lightmaps — unrealistic for a GIS engine |
+| brdf | Sweep incident/view angles, plot the reflectance lobe | The BRDF lives inside sealed shaders; material *inputs* are settable (phase 6), the *function* is not observable | Custom material shaders or a queryable/overridable BRDF |
+| global-illumination | Actual bounces: color bleeding, secondary light | Indirect light is a constant ambient term — no bounces to toggle; taught honestly as *direct-vs-indirect* (#2), calling it GI would overclaim | A dynamic GI solution (SSGI/DDGI/voxel) with a toggle |
+| image-based-lighting | Swap an environment map, watch lighting change | Lighting is analytic sun + ambient only (`SunLighting`/`VirtualLighting`) | An IBL lighting type accepting an HDR/cubemap |
+| shading-models | Flat vs Gouraud vs Phong vs PBR on one object | Only two material models exist (`MeshMaterial` basic, `MeshMaterialMetallicRoughness` PBR) — 2 of 4 points mis-teaches the spectrum; the basic-vs-PBR contrast already surfaces in `scene-albedo` | Legacy shading modes (unlit/lambert/phong) beside PBR — historical, won't come |
+| scene-graph | Rotate a parent, children follow | Graphics are flat collections; `Mesh.components` share one transform; `GroupLayer` inherits *state* (visibility/opacity), not *transforms* — precisely the wrong lesson | Transform-node parenting in the graphics API |
+| double-buffering | Toggle buffer swap, show tearing | Swap is owned by the browser compositor, below the SDK; no web app can disable vsync or tear | Nothing Esri can do — needs a browser swap-chain API |
+| gpu-vs-cpu-rendering | Same map on CPU vs GPU, side by side | Exactly one render path (WebGL2); no software renderer to race — `gpu-race` works because we wrote both lanes ourselves | A CPU fallback renderer — abandoned industry-wide, won't return |
+| webgl-vs-webgpu | Same scene on both APIs with a switch | Typings-verified: zero WebGPU surface in v5 | A WebGPU path with a runtime engine switch — **actively in development at Esri; the likeliest unlock, revisit each major release** |
+| color-spaces | Multi-band recombination (false-color NIR) or a linear/sRGB switch | Every verified keyless imagery service is pre-rendered 8-bit RGB (multi-band services are key-gated); no color-management API | Mostly a *data* gap: a keyless multi-band sample service (`ImageryTileLayer` band support largely exists) |
+| depth-of-field | Focal blur: focus distance + aperture → circle of confusion | No 3D post-processing at all; 2D `layer.effect: blur` has no focal plane/depth input — attention-steering, not optics (phase-5 rejection stands) | A SceneView post-processing stack with a depth-aware DoF pass |
+| motion-blur | Velocity-buffer smear tied to camera speed | Same root cause: no post-processing hooks; `goTo` flights render each frame crisp by design | Same post-processing stack + velocity/accumulation pass |
+
+**Not rejected, tracked elsewhere:** shader + frame-buffer + render-pipeline
+(the `scene-shader` stretch above — hard, not impossible);
+**anti-aliasing — parked, verify-first**: `takeScreenshot({width,height})`
+*might* re-render at the requested resolution (honest supersampling: compare a
+low-res nearest-upscaled shot to a high-res one). Only build it if
+verification shows a true re-render, not a resample of the current
+framebuffer.
