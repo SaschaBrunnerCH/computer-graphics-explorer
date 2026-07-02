@@ -22,7 +22,9 @@ companions sit alongside low-level demos (see each plan's header).
 **Core roadmap (phases 1–5) is done**: 54 playgrounds live, **all 66 terms
 covered**, 19 ArcGIS demos (12 scenes + 7 maps) appearing across 29 terms.
 Phases 6–7 extend ArcGIS-companion coverage from 29 to 47 of 66 terms
-(50 with the stretch).
+(50 with the stretch) — see
+[arcgis-companion-coverage.md](arcgis-companion-coverage.md) for the
+per-term status with live links, including the argued not-possible table.
 
 ## Milestones (phase 1)
 
