@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { termSchema, type Term, type TermInput, type CategoryId, type Difficulty } from "./types";
 import { categories, categoryById } from "./categories";
+import { playgrounds } from "../playgrounds/registry";
 import { renderingFundamentals } from "./terms/rendering-fundamentals";
 import { geometryScene } from "./terms/geometry-scene";
 import { shadingMaterials } from "./terms/shading-materials";
@@ -34,6 +35,14 @@ const catalogSchema = z.array(termSchema).superRefine((all, ctx) => {
         ctx.addIssue({
           code: "custom",
           message: `Term "${term.id}" references unknown related term "${related}"`,
+        });
+      }
+    }
+    for (const demo of term.demos) {
+      if (!(demo in playgrounds)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `Term "${term.id}" references unknown demo "${demo}" (not in the playground registry)`,
         });
       }
     }

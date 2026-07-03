@@ -203,7 +203,7 @@ export const realtimeGis: TermInput[] = [
       "An architect's line drawing of a house tells you more about its form than an out-of-focus photo — the lines sit exactly where your eye needs information: corners, silhouettes, and creases.",
     spotItInTheWild: [
       "ArcGIS SceneView edge rendering: white untextured city buildings with 'solid' or 'sketch' edges, the signature urban-planning look",
-      "Cel-shaded games like Zelda or Borderlands with their inked outlines",
+      "Cel-shaded games like Zelda: The Wind Waker or Borderlands with their inked outlines",
       "CAD and BIM viewers showing hidden-line or wireframe-over-shaded views",
     ],
     deeperDive:
