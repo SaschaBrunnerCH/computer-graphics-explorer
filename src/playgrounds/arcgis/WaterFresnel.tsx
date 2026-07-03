@@ -29,17 +29,25 @@ configureArcgis();
  * Keyless services only: OSM basemap + Esri world elevation.
  */
 
-/** Lake Brienz sits at ~564 m a.s.l.; render just above to avoid z-fighting. */
-const WATER_Z = 564.3;
+/**
+ * Lake Brienz sits at ~564 m a.s.l. Render with generous clearance: coarse
+ * terrain LODs wobble the ground a meter or two, and a too-tight offset lets
+ * the terrain swallow the water across most of the view at grazing angles.
+ */
+const WATER_Z = 565.5;
 const WATER_LAYER_ID = "lake-brienz-water";
 
-/** Generous rectangle over Lake Brienz (Interlaken → Brienz); land parts stay buried. */
+/**
+ * Generous rectangle over Lake Brienz (Interlaken → Brienz); land parts stay
+ * buried. Wound clockwise — Esri's convention for exterior rings; a
+ * counterclockwise ring means a hole and may not render at all.
+ */
 const WATER_RINGS: number[][][] = [
   [
     [7.84, 46.67, WATER_Z],
-    [8.09, 46.67, WATER_Z],
-    [8.09, 46.78, WATER_Z],
     [7.84, 46.78, WATER_Z],
+    [8.09, 46.78, WATER_Z],
+    [8.09, 46.67, WATER_Z],
     [7.84, 46.67, WATER_Z],
   ],
 ];
@@ -51,9 +59,10 @@ const CAMERAS: Record<
   ViewAngle,
   { position: [number, number, number]; heading: number; tilt: number }
 > = {
-  // ~20 m above the water off Bönigen, looking ENE along the lake toward the
-  // Brienzer Rothorn ridge — lots of mountain for the surface to reflect.
-  grazing: { position: [7.895, 46.69, 585], heading: 59, tilt: 84 },
+  // ~27 m above open water just off the Lütschine delta (the old spot over
+  // Bönigen framed mostly village and delta), looking ENE up the lake's long
+  // axis toward Brienz — water fills the frame, mountains left to reflect.
+  grazing: { position: [7.908, 46.6975, 592], heading: 57, tilt: 84 },
   // High above mid-lake, looking almost straight down.
   steep: { position: [7.96, 46.715, 5800], heading: 59, tilt: 8 },
 };
@@ -201,7 +210,7 @@ export default function WaterFresnel(): React.JSX.Element {
         basemap="osm"
         ground="world-elevation"
         qualityProfile="high"
-        cameraPosition="7.8950, 46.6900, 585"
+        cameraPosition={CAMERAS.grazing.position.join(", ")}
         cameraHeading={CAMERAS.grazing.heading}
         cameraTilt={CAMERAS.grazing.tilt}
         popupDisabled

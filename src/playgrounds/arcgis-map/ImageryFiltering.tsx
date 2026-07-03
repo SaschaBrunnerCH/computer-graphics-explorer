@@ -55,23 +55,6 @@ const buildRenderer = (): RasterStretchRenderer =>
     }),
   });
 
-// Module-level singletons (this chunk is lazy-loaded): constructing a layer
-// triggers no network until a view displays it. handleViewReady re-syncs the
-// layer to INITIAL so a later revisit starts fresh; mutations happen only in
-// event handlers (never during render).
-const imageryLayer = new ImageryTileLayer({
-  url: TERRAIN_URL,
-  interpolation: INITIAL.interpolation,
-  renderer: buildRenderer(),
-});
-const sharedMap = new EsriMap({ layers: [imageryLayer] });
-// The service cache stops at level 16; extra LODs let the view overzoom so
-// one source pixel spans many screen pixels (true magnification).
-const overzoomConstraints = new MapViewConstraints({
-  lods: TileInfo.create({ numLODs: 24 }).lods,
-  snapToZoom: false,
-});
-
 const MODE_TEXT: Record<Interpolation, string> = {
   nearest:
     "Nearest copies the single closest sample into every screen pixel — the same hard blocky squares as the magnified checkerboard above.",
@@ -82,6 +65,29 @@ const MODE_TEXT: Record<Interpolation, string> = {
 };
 
 export default function ImageryFiltering(): React.JSX.Element {
+  // Map and constraints are per-mount state, NOT module singletons: the
+  // <arcgis-map> element destroys the Map it was given when it leaves the DOM,
+  // so a shared instance comes back "already destroyed" on the next visit and
+  // the view stays black. Construction still triggers no network until a view
+  // displays the layer. The extra LODs let the view overzoom past the
+  // service's deepest cache level (16) so one source pixel spans many screen
+  // pixels (true magnification). Handlers reach the (mutable) layer through
+  // the element — see readyLayer — so the state binding is never written.
+  const [{ map: sharedMap, constraints: overzoomConstraints }] = useState(() => ({
+    map: new EsriMap({
+      layers: [
+        new ImageryTileLayer({
+          url: TERRAIN_URL,
+          interpolation: INITIAL.interpolation,
+          renderer: buildRenderer(),
+        }),
+      ],
+    }),
+    constraints: new MapViewConstraints({
+      lods: TileInfo.create({ numLODs: 24 }).lods,
+      snapToZoom: false,
+    }),
+  }));
   const mapElRef = useRef<HTMLArcgisMapElement | null>(null);
   const lastUpdateRef = useRef(0);
   const trailingRef = useRef<number | undefined>(undefined);
@@ -94,6 +100,12 @@ export default function ImageryFiltering(): React.JSX.Element {
     return el && el.view ? el : null;
   };
 
+  /** The imagery layer, fetched via the element (handlers only; null pre-view). */
+  const readyLayer = (): ImageryTileLayer | null => {
+    const layer = readyMap()?.view.map?.layers.at(0);
+    return layer instanceof ImageryTileLayer ? layer : null;
+  };
+
   /** Read the current zoom off the view and publish it (deduped via rounding). */
   const updateZoomReadout = (): void => {
     const z = readyMap()?.view?.zoom;
@@ -102,9 +114,9 @@ export default function ImageryFiltering(): React.JSX.Element {
   };
 
   const handleViewReady = (): void => {
-    // The layer outlives the component (module singleton): re-sync it to the
-    // fresh INITIAL React state. StrictMode re-fires this; it's idempotent.
-    imageryLayer.interpolation = INITIAL.interpolation;
+    // StrictMode re-fires this on its simulated remount; it's idempotent.
+    const layer = readyLayer();
+    if (layer) layer.interpolation = INITIAL.interpolation;
   };
 
   const handleViewChange = (): void => {
@@ -140,7 +152,8 @@ export default function ImageryFiltering(): React.JSX.Element {
       onReset={() => {
         setInterpolation(INITIAL.interpolation);
         setZoom(INITIAL.zoom);
-        imageryLayer.interpolation = INITIAL.interpolation;
+        const layer = readyLayer();
+        if (layer) layer.interpolation = INITIAL.interpolation;
         const el = readyMap();
         if (el) void el.goTo({ center: CENTER, zoom: INITIAL.zoom }).catch(() => undefined);
       }}
@@ -156,7 +169,8 @@ export default function ImageryFiltering(): React.JSX.Element {
             ]}
             onChange={(mode) => {
               setInterpolation(mode);
-              imageryLayer.interpolation = mode;
+              const layer = readyLayer();
+              if (layer) layer.interpolation = mode;
             }}
           />
           <SliderControl

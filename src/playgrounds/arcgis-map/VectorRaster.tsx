@@ -30,6 +30,19 @@ const CENTER_ATTR = `${CENTER[0]}, ${CENTER[1]}`;
 const ZOOM = { min: 12, max: 18, step: 0.25 };
 const INITIAL = { zoom: 16 };
 
+/**
+ * The two basemaps use different LOD tables: the raster OSM basemap is the
+ * classic 256 px scheme (level 0 ≈ 1:591M), while the OSM_v2 vector service
+ * is the 512 px scheme whose levels are numbered one lower for the same
+ * scale (level 0 ≈ 1:295.8M). `view.zoom` is an index into each view's own
+ * table, so the same zoom number means different scales — all positioning
+ * and syncing below therefore goes through `view.scale`, and "zoom" in the
+ * UI always means the classic slippy-map level.
+ */
+const CLASSIC_LOD0_SCALE = 591657527.591555;
+const scaleForZoom = (z: number): number => CLASSIC_LOD0_SCALE / 2 ** z;
+const zoomForScale = (s: number): number => Math.log2(CLASSIC_LOD0_SCALE / s);
+
 type Side = "left" | "right";
 
 /** Our verified keyless vector-tile basemap (one instance per map element). */
@@ -61,16 +74,20 @@ export default function VectorRaster(): React.JSX.Element {
   const handleReady = (el: HTMLArcgisMapElement): void => {
     // Continuous wheel zoom: fractional zooms are where the lesson lives.
     el.constraints.snapToZoom = false;
+    // The `zoom` attribute meant this view's own LOD numbering; normalize
+    // both maps to the same real scale (no-op for the raster side).
+    el.view.scale = scaleForZoom(INITIAL.zoom);
   };
 
-  /** Copy the active map's center/zoom to the other and publish the zoom. */
+  /** Copy the active map's center/scale to the other and publish the zoom. */
   const syncFrom = (side: Side): void => {
     const src = readyMap(side);
     const tgt = readyMap(side === "left" ? "right" : "left");
     if (!src || !tgt) return;
     tgt.view.center = src.view.center.clone();
-    if (Math.abs(tgt.view.zoom - src.view.zoom) > 1e-3) tgt.view.zoom = src.view.zoom;
-    const z = Math.round(src.view.zoom * 100) / 100;
+    if (Math.abs(tgt.view.scale - src.view.scale) / src.view.scale > 1e-4)
+      tgt.view.scale = src.view.scale;
+    const z = Math.round(zoomForScale(src.view.scale) * 100) / 100;
     setZoom((prev) => (prev === z ? prev : z));
   };
 
@@ -96,7 +113,7 @@ export default function VectorRaster(): React.JSX.Element {
     setZoom(value);
     for (const side of ["left", "right"] as const) {
       const el = readyMap(side);
-      if (el) el.zoom = value;
+      if (el) el.view.scale = scaleForZoom(value);
     }
   };
 
@@ -118,7 +135,7 @@ export default function VectorRaster(): React.JSX.Element {
           const el = readyMap(side);
           if (el)
             void el
-              .goTo({ center: [...CENTER], zoom: INITIAL.zoom }, { animate: false })
+              .goTo({ center: [...CENTER], scale: scaleForZoom(INITIAL.zoom) }, { animate: false })
               .catch(() => undefined); // interrupted navigations reject — never crash on that
         }
       }}
@@ -152,7 +169,9 @@ export default function VectorRaster(): React.JSX.Element {
             className="block h-full w-full"
             basemap={vectorBasemap}
             center={CENTER_ATTR}
-            zoom={INITIAL.zoom}
+            // This service's 512px LODs are numbered one below the classic
+            // scheme for the same scale; handleReady re-normalizes by scale.
+            zoom={INITIAL.zoom - 1}
             popupDisabled
             onarcgisViewReadyChange={(event: { target: HTMLArcgisMapElement }) =>
               handleReady(event.target)

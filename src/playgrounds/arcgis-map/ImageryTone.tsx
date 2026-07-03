@@ -44,14 +44,19 @@ const buildRenderer = (s: {
     gamma: [s.gamma],
   });
 
-// Module-level singletons (this chunk is lazy-loaded): constructing a layer
-// triggers no network until a view displays it. handleViewReady re-syncs the
-// renderer to INITIAL so a later revisit starts fresh; mutations happen only
-// in event handlers (never during render).
-const imageryLayer = new ImageryTileLayer({ url: TERRAIN_URL, renderer: buildRenderer(INITIAL) });
-const sharedMap = new EsriMap({ layers: [imageryLayer] });
-
 export default function ImageryTone(): React.JSX.Element {
+  // The map is per-mount state, NOT a module singleton: the <arcgis-map>
+  // element destroys the Map it was given when it leaves the DOM, so a shared
+  // instance comes back "already destroyed" on the next visit and the view
+  // stays black. Constructing it here still triggers no network until a view
+  // displays it. Handlers reach the (mutable) layer through the element — see
+  // readyLayer — so the state binding itself is never written.
+  const [sharedMap] = useState(
+    () =>
+      new EsriMap({
+        layers: [new ImageryTileLayer({ url: TERRAIN_URL, renderer: buildRenderer(INITIAL) })],
+      }),
+  );
   const mapElRef = useRef<HTMLArcgisMapElement | null>(null);
   const debounceRef = useRef<number | undefined>(undefined);
   const [displayMin, setDisplayMin] = useState(INITIAL.displayMin);
@@ -67,6 +72,12 @@ export default function ImageryTone(): React.JSX.Element {
     return el && el.view ? el : null;
   };
 
+  /** The imagery layer, fetched via the element (handlers only; null pre-view). */
+  const readyLayer = (): ImageryTileLayer | null => {
+    const layer = readyMap()?.view.map?.layers.at(0);
+    return layer instanceof ImageryTileLayer ? layer : null;
+  };
+
   /** Rebuild the renderer debounced (~200 ms) so slider scrubs don't thrash it. */
   const scheduleRenderer = (next: {
     displayMin: number;
@@ -76,14 +87,15 @@ export default function ImageryTone(): React.JSX.Element {
   }): void => {
     window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
-      imageryLayer.renderer = buildRenderer(next);
+      const layer = readyLayer();
+      if (layer) layer.renderer = buildRenderer(next);
     }, 200);
   };
 
   const handleViewReady = (): void => {
-    // The layer outlives the component (module singleton): re-sync it to the
-    // fresh INITIAL React state. StrictMode re-fires this; it's idempotent.
-    imageryLayer.renderer = buildRenderer(INITIAL);
+    // StrictMode re-fires this on its simulated remount; it's idempotent.
+    const layer = readyLayer();
+    if (layer) layer.renderer = buildRenderer(INITIAL);
   };
 
   const windowText = dra
@@ -109,7 +121,8 @@ export default function ImageryTone(): React.JSX.Element {
         setGamma(INITIAL.gamma);
         setDra(INITIAL.dra);
         window.clearTimeout(debounceRef.current);
-        imageryLayer.renderer = buildRenderer(INITIAL);
+        const layer = readyLayer();
+        if (layer) layer.renderer = buildRenderer(INITIAL);
         const el = readyMap();
         if (el) void el.goTo({ center: CENTER, zoom: ZOOM }).catch(() => undefined);
       }}

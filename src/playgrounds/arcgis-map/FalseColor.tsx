@@ -50,17 +50,6 @@ const BANDS: Record<Mapping, number[]> = {
 
 const INITIAL: Mapping = "natural";
 
-// Module-level singletons (this chunk is lazy-loaded): constructing the layer
-// triggers no network until a view displays it. bandIds is a runtime-settable
-// accessor, mutated only in event handlers (never during render). png32 keeps
-// the export lossless so the band composite stays faithful to the raw pixels.
-const imageryLayer = new ImageryLayer({
-  url: TORONTO_URL,
-  format: "png32",
-  bandIds: BANDS[INITIAL],
-});
-const sharedMap = new EsriMap({ basemap: "osm", layers: [imageryLayer] });
-
 type LoadStatus = "loading" | "ready" | "failed";
 
 const CAPTIONS: Record<Mapping, string> = {
@@ -71,6 +60,20 @@ const CAPTIONS: Record<Mapping, string> = {
 };
 
 export default function FalseColor(): React.JSX.Element {
+  // The map is per-mount state, NOT a module singleton: the <arcgis-map>
+  // element destroys the Map it was given when it leaves the DOM, so a shared
+  // instance comes back "already destroyed" on the next visit and the view
+  // stays black. bandIds is a runtime-settable accessor, mutated only in event
+  // handlers via readyLayer (so the state binding is never written); png32
+  // keeps the export lossless so the band composite stays faithful to the raw
+  // pixels.
+  const [sharedMap] = useState(
+    () =>
+      new EsriMap({
+        basemap: "osm",
+        layers: [new ImageryLayer({ url: TORONTO_URL, format: "png32", bandIds: BANDS[INITIAL] })],
+      }),
+  );
   const mapElRef = useRef<HTMLArcgisMapElement | null>(null);
   const [mapping, setMapping] = useState<Mapping>(INITIAL);
   const [status, setStatus] = useState<LoadStatus>("loading");
@@ -81,17 +84,23 @@ export default function FalseColor(): React.JSX.Element {
     return el && el.view ? el : null;
   };
 
+  /** The imagery layer, fetched via the element (handlers only; null pre-view). */
+  const readyLayer = (): ImageryLayer | null => {
+    const layer = readyMap()?.view.map?.layers.at(0);
+    return layer instanceof ImageryLayer ? layer : null;
+  };
+
   const applyMapping = (m: Mapping): void => {
-    imageryLayer.bandIds = BANDS[m];
+    const layer = readyLayer();
+    if (layer) layer.bandIds = BANDS[m];
   };
 
   const handleViewReady = (): void => {
-    // The layer outlives the component (module singleton): re-sync its bandIds
-    // to the current React state. StrictMode re-fires this; it's idempotent.
+    // StrictMode re-fires this on its simulated remount; it's idempotent.
     applyMapping(mapping);
     // Surface an honest failure if the external service can't load.
-    imageryLayer
-      .load()
+    readyLayer()
+      ?.load()
       .then(() => setStatus("ready"))
       .catch(() => setStatus("failed"));
   };
