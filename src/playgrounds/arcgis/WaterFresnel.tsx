@@ -38,17 +38,20 @@ const WATER_Z = 565.5;
 const WATER_LAYER_ID = "lake-brienz-water";
 
 /**
- * Generous rectangle over Lake Brienz (Interlaken → Brienz); land parts stay
- * buried. Wound clockwise — Esri's convention for exterior rings; a
- * counterclockwise ring means a hole and may not render at all.
+ * Generous rectangle over Lake Brienz (Bönigen bay → Brienz); land parts stay
+ * buried. The west edge stops short of the Bödeli so the sheet never reaches
+ * Lake Thun (surface 558 m — the sheet would visibly float 7 m above it).
+ * Wound clockwise — Esri's convention for exterior rings; a counterclockwise
+ * ring is a hole, which the engine renders as the world-sized INVERSE of the
+ * rectangle (verified live: water everywhere except the lake).
  */
 const WATER_RINGS: number[][][] = [
   [
-    [7.84, 46.67, WATER_Z],
-    [7.84, 46.78, WATER_Z],
-    [8.09, 46.78, WATER_Z],
-    [8.09, 46.67, WATER_Z],
-    [7.84, 46.67, WATER_Z],
+    [7.885, 46.67, WATER_Z],
+    [7.885, 46.78, WATER_Z],
+    [8.06, 46.78, WATER_Z],
+    [8.06, 46.67, WATER_Z],
+    [7.885, 46.67, WATER_Z],
   ],
 ];
 
