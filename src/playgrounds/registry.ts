@@ -96,6 +96,8 @@ export const playgrounds: Record<string, LazyExoticComponent<ComponentType>> = {
   "painters-order": lazy(() => import("./arcgis-map/PaintersOrder")),
   "map-view-transform": lazy(() => import("./arcgis-map/MapViewTransform")),
   "extent-culling": lazy(() => import("./arcgis-map/ExtentCulling")),
+  // Feedback follow-ups — display pipeline simulator (half-drawn frames, tearing, vsync)
+  "double-buffering": lazy(() => import("./diagrams/DoubleBuffering")),
 };
 
 /** Demo keys rendered with the ArcGIS Maps SDK (marked with the SDK logo in the TOC). */

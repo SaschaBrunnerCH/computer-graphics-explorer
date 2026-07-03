@@ -185,7 +185,7 @@ export const renderingFundamentals: TermInput[] = [
     ],
     deeperDive:
       "The swap is typically synchronized to the display's refresh (vsync) to avoid tearing; missing the deadline means waiting a whole refresh, which is why frame rates under vsync often snap to divisors (60 → 30). Triple buffering adds a second back buffer to decouple drawing from the swap deadline at the cost of one frame of latency. Variable-refresh displays (G-Sync/FreeSync) relax the fixed deadline entirely.",
-    demos: ["frame-time"],
+    demos: ["double-buffering", "frame-time"],
     relatedTermIds: ["frame-buffer", "frame-rate"],
   },
   {

@@ -54,6 +54,15 @@ test("raw WebGL2 playground renders (depth buffer)", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test("double buffering simulator renders (display pipeline diagram)", async ({ page }) => {
+  const errors = collectPageErrors(page);
+  await page.goto("#/term/double-buffering");
+  await expect(page.getByRole("heading", { level: 1, name: /double buffering/i })).toBeVisible();
+  // The simulator pairs with the frame-time demo — two diagram canvases.
+  await expect(page.locator("figure canvas")).toHaveCount(2, { timeout: 30_000 });
+  expect(errors).toEqual([]);
+});
+
 test("ArcGIS scene playground renders (shadow mapping)", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("#/term/shadow-mapping");
