@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { PlaygroundFrame } from "../../components/PlaygroundFrame";
 import { SliderControl, SwitchControl, SegmentedControl } from "../../components/controls";
+import { formatZFightOffset, Z_FIGHT_OFFSET } from "../zFightControls";
 
 /**
  * Raw WebGL2 on purpose: the whole lesson is the real pipeline with nothing
- * in between. Two nearly co-planar quads z-fight; the near-plane slider
- * redistributes depth precision and fixes it. The view modes show what the
- * depth buffer actually stores.
+ * in between. Two co-planar quads expose the limits of a conventional depth
+ * buffer. The controls update the real projection and lift uniforms; the
+ * readout reports a sampled depth-step estimate instead of treating any
+ * near-plane or offset threshold as a universal fix. The view modes show what
+ * the depth buffer actually stores.
  */
 
 const VERT = `#version 300 es
@@ -52,18 +55,42 @@ type ViewMode = "color" | "raw" | "linear";
 interface DemoState {
   near: number;
   far: number;
-  offsetMm: number;
+  offsetCm: number;
   viewMode: ViewMode;
   animate: boolean;
+  orbitYaw: number;
+  orbitPitch: number;
 }
+
+const CAMERA_TARGET: [number, number, number] = [0, 0.4, -12];
+const INITIAL_ORBIT_PITCH = Math.atan2(1.8, 19);
+const INITIAL_ORBIT_DISTANCE = Math.hypot(1.8, 19);
+const CAMERA_PITCH_MIN = -1.3;
+const CAMERA_PITCH_MAX = 1.3;
+const CAMERA_DRAG_RADIANS_PER_PIXEL = 0.008;
+const CAMERA_KEY_RADIANS = 0.06;
+const CAMERA_SWAY_YAW = Math.asin(1.2 / INITIAL_ORBIT_DISTANCE);
+const CAMERA_SWAY_PITCH = Math.asin(0.2 / INITIAL_ORBIT_DISTANCE);
 
 const INITIAL: DemoState = {
   near: 0.01,
-  far: 2000,
-  offsetMm: 0,
+  far: 100,
+  offsetCm: 0,
   viewMode: "color",
   animate: true,
+  orbitYaw: 0,
+  orbitPitch: INITIAL_ORBIT_PITCH,
 };
+
+/** A stable camera and three points used only for the explanatory readout. */
+const REFERENCE_EYE: [number, number, number] = [0, 2.2, 7];
+const REFERENCE_STRIPE_Z = [-35, -15, 5] as const;
+
+interface DepthStepEstimate {
+  min: number;
+  max: number;
+  sampleCount: number;
+}
 
 /* ---------- tiny matrix helpers (column-major, like WebGL expects) ---------- */
 
@@ -89,8 +116,10 @@ function lookAt(eye: [number, number, number], target: [number, number, number])
   zy /= zl;
   zz /= zl;
   // up = (0,1,0)
-  let xx = -zz,
-    xz = zx;
+  // right = normalize(cross(up, view-z)); the opposite signs rotate the
+  // rendered world upside down and make the road appear to hang overhead.
+  let xx = zz,
+    xz = -zx;
   const xl = Math.hypot(xx, xz);
   xx /= xl;
   xz /= xl;
@@ -104,6 +133,77 @@ function lookAt(eye: [number, number, number], target: [number, number, number])
     xz, yz, zz, 0,
     -(xx * ex + xz * ez), -(yx * ex + yy * ey + yz * ez), -(zx * ex + zy * ey + zz * ez), 1,
   ]);
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function orbitEye(yaw: number, pitch: number): [number, number, number] {
+  const horizontalDistance = INITIAL_ORBIT_DISTANCE * Math.cos(pitch);
+  return [
+    CAMERA_TARGET[0] + Math.sin(yaw) * horizontalDistance,
+    CAMERA_TARGET[1] + Math.sin(pitch) * INITIAL_ORBIT_DISTANCE,
+    CAMERA_TARGET[2] + Math.cos(yaw) * horizontalDistance,
+  ];
+}
+
+function viewSpaceZ(view: Float32Array, point: [number, number, number]): number {
+  return view[2] * point[0] + view[6] * point[1] + view[10] * point[2] + view[14];
+}
+
+/** Returns a point's normalized window-depth value after the current projection. */
+function windowDepth(
+  projection: Float32Array,
+  view: Float32Array,
+  point: [number, number, number],
+): number {
+  const viewZ = viewSpaceZ(view, point);
+  const clipZ = projection[10] * viewZ + projection[14];
+  return (clipZ / -viewZ + 1) * 0.5;
+}
+
+/**
+ * Estimate the number of stored depth values separating the road and stripe
+ * at three visible distances. This is an analytic diagnostic for the current
+ * conventional projection, not a promise about every rasterized pixel.
+ */
+function estimateDepthSteps(
+  near: number,
+  far: number,
+  offsetCm: number,
+  depthBits: number,
+): DepthStepEstimate | null {
+  const view = lookAt(REFERENCE_EYE, CAMERA_TARGET);
+  const projection = perspective(55, 1, near, far);
+  const storedValues = 2 ** depthBits - 1;
+  const lift = offsetCm / 100;
+  const steps: number[] = [];
+  for (const z of REFERENCE_STRIPE_Z) {
+    const roadPoint: [number, number, number] = [0, 0, z];
+    const distance = -viewSpaceZ(view, roadPoint);
+    if (distance < near || distance > far) continue;
+    const roadDepth = windowDepth(projection, view, roadPoint);
+    const stripeDepth = windowDepth(projection, view, [0, lift, z]);
+    steps.push(Math.abs(stripeDepth - roadDepth) * storedValues);
+  }
+  if (steps.length === 0) return null;
+  return { min: Math.min(...steps), max: Math.max(...steps), sampleCount: steps.length };
+}
+
+function formatDepthSteps(value: number): string {
+  if (value === 0) return "0";
+  if (value < 0.01) return value.toExponential(1);
+  if (value < 10) return value.toFixed(2);
+  return Math.round(value).toLocaleString();
+}
+
+function formatMeters(value: number): string {
+  return value < 1 ? `${value.toFixed(2)} m` : `${value.toFixed(value < 10 ? 1 : 0)} m`;
+}
+
+function formatRatio(value: number): string {
+  return value >= 1000 ? Math.round(value).toLocaleString() : value.toFixed(0);
 }
 
 /* ---------- geometry ---------- */
@@ -206,6 +306,7 @@ export default function DepthBuffer(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<DemoState>({ ...INITIAL });
   const [state, setState] = useState<DemoState>({ ...INITIAL });
+  const [depthBits, setDepthBits] = useState<number | null>(null);
 
   // Mirror state into a ref so the RAF loop reads fresh values without re-creating the GL setup.
   useEffect(() => {
@@ -217,6 +318,8 @@ export default function DepthBuffer(): React.JSX.Element {
     if (!canvas) return;
     const gl = canvas.getContext("webgl2");
     if (!gl) throw new Error("WebGL2 not supported");
+    const reportedDepthBits = gl.getParameter(gl.DEPTH_BITS) as number;
+    setDepthBits(reportedDepthBits > 0 ? reportedDepthBits : null);
 
     const program = gl.createProgram()!;
     gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
@@ -251,6 +354,80 @@ export default function DepthBuffer(): React.JSX.Element {
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
 
+    const updateManualCamera = (update: (s: DemoState) => Partial<DemoState>): void => {
+      setState((s) => ({ ...s, animate: false, ...update(s) }));
+    };
+
+    let drag: { pointerId: number; clientX: number; clientY: number } | null = null;
+    const onPointerDown = (event: PointerEvent): void => {
+      if (event.button !== 0) return;
+      drag = { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY };
+      canvas.setPointerCapture(event.pointerId);
+      canvas.focus({ preventScroll: true });
+      canvas.style.cursor = "grabbing";
+      updateManualCamera(() => ({}));
+      event.preventDefault();
+    };
+    const onPointerMove = (event: PointerEvent): void => {
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      const deltaX = event.clientX - drag.clientX;
+      const deltaY = event.clientY - drag.clientY;
+      drag = { ...drag, clientX: event.clientX, clientY: event.clientY };
+      updateManualCamera((s) => ({
+        orbitYaw: s.orbitYaw - deltaX * CAMERA_DRAG_RADIANS_PER_PIXEL,
+        orbitPitch: clamp(
+          s.orbitPitch + deltaY * CAMERA_DRAG_RADIANS_PER_PIXEL,
+          CAMERA_PITCH_MIN,
+          CAMERA_PITCH_MAX,
+        ),
+      }));
+      event.preventDefault();
+    };
+    const endDrag = (event: PointerEvent): void => {
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      drag = null;
+      canvas.style.cursor = "grab";
+    };
+    const onKeyDown = (event: KeyboardEvent): void => {
+      switch (event.key) {
+        case "ArrowLeft":
+          updateManualCamera((s) => ({ orbitYaw: s.orbitYaw + CAMERA_KEY_RADIANS }));
+          break;
+        case "ArrowRight":
+          updateManualCamera((s) => ({ orbitYaw: s.orbitYaw - CAMERA_KEY_RADIANS }));
+          break;
+        case "ArrowUp":
+          updateManualCamera((s) => ({
+            orbitPitch: clamp(
+              s.orbitPitch - CAMERA_KEY_RADIANS,
+              CAMERA_PITCH_MIN,
+              CAMERA_PITCH_MAX,
+            ),
+          }));
+          break;
+        case "ArrowDown":
+          updateManualCamera((s) => ({
+            orbitPitch: clamp(
+              s.orbitPitch + CAMERA_KEY_RADIANS,
+              CAMERA_PITCH_MIN,
+              CAMERA_PITCH_MAX,
+            ),
+          }));
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+    };
+
+    canvas.style.cursor = "grab";
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", endDrag);
+    canvas.addEventListener("pointercancel", endDrag);
+    canvas.addEventListener("keydown", onKeyDown);
+
     let raf = 0;
     let t = 0;
     const draw = (): void => {
@@ -267,12 +444,15 @@ export default function DepthBuffer(): React.JSX.Element {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
       if (s.animate) t += 0.01;
-      const eye: [number, number, number] = [Math.sin(t) * 1.2, 2.2 + Math.sin(t * 0.7) * 0.2, 7];
+      const eye = orbitEye(
+        s.orbitYaw + (s.animate ? Math.sin(t) * CAMERA_SWAY_YAW : 0),
+        s.orbitPitch + (s.animate ? Math.sin(t * 0.7) * CAMERA_SWAY_PITCH : 0),
+      );
 
       gl.useProgram(program);
       gl.uniformMatrix4fv(uProj, false, perspective(55, w / h, s.near, s.far));
-      gl.uniformMatrix4fv(uView, false, lookAt(eye, [0, 0.4, -12]));
-      gl.uniform1f(uOffset, s.offsetMm / 1000);
+      gl.uniformMatrix4fv(uView, false, lookAt(eye, CAMERA_TARGET));
+      gl.uniform1f(uOffset, s.offsetCm / 100);
       gl.uniform1f(uNear, s.near);
       gl.uniform1f(uFar, s.far);
       gl.uniform1i(uViewMode, s.viewMode === "color" ? 0 : s.viewMode === "raw" ? 1 : 2);
@@ -288,21 +468,40 @@ export default function DepthBuffer(): React.JSX.Element {
       // lost context would survive into the second mount. GPU objects are freed
       // explicitly; the context itself goes away with the canvas element.
       cancelAnimationFrame(raf);
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", endDrag);
+      canvas.removeEventListener("pointercancel", endDrag);
+      canvas.removeEventListener("keydown", onKeyDown);
       gl.deleteBuffer(vbo);
       gl.deleteVertexArray(vao);
       gl.deleteProgram(program);
     };
   }, []);
 
-  const fighting = state.offsetMm < 1 && state.near < 0.5;
+  const estimate =
+    depthBits === null
+      ? null
+      : estimateDepthSteps(state.near, state.far, state.offsetCm, depthBits);
+  const frustumSummary = `The visible range is ${formatMeters(state.near)}–${formatMeters(state.far)} (${formatRatio(state.far / state.near)}×).`;
+  const precisionSummary =
+    depthBits === null
+      ? `${frustumSummary} This WebGL context did not report its depth-buffer precision.`
+      : estimate === null
+        ? `${frustumSummary} None of the centered reference points is inside this range.`
+        : `${frustumSummary} At ${estimate.sampleCount} visible centered reference point${estimate.sampleCount === 1 ? "" : "s"}, this ${depthBits}-bit buffer gives ${formatDepthSteps(estimate.min)}–${formatDepthSteps(estimate.max)} stored depth steps for a ${formatZFightOffset(state.offsetCm)} lift.`;
   const caption =
     state.viewMode === "raw"
-      ? "Raw depth-buffer contents: almost everything is ~1.0 (white). Perspective squeezes most precision into the first few meters — that's why the far scene flickers."
+      ? `Raw depth-buffer contents: almost everything is ~1.0 (white). Perspective squeezes most precision into the first few meters. ${frustumSummary} Switch back to Scene for the sampled precision readout.`
       : state.viewMode === "linear"
-        ? "Linearized depth: dark = near, light = far. This is the distance the raw values encode so unevenly."
-        : fighting
-          ? "The yellow stripe and the road share the same depth — watch them flicker (z-fighting). Fix it: raise the near plane, or lift the stripe a few millimeters."
-          : "No more flicker: the depth buffer can now tell the two surfaces apart. Drop the near plane back to 0.01 to break it again.";
+        ? `Linearized depth: dark = near, light = far. This is the distance the raw values encode so unevenly. ${frustumSummary}`
+        : state.offsetCm === 0
+          ? `${precisionSummary} The yellow stripe and road are exactly co-planar, so their depths tie. The visible result can depend on rasterization and draw order; camera motion can expose z-fighting.`
+          : estimate === null
+            ? `${precisionSummary} This lift breaks the exact tie, but it is not a reliable fix without a precision measurement.`
+            : estimate.min < 1
+              ? `${precisionSummary} At least one reference point is below one stored depth step, so this lift is not a reliable fix: the surfaces can still quantize to the same depth.`
+              : `${precisionSummary} These reference samples exceed one stored depth step. That indicates separation for those samples, not a guarantee for every point, distance, or viewing angle.`;
 
   return (
     <PlaygroundFrame
@@ -311,31 +510,61 @@ export default function DepthBuffer(): React.JSX.Element {
       onReset={() => setState({ ...INITIAL })}
       controls={
         <>
+          <output
+            data-testid="depth-buffer-camera"
+            data-mode={state.animate ? "sway" : "manual"}
+            data-yaw={state.orbitYaw.toFixed(3)}
+            data-pitch={state.orbitPitch.toFixed(3)}
+            className="m-0 text-xs text-[var(--calcite-color-text-3)]"
+            aria-live="polite"
+          >
+            {state.animate
+              ? "Camera: sway. Drag to orbit; manual input pauses the sway."
+              : "Camera: manual orbit. Reset restores the starting view."}
+          </output>
           <SliderControl
-            label="Near plane"
+            label="Near plane (m)"
             value={state.near}
             min={0.01}
             max={2}
             step={0.01}
             onInput={(near) => setState((s) => ({ ...s, near }))}
-            format={(v) => v.toFixed(2)}
+            format={formatMeters}
           />
           <SliderControl
-            label="Far plane"
+            label="Far plane (m)"
             value={state.far}
-            min={50}
-            max={5000}
-            step={50}
+            min={10}
+            max={100}
+            step={1}
             onInput={(far) => setState((s) => ({ ...s, far }))}
+            format={formatMeters}
           />
+          <output
+            data-testid="depth-buffer-frustum"
+            data-near={state.near}
+            data-far={state.far}
+            className="m-0 text-xs text-[var(--calcite-color-text-3)]"
+            aria-live="polite"
+          >
+            {frustumSummary} This 10–100 m range fits the road scene: lower Far to 10 m to clip the
+            distance, while 100 m contains it. Once Far is beyond the scene, changing it has much
+            less precision effect than changing Near.
+          </output>
+          <p className="m-0 text-xs text-[var(--calcite-color-text-3)]">
+            Near plane is the closest visible distance. Raising it removes nearby geometry but gives
+            distant geometry much more depth precision. Far plane is the farthest visible distance;
+            lowering it removes distant geometry and helps less. The near/far ratio is the main
+            stress test here.
+          </p>
           <SliderControl
-            label="Lift stripe (mm)"
-            value={state.offsetMm}
-            min={0}
-            max={20}
-            step={0.5}
-            onInput={(offsetMm) => setState((s) => ({ ...s, offsetMm }))}
-            format={(v) => `${v} mm`}
+            label="Lift stripe (cm)"
+            value={state.offsetCm}
+            min={Z_FIGHT_OFFSET.minCm}
+            max={Z_FIGHT_OFFSET.maxCm}
+            step={Z_FIGHT_OFFSET.stepCm}
+            onInput={(offsetCm) => setState((s) => ({ ...s, offsetCm }))}
+            format={formatZFightOffset}
           />
           <SegmentedControl<ViewMode>
             label="View"
@@ -352,10 +581,21 @@ export default function DepthBuffer(): React.JSX.Element {
             checked={state.animate}
             onChange={(animate) => setState((s) => ({ ...s, animate }))}
           />
+          <p className="m-0 text-xs text-[var(--calcite-color-text-3)]">
+            Keyboard: focus the scene, then use arrow keys to orbit. Camera distance stays fixed so
+            Near and Far remain the only clipping and depth-precision controls. The precision
+            estimate deliberately stays on its centered reference camera so manual inspection does
+            not turn it into a universal claim.
+          </p>
         </>
       }
     >
-      <canvas ref={canvasRef} className="h-full w-full" aria-label="WebGL2 depth buffer demo" />
+      <canvas
+        ref={canvasRef}
+        className="h-full w-full touch-none cursor-grab focus:outline-none focus:ring-2 focus:ring-[var(--calcite-color-brand)]"
+        aria-label="WebGL2 depth buffer demo. Drag or use arrow keys to orbit after focusing the scene. Camera distance stays fixed so Near and Far control clipping and depth precision."
+        tabIndex={0}
+      />
     </PlaygroundFrame>
   );
 }

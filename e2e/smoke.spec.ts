@@ -81,7 +81,79 @@ test("raw WebGL2 playground renders (depth buffer)", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("#/term/depth-buffer");
   await expect(page.getByRole("heading", { level: 1, name: /depth buffer/i })).toBeVisible();
-  await expect(page.locator("figure canvas")).toBeVisible({ timeout: 30_000 });
+  const demo = page.locator("figure").filter({ hasText: "The depth buffer, live and breakable" });
+  const canvas = demo.locator("canvas");
+  await expect(canvas).toBeVisible({ timeout: 30_000 });
+  // A co-planar pair is a depth tie. The lesson must not present a hard-coded
+  // near-plane/offset threshold as a universal z-fighting fix.
+  const caption = demo.locator("figcaption");
+  await expect(caption).toContainText(/exactly co-planar/i);
+  await expect(caption).not.toContainText("Fix it:");
+  await expect(caption).not.toContainText("No more flicker");
+
+  // Drive the real Calcite slider: two 0.05-cm keyboard steps reach 0.10 cm
+  // (1 mm). The
+  // old threshold claimed this was always fixed; the corrected lesson must
+  // preserve the precision caveat.
+  const liftHost = demo
+    .locator("calcite-label")
+    .filter({ hasText: /Lift stripe \(cm\)/ })
+    .locator("calcite-slider");
+  await expect(liftHost).toHaveAttribute("min", "0");
+  await expect(liftHost).toHaveAttribute("max", "1");
+  await expect(liftHost).toHaveAttribute("step", "0.05");
+  const liftThumb = liftHost.locator('[role="slider"]');
+  await liftThumb.focus();
+  await liftThumb.press("ArrowRight");
+  await liftThumb.press("ArrowRight");
+  await expect(liftHost).toHaveJSProperty("value", 0.1);
+  await expect(caption).toContainText(/not a reliable fix/i);
+  await expect(caption).not.toContainText(/No more flicker|can now tell the two surfaces apart/i);
+
+  // Far can move close enough to visibly clip the distant scene. Its smaller
+  // precision contribution is explained separately from the dominant Near control.
+  const farHost = demo
+    .locator("calcite-label")
+    .filter({ hasText: /Far plane \(m\)/ })
+    .locator("calcite-slider");
+  const frustum = demo.getByTestId("depth-buffer-frustum");
+  await expect(farHost).toHaveAttribute("min", "10");
+  await expect(farHost).toHaveAttribute("max", "100");
+  await farHost.locator('[role="slider"]').focus();
+  await farHost.locator('[role="slider"]').press("Home");
+  await expect(frustum).toHaveAttribute("data-far", "10");
+  await expect(frustum).toContainText(/lower Far to 10 m to clip the distance/i);
+
+  // The ArcGIS companion imports the same shared scale, so the two lessons
+  // cannot drift back to different units or offset ranges.
+  const elevationHost = page
+    .locator("calcite-label")
+    .filter({ hasText: /Elevation offset \(cm\)/ })
+    .locator("calcite-slider");
+  await expect(elevationHost).toHaveAttribute("min", "0");
+  await expect(elevationHost).toHaveAttribute("max", "1");
+  await expect(elevationHost).toHaveAttribute("step", "0.05");
+
+  // Navigation is live too: keyboard and pointer drag use the same camera
+  // state and stop the automatic sway without changing camera distance.
+  const camera = demo.getByTestId("depth-buffer-camera");
+  await expect(camera).toHaveAttribute("data-mode", "sway");
+  await expect(demo.getByText(/Near plane is the closest visible distance/i)).toBeVisible();
+  await canvas.focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(camera).toHaveAttribute("data-mode", "manual");
+  const yawBeforeDrag = await camera.getAttribute("data-yaw");
+  const pitchBeforeDrag = Number(await camera.getAttribute("data-pitch"));
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("Depth-buffer canvas did not have a bounding box");
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2 + 15);
+  await page.mouse.up();
+  await expect.poll(() => camera.getAttribute("data-yaw")).not.toBe(yawBeforeDrag);
+  await expect
+    .poll(async () => Number(await camera.getAttribute("data-pitch")))
+    .toBeGreaterThan(pitchBeforeDrag);
   expect(errors).toEqual([]);
 });
 

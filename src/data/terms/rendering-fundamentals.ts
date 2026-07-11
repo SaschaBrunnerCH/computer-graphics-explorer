@@ -162,7 +162,7 @@ export const renderingFundamentals: TermInput[] = [
       "Depth-of-field blur, driven by per-pixel depth",
     ],
     deeperDive:
-      "Depth precision is non-linear: perspective projection maps depth to the buffer such that most precision bunches up near the near plane. A tiny near-plane value starves the rest of the range — the classic cause of z-fighting on distant geometry. Fixes: push the near plane out, use 32-bit float depth, use 'reversed-Z' (which distributes float precision far better), or offset co-planar geometry with polygon offset. Try all of this live in the playground.",
+      "Depth precision is non-linear: perspective projection maps depth to the buffer such that most precision bunches up near the near plane. A tiny near-plane value starves the rest of the range — the classic cause of z-fighting on distant geometry. Mitigations include pushing the near plane out, using 32-bit float depth, using 'reversed-Z' (which distributes float precision far better), or offsetting co-planar geometry with polygon offset. The playground lets you inspect the near/far tradeoff and a small geometry lift; it does not implement every mitigation.",
     relatedTermIds: ["frame-buffer", "rasterization", "camera-frustum", "render-pipeline"],
     demos: ["depth-buffer", "scene-zfight", "painters-order"],
   },
