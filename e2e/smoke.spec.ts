@@ -36,6 +36,37 @@ test("search palette opens with Ctrl+K and finds terms", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test("terms expose curated, direct further-reading links", async ({ page }) => {
+  const errors = collectPageErrors(page);
+  await page.goto("#/term/path-tracing");
+  await expect(page.getByRole("heading", { level: 1, name: /path tracing/i })).toBeVisible();
+
+  const furtherReading = page.locator('section[aria-label="Further reading"]');
+  await expect(furtherReading).toBeVisible();
+  await expect(furtherReading.getByRole("link")).toHaveCount(4);
+  await expect(
+    furtherReading.getByRole("link", { name: /PBRT: §13\.2 Path Tracing/i }),
+  ).toHaveAttribute(
+    "href",
+    "https://www.pbr-book.org/4ed/Light_Transport_I_Surface_Reflection/Path_Tracing",
+  );
+  expect(errors).toEqual([]);
+});
+
+test("terms without an honest source match omit further reading", async ({ page }) => {
+  const errors = collectPageErrors(page);
+  for (const term of [
+    { id: "i3s-3d-tiles", heading: /i3s/i },
+    { id: "tone-mapping", heading: /tone mapping/i },
+    { id: "hdr", heading: /high dynamic range/i },
+  ]) {
+    await page.goto(`#/term/${term.id}`);
+    await expect(page.getByRole("heading", { level: 1, name: term.heading })).toBeVisible();
+    await expect(page.locator('section[aria-label="Further reading"]')).toHaveCount(0);
+  }
+  expect(errors).toEqual([]);
+});
+
 test("react-three-fiber playground renders (shading models)", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("#/term/shading-models");
