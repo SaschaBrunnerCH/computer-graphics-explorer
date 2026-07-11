@@ -74,6 +74,86 @@ test("ArcGIS scene playground renders (shadow mapping)", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test("Architectural path tracing resets and reconverges when daylight changes", async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  const errors = collectPageErrors(page);
+  await page.goto("#/term/path-tracing");
+  await expect(page.getByRole("heading", { level: 1, name: /path tracing/i })).toBeVisible();
+
+  // This term contains a diagram companion too, so scope the WebGL assertion to
+  // the ArcGIS custom element rather than accepting the first figure canvas.
+  const scene = page.locator("figure arcgis-scene").first();
+  await expect(scene.locator("canvas")).toBeVisible({
+    timeout: 60_000,
+  });
+  await scene.scrollIntoViewIfNeeded();
+
+  const daylightExpand = scene.locator("arcgis-expand");
+  const daylight = page.getByTestId("path-trace-daylight");
+  await expect(daylightExpand).toHaveJSProperty("expanded", false);
+  await expect(daylight).toBeHidden();
+
+  const expandButton = daylightExpand.locator('calcite-action[title="Change date and time"]');
+  await expect(expandButton).toBeVisible();
+  await expandButton.click();
+  await expect(daylightExpand).toHaveJSProperty("expanded", true);
+  await expect(daylight).toBeVisible({ timeout: 60_000 });
+  expect(await daylight.evaluate((element) => Reflect.get(element, "hidePlayButtons"))).toBe(true);
+
+  const status = page.getByTestId("path-trace-status");
+  await expect(status).toBeVisible();
+  await expect
+    .poll(async () => Number(await status.getAttribute("data-samples")), {
+      message: "the initial path-tracing estimate should begin accumulating",
+      timeout: 60_000,
+    })
+    .toBeGreaterThan(1);
+
+  // Record every data-samples mutation so a fast reset cannot hide between two
+  // Playwright polling turns. Then drive the real Daylight slider by keyboard;
+  // this must update SunLighting.date, reset to 1 SPP, and begin accumulating.
+  await status.evaluate((element) => {
+    const transitions = [Number(element.getAttribute("data-samples"))];
+    element.setAttribute("data-test-sample-transitions", JSON.stringify(transitions));
+    const observer = new MutationObserver(() => {
+      transitions.push(Number(element.getAttribute("data-samples")));
+      element.setAttribute("data-test-sample-transitions", JSON.stringify(transitions));
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ["data-samples"] });
+  });
+
+  const readLightingDate = async (): Promise<string> =>
+    scene.evaluate((element) => {
+      const environment = Reflect.get(element, "environment");
+      const lighting = Reflect.get(environment, "lighting");
+      return Reflect.get(lighting, "date").toISOString();
+    });
+  const dateBefore = await readLightingDate();
+  const timeSlider = daylight.locator('[role="slider"]');
+  await expect(daylight.locator("arcgis-time-of-day-slider")).toBeVisible();
+  await timeSlider.focus();
+  await page.keyboard.press("ArrowRight");
+
+  await expect.poll(readLightingDate, { timeout: 30_000 }).not.toBe(dateBefore);
+  await expect
+    .poll(
+      async () => {
+        const raw = await status.getAttribute("data-test-sample-transitions");
+        const transitions = JSON.parse(raw ?? "[]") as number[];
+        const resetIndex = transitions.indexOf(1);
+        return resetIndex >= 0 && transitions.slice(resetIndex + 1).some((sample) => sample > 1);
+      },
+      {
+        message: "the daylight-driven sun change should reset and then reconverge",
+        timeout: 60_000,
+      },
+    )
+    .toBe(true);
+  expect(errors).toEqual([]);
+});
+
 test("multi-playground term shows both demos (fresnel + ArcGIS water)", async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.goto("#/term/fresnel-effect");
