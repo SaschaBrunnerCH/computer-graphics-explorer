@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { termById, categoryById, difficultyMeta, type Term } from "../data";
+import { getFurtherReading } from "../data/furtherReading";
 import { useUnderstood, toggleUnderstood } from "../state/progress";
 import { DifficultyBadge } from "./DifficultyBadge";
 import { DemoHost } from "./DemoHost";
@@ -16,6 +17,7 @@ export function TermArticle({ term }: { term: Term }): React.JSX.Element {
   const understood = useUnderstood();
   const category = categoryById.get(term.category);
   const isUnderstood = understood.has(term.id);
+  const furtherReading = getFurtherReading(term);
 
   return (
     <article className="w-full">
@@ -96,6 +98,33 @@ export function TermArticle({ term }: { term: Term }): React.JSX.Element {
         >
           <p className="leading-relaxed text-[var(--calcite-color-text-2)]">{term.deeperDive}</p>
         </calcite-block>
+      )}
+
+      {furtherReading.length > 0 && (
+        <section aria-label="Further reading" className="my-6">
+          <h2 className="mb-2 text-xl font-semibold text-[var(--calcite-color-text-1)]">
+            Further reading
+          </h2>
+          <p className="mb-3 text-[var(--calcite-color-text-2)]">
+            Read directly related lessons and sections about {term.title}.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {furtherReading.map((resource) => (
+              <a
+                key={resource.url}
+                href={resource.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded border border-[var(--calcite-color-border-3)] px-3 py-2 text-sm text-[var(--calcite-color-text-link)] no-underline hover:bg-[var(--calcite-color-foreground-2)]"
+                aria-label={`${resource.source}: ${resource.title} (opens in a new tab)`}
+              >
+                <span className="font-semibold">{resource.source}</span>
+                <span className="text-[var(--calcite-color-text-2)]"> · {resource.title}</span>
+                <calcite-icon icon="launch" scale="s" className="ml-1 align-text-bottom" />
+              </a>
+            ))}
+          </div>
+        </section>
       )}
 
       {term.relatedTermIds.length > 0 && (

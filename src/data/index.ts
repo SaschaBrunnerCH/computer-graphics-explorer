@@ -9,6 +9,7 @@ import { lighting } from "./terms/lighting";
 import { texturesSampling } from "./terms/textures-sampling";
 import { postProcessing } from "./terms/post-processing";
 import { realtimeGis } from "./terms/realtime-gis";
+import { validateFurtherReading } from "./furtherReading";
 
 const rawTerms: TermInput[] = [
   ...renderingFundamentals,
@@ -19,6 +20,8 @@ const rawTerms: TermInput[] = [
   ...postProcessing,
   ...realtimeGis,
 ];
+
+validateFurtherReading(rawTerms);
 
 // Validate shape plus referential integrity (unique ids, resolvable related ids).
 const catalogSchema = z.array(termSchema).superRefine((all, ctx) => {
