@@ -116,9 +116,11 @@ Reset restores this camera.
 The scene uses `SunLighting` with direct shadows enabled. Initial time is
 `2026-07-10T18:00:00Z`, providing low, long shadows.
 
-Register and render `<arcgis-daylight>` in the scene's top-right slot with:
+Wrap `<arcgis-daylight>` in an `<arcgis-expand>` in the scene's top-right slot.
+Keep it collapsed by default so the scene remains unobstructed, with the clock
+button exposing:
 
-- date picker and daytime slider visible;
+- date picker and daytime slider visible after expansion;
 - UTC displayed explicitly (`utcOffset={0}`);
 - play buttons hidden, because continuous sun animation would prevent
   convergence;
@@ -129,9 +131,11 @@ Register and render `<arcgis-daylight>` in the scene's top-right slot with:
 requests a render. The RenderNode's sun signature remains the authoritative
 accumulation invalidation mechanism.
 
-A sun below the horizon is valid behavior. When the ArcGIS sun contributes no
-direct energy, the custom scene converges under dim ambient sky and the caption
-says "Sun below horizon — ambient sky only; choose a daytime with direct sun."
+A sun below the horizon is valid behavior. With one or more indirect bounces,
+the custom scene converges under dim ambient sky and the caption says "Sun below
+horizon — ambient sky only." The direct-only zero-bounce comparison deliberately
+samples no ambient-sky path, reports "Sun below horizon — no direct sun," and can
+render the proposal black until the time or bounce count changes.
 
 ## Procedural Courtyard
 
@@ -252,8 +256,9 @@ Each frame casts one independently seeded path per pixel.
    double-count the explicitly sampled sun.
 
 The control is labeled **"Indirect bounces"**, ranges from 0 to 3, and defaults
-to 2. Zero is a direct-only comparison; one or more enables genuine color
-transfer. No Russian roulette is needed at this bounded depth.
+to 2. Zero is a direct-only comparison with no ambient-sky path; one or more
+enables genuine color transfer and the restrained sky term. No Russian roulette
+is needed at this bounded depth.
 
 ## Accumulation and UI State
 
@@ -270,8 +275,10 @@ Reset accumulation when any of these change:
 - sun diffuse color or intensity;
 - sun ambient color or intensity.
 
-The immutable local frame and procedural geometry do not enter the per-frame
-signature because changing either requires node reconstruction.
+The packed analytic-scene reference participates in the reset check as a
+defensive guard. Normal geometry or local-frame changes still reconstruct the
+node; immutable geometry contents and local-frame matrix values are not hashed
+into the per-frame signatures.
 
 Expose these stage states through a compact status chip and the live caption:
 
@@ -279,6 +286,7 @@ Expose these stage states through a compact status chip and the live caption:
 - `Converging · N / 512 SPP`;
 - `Converged · 512 SPP`;
 - `Single sample · accumulation disabled`;
+- `Sun below horizon · no direct sun`;
 - `Sun below horizon · ambient sky only`;
 - `Path tracing off`;
 - initialization or shader failure.

@@ -424,10 +424,11 @@ export default function ScenePathTrace(): React.JSX.Element {
           />
           <p className="m-0 text-xs text-[var(--calcite-color-text-3)]">
             Only the three proposed pavilions and their foundation enter traced light transport;
-            ArcGIS rasterizes the surrounding site and supplies the shared geolocated sun and depth
-            occlusion. Set indirect bounces to 0 for direct sun only, then raise it to reveal
-            genuine diffuse colour transfer between the nearby buildings. The fixed-seed convex
-            architecture is independently authored; the linked{" "}
+            RenderNode combines that path-traced image with ArcGIS&apos;s rasterized surroundings
+            through the shared depth buffer, while ArcGIS also supplies the geolocated sun. Set
+            indirect bounces to 0 for direct sun only, then raise it to reveal genuine diffuse
+            colour transfer between the nearby buildings. The fixed-seed convex architecture is
+            independently authored; the linked{" "}
             <a
               className="underline"
               href="https://www.shadertoy.com/view/wdjSDG"
