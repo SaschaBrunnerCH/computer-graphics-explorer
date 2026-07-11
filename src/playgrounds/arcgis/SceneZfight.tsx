@@ -11,6 +11,7 @@ import "@arcgis/map-components/components/arcgis-scene";
 import { PlaygroundFrame } from "../../components/PlaygroundFrame";
 import { SegmentedControl, SliderControl } from "../../components/controls";
 import { configureArcgis } from "../../lib/arcgis";
+import { formatZFightOffset, Z_FIGHT_OFFSET } from "../zFightControls";
 
 configureArcgis();
 
@@ -19,17 +20,16 @@ configureArcgis();
  * slabs (`Mesh.createPlane`, zero thickness, facing up) placed at the *same*
  * absolute height over the flat Theresienwiese in Munich. Because a plane has
  * no thickness, two of them at an identical z map to identical depth-buffer
- * values, so the depth test can't decide which is nearer — every frame, and
- * every tiny camera move, a different set of pixels wins. That shimmer is real
- * z-fighting from a production renderer, not a simulation of it.
+ * values, so the depth test has no geometric basis for ordering them. Camera
+ * movement can expose that tie as real z-fighting in a production renderer,
+ * not a simulation of it.
  *
  * The slabs overlap ~70% but are offset horizontally so each keeps a visible
  * margin — proof there really are two of them. The "Elevation offset" slider
- * raises the blue slab a few centimetres by rebuilding it from a pristine base
- * (same clone-and-offset pattern as MeshTransform); a couple of cm cures the
- * flicker from the Close camera. Switch to Far and the *same* offset can shimmer
- * again: perspective packs most depth precision near the camera, so a gap that
- * spans several depth steps up close can collapse into a single step at range.
+ * raises the blue slab by a small shared offset by rebuilding it from a pristine base
+ * (same clone-and-offset pattern as MeshTransform). Separation can stabilize a
+ * close view, but it is not a universal threshold: at longer distances,
+ * perspective can still collapse a small gap into one stored depth value.
  */
 
 const LAYER_ID = "scene-zfight";
@@ -99,7 +99,7 @@ export default function SceneZfight(): React.JSX.Element {
     if (!base || !layer || layer.destroyed) return;
     const m = base.clone();
     // At cm = 0 this is a no-op, so blue stays exactly co-planar with crimson
-    // and the two MUST z-fight — there is no separation hack here.
+    // and there is no separation hack here.
     if (cm !== 0) m.offset(0, 0, cm / 100);
     const graphic = new Graphic({ geometry: m, symbol: slabSymbol() });
     const previous = blueGraphicRef.current;
@@ -183,8 +183,8 @@ export default function SceneZfight(): React.JSX.Element {
       : status === "loading"
         ? "Placing two co-planar slabs…"
         : offsetCm === 0
-          ? "Two slabs at exactly the same height: the depth buffer can't order them, so every frame (and every camera twitch) different pixels win — that shimmer is z-fighting. Drag the camera a hair and watch the fight dance."
-          : `+${offsetCm} cm: enough separation up close — now switch to the Far camera. At that distance ${offsetCm} cm may still fall inside a single depth step and the fight resumes. Nudge the camera to check.`;
+          ? "Two slabs at exactly the same height: they map to the same depth, so there is no geometrically correct order. Camera movement can expose z-fighting as rasterized samples alternate."
+          : `+${formatZFightOffset(offsetCm)}: the slabs are geometrically separated. Switch to the Far camera to stress the depth buffer — whether the gap stays stable still depends on distance, viewing angle, and renderer precision.`;
 
   return (
     <PlaygroundFrame
@@ -201,12 +201,12 @@ export default function SceneZfight(): React.JSX.Element {
       controls={
         <>
           <SliderControl
-            label="Elevation offset"
+            label="Elevation offset (cm)"
             value={offsetCm}
-            min={0}
-            max={50}
-            step={1}
-            format={(v) => `${Math.round(v)} cm`}
+            min={Z_FIGHT_OFFSET.minCm}
+            max={Z_FIGHT_OFFSET.maxCm}
+            step={Z_FIGHT_OFFSET.stepCm}
+            format={formatZFightOffset}
             onInput={(cm) => {
               setOffsetCm(cm);
               const el = readyScene();
@@ -229,10 +229,10 @@ export default function SceneZfight(): React.JSX.Element {
           <p className="m-0 text-xs text-[var(--calcite-color-text-3)]">
             The depth buffer stores each pixel's distance with finite precision, and perspective
             bunches most of that precision near the camera. Two co-planar surfaces resolve to the
-            same stored value, so the depth test becomes a per-pixel coin flip — the flicker you
-            see. Fixes: offset the geometry (this slider), push the near plane further out, or use a
-            reversed-Z floating-point depth buffer. The low-level depth-buffer playground shows the
-            raw buffer these values live in.
+            same stored value, so camera movement can reveal z-fighting. Offsetting the geometry
+            (this slider), pushing the near plane further out, or using a reversed-Z floating-point
+            depth buffer can help; none is a universal threshold. The low-level depth-buffer
+            playground shows the raw buffer and a sampled precision estimate.
           </p>
         </>
       }
